@@ -1,0 +1,1213 @@
+Running Trust Score Engine across all Known Assets...
+
+Computing trust score for AAPLx...
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2026-05-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2026-02-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2025-11-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2025-08-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2025-05-12T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2025-02-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2024-11-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2024-08-12T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2024-05-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2024-02-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2023-11-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2023-08-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2023-05-12T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2023-02-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2022-12-23T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2022-11-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2022-08-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2022-05-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2022-02-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2021-11-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2021-08-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2021-05-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2021-02-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2020-11-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2020-08-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2020-05-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2020-02-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2019-11-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2019-08-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2019-05-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2019-02-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2018-11-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2018-08-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2018-05-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2018-02-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2017-11-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2017-08-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2017-05-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2017-02-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2016-11-03T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2016-08-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2016-05-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2016-02-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2015-11-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2015-08-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2015-05-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2015-02-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2014-11-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2014-08-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2014-05-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2014-02-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2013-11-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2013-08-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2013-05-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2013-02-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2012-11-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2012-08-09T00:00:00.000Z without a dedicated indexer.
+Computing trust score for TSLAx...
+Computing trust score for NVDAx...
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2026-06-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2026-03-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2025-12-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2025-09-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2025-06-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2025-03-12T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2024-12-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2024-09-12T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2024-06-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2024-05-29T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2024-03-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2023-12-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2023-09-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2023-06-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2023-03-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2022-11-30T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2022-09-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2022-06-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2022-03-02T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2021-12-01T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2021-08-31T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2021-06-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2021-03-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2020-12-03T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2020-09-01T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2020-06-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2020-02-27T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2019-11-27T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2019-08-28T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2019-05-30T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2019-02-28T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2018-11-29T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2018-08-29T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2018-05-23T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2018-02-22T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2017-11-22T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2017-08-22T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2017-05-19T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2017-02-22T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2016-11-23T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2016-08-23T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2016-05-24T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2016-02-29T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2015-11-18T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2015-08-18T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2015-05-19T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2015-02-24T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2014-11-19T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2014-08-19T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2014-05-20T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2014-02-25T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2013-11-19T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2013-08-20T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2013-05-21T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2013-02-26T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-11T14:10:47.000Z. Cannot realistically paginate to 2012-11-20T00:00:00.000Z without a dedicated indexer.
+Computing trust score for AAPLon...
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2026-05-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2026-02-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2025-11-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2025-08-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2025-05-12T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2025-02-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2024-11-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2024-08-12T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2024-05-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2024-02-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2023-11-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2023-08-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2023-05-12T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2023-02-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2022-12-23T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2022-11-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2022-08-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2022-05-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2022-02-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2021-11-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2021-08-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2021-05-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2021-02-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2020-11-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2020-08-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2020-05-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2020-02-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2019-11-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2019-08-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2019-05-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2019-02-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2018-11-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2018-08-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2018-05-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2018-02-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2017-11-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2017-08-10T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2017-05-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2017-02-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2016-11-03T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2016-08-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2016-05-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2016-02-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2015-11-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2015-08-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2015-05-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2015-02-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2014-11-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2014-08-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2014-05-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2014-02-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2013-11-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2013-08-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2013-05-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2013-02-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2012-11-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2012-08-09T00:00:00.000Z without a dedicated indexer.
+Computing trust score for TSLAon...
+Computing trust score for NVDAon...
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2026-06-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2026-03-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2025-12-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2025-09-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2025-06-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2025-03-12T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2024-12-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2024-09-12T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2024-06-11T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2024-05-29T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2024-03-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2023-12-05T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2023-09-06T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2023-06-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2023-03-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2022-11-30T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2022-09-07T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2022-06-08T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2022-03-02T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2021-12-01T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2021-08-31T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2021-06-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2021-03-09T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2020-12-03T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2020-09-01T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2020-06-04T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2020-02-27T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2019-11-27T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2019-08-28T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2019-05-30T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2019-02-28T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2018-11-29T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2018-08-29T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2018-05-23T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2018-02-22T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2017-11-22T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2017-08-22T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2017-05-19T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2017-02-22T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2016-11-23T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2016-08-23T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2016-05-24T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2016-02-29T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2015-11-18T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2015-08-18T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2015-05-19T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2015-02-24T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2014-11-19T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2014-08-19T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2014-05-20T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2014-02-25T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2013-11-19T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2013-08-20T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2013-05-21T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2013-02-26T00:00:00.000Z without a dedicated indexer.
+Historical verification failed: Authority account transaction history too deep. 1000 txns only reach 2026-09-10T20:41:57.000Z. Cannot realistically paginate to 2012-11-20T00:00:00.000Z without a dedicated indexer.
+
+======================================================
+               INDIVIDUAL TRUST SCORES                
+======================================================
+
+--- AAPLx (Apple xStock) ---
+Composite Trust Score: 50.86/100
+  - Verification Track Record (50% weight): 100.00%
+  - Verification Coverage (35% weight):     1.72%
+  - Timing Accuracy (15% weight):           1.72%
+
+Events Analyzed: 58
+Breakdown:
+  1. Ex-Date: 2026-08-10
+     Bucket: explained-withholding-tax
+     Independently Verified: Yes
+     Timing Match: Yes
+  2. Ex-Date: 2026-05-11
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  3. Ex-Date: 2026-02-09
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  4. Ex-Date: 2025-11-10
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  5. Ex-Date: 2025-08-11
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  6. Ex-Date: 2025-05-12
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  7. Ex-Date: 2025-02-10
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  8. Ex-Date: 2024-11-08
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  9. Ex-Date: 2024-08-12
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  10. Ex-Date: 2024-05-10
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  11. Ex-Date: 2024-02-09
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  12. Ex-Date: 2023-11-10
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  13. Ex-Date: 2023-08-11
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  14. Ex-Date: 2023-05-12
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  15. Ex-Date: 2023-02-10
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  16. Ex-Date: 2022-12-23
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  17. Ex-Date: 2022-11-04
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  18. Ex-Date: 2022-08-05
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  19. Ex-Date: 2022-05-06
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  20. Ex-Date: 2022-02-04
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  21. Ex-Date: 2021-11-05
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  22. Ex-Date: 2021-08-06
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  23. Ex-Date: 2021-05-07
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  24. Ex-Date: 2021-02-05
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  25. Ex-Date: 2020-11-06
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  26. Ex-Date: 2020-08-07
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  27. Ex-Date: 2020-05-08
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  28. Ex-Date: 2020-02-07
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  29. Ex-Date: 2019-11-07
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  30. Ex-Date: 2019-08-09
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  31. Ex-Date: 2019-05-10
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  32. Ex-Date: 2019-02-08
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  33. Ex-Date: 2018-11-08
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  34. Ex-Date: 2018-08-10
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  35. Ex-Date: 2018-05-11
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  36. Ex-Date: 2018-02-09
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  37. Ex-Date: 2017-11-10
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  38. Ex-Date: 2017-08-10
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  39. Ex-Date: 2017-05-11
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  40. Ex-Date: 2017-02-09
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  41. Ex-Date: 2016-11-03
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  42. Ex-Date: 2016-08-04
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  43. Ex-Date: 2016-05-05
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  44. Ex-Date: 2016-02-04
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  45. Ex-Date: 2015-11-05
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  46. Ex-Date: 2015-08-06
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  47. Ex-Date: 2015-05-07
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  48. Ex-Date: 2015-02-05
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  49. Ex-Date: 2014-11-06
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  50. Ex-Date: 2014-08-07
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  51. Ex-Date: 2014-05-08
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  52. Ex-Date: 2014-02-06
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  53. Ex-Date: 2013-11-06
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  54. Ex-Date: 2013-08-08
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  55. Ex-Date: 2013-05-09
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  56. Ex-Date: 2013-02-07
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  57. Ex-Date: 2012-11-07
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  58. Ex-Date: 2012-08-09
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+
+
+--- TSLAx (Tesla xStock) ---
+No dividend events to analyze yet.
+
+--- NVDAx (NVIDIA xStock) ---
+Composite Trust Score: 50.88/100
+  - Verification Track Record (50% weight): 100.00%
+  - Verification Coverage (35% weight):     1.75%
+  - Timing Accuracy (15% weight):           1.75%
+
+Events Analyzed: 57
+Breakdown:
+  1. Ex-Date: 2026-09-10
+     Bucket: explained-withholding-tax
+     Independently Verified: Yes
+     Timing Match: Yes
+  2. Ex-Date: 2026-06-04
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  3. Ex-Date: 2026-03-11
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  4. Ex-Date: 2025-12-04
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  5. Ex-Date: 2025-09-11
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  6. Ex-Date: 2025-06-11
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  7. Ex-Date: 2025-03-12
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  8. Ex-Date: 2024-12-05
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  9. Ex-Date: 2024-09-12
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  10. Ex-Date: 2024-06-11
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  11. Ex-Date: 2024-05-29
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  12. Ex-Date: 2024-03-05
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  13. Ex-Date: 2023-12-05
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  14. Ex-Date: 2023-09-06
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  15. Ex-Date: 2023-06-07
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  16. Ex-Date: 2023-03-07
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  17. Ex-Date: 2022-11-30
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  18. Ex-Date: 2022-09-07
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  19. Ex-Date: 2022-06-08
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  20. Ex-Date: 2022-03-02
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  21. Ex-Date: 2021-12-01
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  22. Ex-Date: 2021-08-31
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  23. Ex-Date: 2021-06-09
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  24. Ex-Date: 2021-03-09
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  25. Ex-Date: 2020-12-03
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  26. Ex-Date: 2020-09-01
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  27. Ex-Date: 2020-06-04
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  28. Ex-Date: 2020-02-27
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  29. Ex-Date: 2019-11-27
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  30. Ex-Date: 2019-08-28
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  31. Ex-Date: 2019-05-30
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  32. Ex-Date: 2019-02-28
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  33. Ex-Date: 2018-11-29
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  34. Ex-Date: 2018-08-29
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  35. Ex-Date: 2018-05-23
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  36. Ex-Date: 2018-02-22
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  37. Ex-Date: 2017-11-22
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  38. Ex-Date: 2017-08-22
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  39. Ex-Date: 2017-05-19
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  40. Ex-Date: 2017-02-22
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  41. Ex-Date: 2016-11-23
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  42. Ex-Date: 2016-08-23
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  43. Ex-Date: 2016-05-24
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  44. Ex-Date: 2016-02-29
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  45. Ex-Date: 2015-11-18
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  46. Ex-Date: 2015-08-18
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  47. Ex-Date: 2015-05-19
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  48. Ex-Date: 2015-02-24
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  49. Ex-Date: 2014-11-19
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  50. Ex-Date: 2014-08-19
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  51. Ex-Date: 2014-05-20
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  52. Ex-Date: 2014-02-25
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  53. Ex-Date: 2013-11-19
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  54. Ex-Date: 2013-08-20
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  55. Ex-Date: 2013-05-21
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  56. Ex-Date: 2013-02-26
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  57. Ex-Date: 2012-11-20
+     Bucket: explained-withholding-tax
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+
+
+--- AAPLon (Apple (Ondo Tokenized)) ---
+Composite Trust Score: 0.60/100
+  - Verification Track Record (50% weight): 0.00%
+  - Verification Coverage (35% weight):     1.72%
+  - Timing Accuracy (15% weight):           0.00%
+
+Events Analyzed: 58
+Breakdown:
+  1. Ex-Date: 2026-08-10
+     Bucket: unexplained
+     Independently Verified: Yes
+     Timing Match: No
+  2. Ex-Date: 2026-05-11
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  3. Ex-Date: 2026-02-09
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  4. Ex-Date: 2025-11-10
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  5. Ex-Date: 2025-08-11
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  6. Ex-Date: 2025-05-12
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  7. Ex-Date: 2025-02-10
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  8. Ex-Date: 2024-11-08
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  9. Ex-Date: 2024-08-12
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  10. Ex-Date: 2024-05-10
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  11. Ex-Date: 2024-02-09
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  12. Ex-Date: 2023-11-10
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  13. Ex-Date: 2023-08-11
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  14. Ex-Date: 2023-05-12
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  15. Ex-Date: 2023-02-10
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  16. Ex-Date: 2022-12-23
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  17. Ex-Date: 2022-11-04
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  18. Ex-Date: 2022-08-05
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  19. Ex-Date: 2022-05-06
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  20. Ex-Date: 2022-02-04
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  21. Ex-Date: 2021-11-05
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  22. Ex-Date: 2021-08-06
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  23. Ex-Date: 2021-05-07
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  24. Ex-Date: 2021-02-05
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  25. Ex-Date: 2020-11-06
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  26. Ex-Date: 2020-08-07
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  27. Ex-Date: 2020-05-08
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  28. Ex-Date: 2020-02-07
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  29. Ex-Date: 2019-11-07
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  30. Ex-Date: 2019-08-09
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  31. Ex-Date: 2019-05-10
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  32. Ex-Date: 2019-02-08
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  33. Ex-Date: 2018-11-08
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  34. Ex-Date: 2018-08-10
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  35. Ex-Date: 2018-05-11
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  36. Ex-Date: 2018-02-09
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  37. Ex-Date: 2017-11-10
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  38. Ex-Date: 2017-08-10
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  39. Ex-Date: 2017-05-11
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  40. Ex-Date: 2017-02-09
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  41. Ex-Date: 2016-11-03
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  42. Ex-Date: 2016-08-04
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  43. Ex-Date: 2016-05-05
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  44. Ex-Date: 2016-02-04
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  45. Ex-Date: 2015-11-05
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  46. Ex-Date: 2015-08-06
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  47. Ex-Date: 2015-05-07
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  48. Ex-Date: 2015-02-05
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  49. Ex-Date: 2014-11-06
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  50. Ex-Date: 2014-08-07
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  51. Ex-Date: 2014-05-08
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  52. Ex-Date: 2014-02-06
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  53. Ex-Date: 2013-11-06
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  54. Ex-Date: 2013-08-08
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  55. Ex-Date: 2013-05-09
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  56. Ex-Date: 2013-02-07
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  57. Ex-Date: 2012-11-07
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  58. Ex-Date: 2012-08-09
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+
+
+--- TSLAon (Tesla (Ondo Tokenized)) ---
+No dividend events to analyze yet.
+
+--- NVDAon (NVIDIA (Ondo Tokenized)) ---
+Composite Trust Score: 0.88/100
+  - Verification Track Record (50% weight): 0.00%
+  - Verification Coverage (35% weight):     1.75%
+  - Timing Accuracy (15% weight):           1.75%
+
+Events Analyzed: 57
+Breakdown:
+  1. Ex-Date: 2026-09-10
+     Bucket: unexplained
+     Independently Verified: Yes
+     Timing Match: Yes
+  2. Ex-Date: 2026-06-04
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  3. Ex-Date: 2026-03-11
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  4. Ex-Date: 2025-12-04
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  5. Ex-Date: 2025-09-11
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  6. Ex-Date: 2025-06-11
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  7. Ex-Date: 2025-03-12
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  8. Ex-Date: 2024-12-05
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  9. Ex-Date: 2024-09-12
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  10. Ex-Date: 2024-06-11
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  11. Ex-Date: 2024-05-29
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  12. Ex-Date: 2024-03-05
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  13. Ex-Date: 2023-12-05
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  14. Ex-Date: 2023-09-06
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  15. Ex-Date: 2023-06-07
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  16. Ex-Date: 2023-03-07
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  17. Ex-Date: 2022-11-30
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  18. Ex-Date: 2022-09-07
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  19. Ex-Date: 2022-06-08
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  20. Ex-Date: 2022-03-02
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  21. Ex-Date: 2021-12-01
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  22. Ex-Date: 2021-08-31
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  23. Ex-Date: 2021-06-09
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  24. Ex-Date: 2021-03-09
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  25. Ex-Date: 2020-12-03
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  26. Ex-Date: 2020-09-01
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  27. Ex-Date: 2020-06-04
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  28. Ex-Date: 2020-02-27
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  29. Ex-Date: 2019-11-27
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  30. Ex-Date: 2019-08-28
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  31. Ex-Date: 2019-05-30
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  32. Ex-Date: 2019-02-28
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  33. Ex-Date: 2018-11-29
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  34. Ex-Date: 2018-08-29
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  35. Ex-Date: 2018-05-23
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  36. Ex-Date: 2018-02-22
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  37. Ex-Date: 2017-11-22
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  38. Ex-Date: 2017-08-22
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  39. Ex-Date: 2017-05-19
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  40. Ex-Date: 2017-02-22
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  41. Ex-Date: 2016-11-23
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  42. Ex-Date: 2016-08-23
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  43. Ex-Date: 2016-05-24
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  44. Ex-Date: 2016-02-29
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  45. Ex-Date: 2015-11-18
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  46. Ex-Date: 2015-08-18
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  47. Ex-Date: 2015-05-19
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  48. Ex-Date: 2015-02-24
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  49. Ex-Date: 2014-11-19
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  50. Ex-Date: 2014-08-19
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  51. Ex-Date: 2014-05-20
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  52. Ex-Date: 2014-02-25
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  53. Ex-Date: 2013-11-19
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  54. Ex-Date: 2013-08-20
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  55. Ex-Date: 2013-05-21
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  56. Ex-Date: 2013-02-26
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+  57. Ex-Date: 2012-11-20
+     Bucket: unexplained
+     Independently Verified: No (Fallback Assumed)
+     Timing Match: No
+
+
+======================================================
+                 ISSUER LEADERBOARD                   
+======================================================
+
+1. xStocks
+   Average Trust Score: 50.87 (across 2 valid assets)
+2. Ondo
+   Average Trust Score: 0.74 (across 2 valid assets)
