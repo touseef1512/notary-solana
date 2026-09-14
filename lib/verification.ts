@@ -1,5 +1,5 @@
 import { KnownAsset } from './known-assets';
-import { getDividendHistory } from './market-data';
+import { DividendRecord } from './market-data';
 import { getScaledUiAmountConfig } from './solana';
 
 export interface VerificationResult {
@@ -41,12 +41,17 @@ export async function verifyDividendEvent(
   asset: KnownAsset, 
   referencePrice: number,
   referenceDate: string,
-  latestDividend: any
+  latestDividend: DividendRecord
 ): Promise<VerificationResult | null> {
   // Pull scaled config
   const config = await getScaledUiAmountConfig(asset.mintAddress);
   if (!config) {
     throw new Error(`Asset ${asset.symbol} is missing scaledUiAmountConfig`);
+  }
+
+  if (config.multiplier === config.newMultiplier) {
+    console.warn(`[WARNING] Cannot verify ${asset.symbol} from live state: config already settled (multiplier === newMultiplier).`);
+    return null;
   }
 
   // Timing check

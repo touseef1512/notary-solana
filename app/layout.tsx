@@ -1,10 +1,20 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Fira_Sans, IBM_Plex_Mono } from "next/font/google";
+import '@solana/wallet-adapter-react-ui/styles.css';
 import "./globals.css";
 import { SolanaWalletProvider } from "@/components/WalletProvider";
-import { Navbar } from "@/components/Navbar";
 
-const inter = Inter({ subsets: ["latin"] });
+const firaSans = Fira_Sans({ 
+  subsets: ["latin"], 
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-fira-sans" 
+});
+
+const ibmPlexMono = IBM_Plex_Mono({ 
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-ibm-plex-mono"
+});
 
 export const metadata: Metadata = {
   title: "Notary",
@@ -18,12 +28,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen bg-slate-950 text-slate-50`}>
+      <body className={`${firaSans.variable} ${ibmPlexMono.variable} font-sans min-h-screen bg-brand-bg text-brand-text`}>
         <SolanaWalletProvider>
-          <Navbar />
-          <main className="container mx-auto p-4 pt-8">
-            {children}
-          </main>
+          {children}
         </SolanaWalletProvider>
       </body>
     </html>

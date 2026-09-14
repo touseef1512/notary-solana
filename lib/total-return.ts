@@ -93,7 +93,17 @@ export async function computeTrueTotalReturn(
     } else {
       // 2. Older events: try getHistoricalMultiplierChange
       const divTimestamp = Math.floor(new Date(div.ex_dividend_date).getTime() / 1000);
-      const histConfig = await getHistoricalMultiplierChange(asset.mintAddress, divTimestamp);
+      let histConfig = null;
+      try {
+        histConfig = await getHistoricalMultiplierChange(asset.mintAddress, divTimestamp);
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        if (errMsg.includes("too deep") || errMsg.includes("paginat")) {
+          console.warn(`[WARNING] RPC pagination limit reached for ${asset.symbol} on ${div.ex_dividend_date}. Event too old to verify directly.`);
+        } else {
+          console.warn(`[WARNING] getHistoricalMultiplierChange failed for ${asset.symbol}:`, err);
+        }
+      }
       
       if (histConfig) {
         const actualPct = (histConfig.newMultiplier / histConfig.multiplier) - 1;

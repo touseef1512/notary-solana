@@ -2,7 +2,178 @@
 
 import { getTokenizedStockHoldings as fetchHoldings } from "@/lib/solana";
 import { TokenHolding } from "@/lib/solana";
+import type { TokenHolding as AskNotaryTokenHolding } from "@/lib/ask-notary";
 
 export async function getTokenizedStockHoldings(walletAddress: string): Promise<TokenHolding[]> {
   return await fetchHoldings(walletAddress);
+}
+
+export type TokenHoldingWithPrice = TokenHolding & {
+  currentPrice: number | null;
+  totalValue: number | null;
+};
+
+export async function getHoldingsWithPrices(walletAddress: string): Promise<TokenHoldingWithPrice[]> {
+  const { getStockPrice } = await import('@/lib/market-data');
+  const holdings = await fetchHoldings(walletAddress);
+  
+  const enrichedHoldings = await Promise.all(holdings.map(async (holding) => {
+    try {
+      const priceData = await getStockPrice(holding.underlyingTicker);
+      const currentPrice = priceData ? priceData.price : null;
+      const totalValue = currentPrice !== null ? currentPrice * holding.balance : null;
+      
+      return {
+        ...holding,
+        currentPrice,
+        totalValue
+      };
+    } catch (e) {
+      console.warn(`Could not fetch price for ${holding.underlyingTicker}:`, e);
+      return {
+        ...holding,
+        currentPrice: null,
+        totalValue: null
+      };
+    }
+  }));
+  
+  return enrichedHoldings;
+}
+
+export type VerificationStatusResult = {
+  status: 'verified' | 'anomaly' | 'no_events' | 'error';
+  narration?: string;
+  error?: string;
+};
+
+export async function verifyAssetHolding(mintAddress: string): Promise<VerificationStatusResult> {
+  const { KNOWN_ASSETS_MAP } = await import('@/lib/known-assets');
+  const { getDividendHistory, getStockPrice, delay } = await import('@/lib/market-data');
+  const { verifyDividendEvent, getDiscrepancyBucket } = await import('@/lib/verification');
+  const { narrateVerificationResult } = await import('@/lib/narration');
+
+  try {
+    const asset = KNOWN_ASSETS_MAP[mintAddress];
+    if (!asset) {
+      return { status: 'error', error: 'Asset not found' };
+    }
+
+    const dividends = await getDividendHistory(asset.underlyingTicker);
+    if (dividends.length === 0) {
+      return { status: 'no_events' };
+    }
+
+    const latestDividend = dividends[0];
+    const d = new Date(latestDividend.ex_dividend_date);
+    d.setDate(d.getDate() - 1);
+    const refDate = d.toISOString().split('T')[0];
+
+    // Throttle slightly to respect Alpha Vantage rate limits if hitting multiple assets concurrently
+    await delay(1200);
+    const priceData = await getStockPrice(asset.underlyingTicker, refDate);
+    if (!priceData) {
+      return { status: 'error', error: 'Could not fetch historical price' };
+    }
+
+    const result = await verifyDividendEvent(asset, priceData.price, priceData.date, latestDividend);
+    if (!result) {
+      // Typically means multiplier === newMultiplier, indicating processing is done but we can't 'verify' from live state
+      // Actually, if it's done, we shouldn't necessarily call it error. Let's just say NO_EVENTS or ERROR? 
+      // The user asked for "NO EVENTS" when there is no recent corporate action to verify yet. 
+      return { status: 'no_events' };
+    }
+
+    const bucket = getDiscrepancyBucket(result.verdict);
+    const status = (bucket === 'explained-no-tax' || bucket === 'explained-withholding-tax') ? 'verified' : 'anomaly';
+    
+    let narration: string | undefined;
+    try {
+      narration = await narrateVerificationResult(result, asset);
+    } catch (e) {
+      console.warn("Narration failed", e);
+    }
+
+    return { status, narration };
+  } catch (error) {
+    console.error(`Error verifying holding ${mintAddress}:`, error);
+    return { status: 'error', error: (error as Error).message };
+  }
+}
+
+export async function getTrustLeaderboardAction() {
+  const { getIssuerLeaderboard } = await import('@/lib/trust-score');
+  try {
+    return await getIssuerLeaderboard();
+  } catch (error) {
+    console.error(`Error getting trust leaderboard:`, error);
+    throw new Error('Failed to load trust leaderboard');
+  }
+}
+
+export async function getReserveAttestationsAction() {
+  const { KNOWN_ASSETS } = await import('@/lib/known-assets');
+  const { getReserveAttestation } = await import('@/lib/attestation');
+  
+  try {
+    const attestations = await Promise.all(KNOWN_ASSETS.map(asset => getReserveAttestation(asset)));
+    return attestations;
+  } catch (error) {
+    console.error(`Error getting reserve attestations:`, error);
+    throw new Error('Failed to load reserve attestations');
+  }
+}
+
+export async function getUpcomingAlertsAction() {
+  const { getAllUpcomingAlerts } = await import('@/lib/alerts');
+  try {
+    return await getAllUpcomingAlerts();
+  } catch (error) {
+    console.error(`Error getting upcoming alerts:`, error);
+    throw new Error('Failed to load upcoming alerts');
+  }
+}
+
+export async function generateTaxCsvAction(assetMintAddress: string, purchaseDate: string, purchasePrice: number, shares: number) {
+  const { generateTaxCsv } = await import('@/lib/tax-export');
+  const { KNOWN_ASSETS_MAP } = await import('@/lib/known-assets');
+  
+  const asset = KNOWN_ASSETS_MAP[assetMintAddress];
+  if (!asset) throw new Error("Asset not found");
+  
+  const holdings = { purchaseDate, purchasePrice, shares };
+  
+  try {
+    return await generateTaxCsv(asset, holdings);
+  } catch (error) {
+    console.error(`Error generating tax CSV:`, error);
+    throw new Error('Failed to generate tax CSV');
+  }
+}
+
+export async function askNotaryAction(question: string, walletAddress?: string, assetMintAddress?: string | null) {
+  const { askNotary } = await import('@/lib/ask-notary');
+  const { KNOWN_ASSETS_MAP } = await import('@/lib/known-assets');
+  
+  let holdings: AskNotaryTokenHolding[] = [];
+  if (walletAddress) {
+    try {
+      const rawHoldings = await fetchHoldings(walletAddress);
+      holdings = rawHoldings.map(h => ({
+        mintAddress: h.mintAddress,
+        shares: h.balance
+      }));
+    } catch (e) {
+      console.warn("Could not fetch holdings for askNotary", e);
+    }
+  }
+
+  const asset = assetMintAddress ? KNOWN_ASSETS_MAP[assetMintAddress] : undefined;
+
+  try {
+    return await askNotary(question, { holdings, asset });
+  } catch (error) {
+    console.error(`Error in askNotaryAction:`, error);
+    throw new Error('Failed to communicate with Notary');
+  }
 }

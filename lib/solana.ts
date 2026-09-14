@@ -85,7 +85,7 @@ export async function getScaledUiAmountConfig(mintAddress: string): Promise<Scal
   if (!('parsed' in data)) return null;
   
   const extensions = data.parsed.info.extensions || [];
-  const config = extensions.find((ext: any) => ext.extension === 'scaledUiAmountConfig');
+  const config = extensions.find((ext: { extension: string; state?: Record<string, string | number> }) => ext.extension === 'scaledUiAmountConfig');
   
   if (!config || !config.state) return null;
   
@@ -118,7 +118,7 @@ export async function notarizeVerificationResult(result: VerificationResult, ass
   let secretKey: Uint8Array;
   try {
     secretKey = Uint8Array.from(JSON.parse(keypairString));
-  } catch (e) {
+  } catch {
     throw new Error('Invalid NOTARY_KEYPAIR format. Expected JSON array of numbers.');
   }
   const keypair = Keypair.fromSecretKey(secretKey);
@@ -157,14 +157,14 @@ export async function notarizeVerificationResult(result: VerificationResult, ass
     });
 
     return signature;
-  } catch (error: any) {
-    console.error('Notarization transaction failed:', error.message);
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error('Notarization transaction failed:', errorMsg);
     throw new Error(`Failed to notarize to Solana Devnet. Check if the wallet has SOL.`);
   }
 }
 export async function getHistoricalMultiplierChange(mintAddress: string, approximateTimestamp: number): Promise<{ multiplier: number, newMultiplier: number } | null> {
   const connection = getSolanaConnection('mainnet');
-  const pubkey = new PublicKey(mintAddress);
   
   try {
     const config = await getScaledUiAmountConfig(mintAddress);
@@ -192,8 +192,12 @@ export async function getHistoricalMultiplierChange(mintAddress: string, approxi
     // extract multiplier values...
 
     return null;
-  } catch (e: any) {
-    console.warn(`Historical verification failed: ${e.message}`);
+  } catch (_e: unknown) {
+    const errorMsg = _e instanceof Error ? _e.message : String(_e);
+    console.warn(`Historical verification failed: ${errorMsg}`);
+    if (errorMsg.includes('transaction history too deep')) {
+      throw _e;
+    }
     return null;
   }
 }

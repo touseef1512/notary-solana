@@ -17,15 +17,17 @@ async function main() {
   
   for (const score of scores) {
     console.log(`--- ${score.asset.symbol} (${score.asset.name}) ---`);
-    if (score.trustScore === null) {
+    if (score.eventsAnalyzed === 0) {
       console.log('No dividend events to analyze yet.\n');
       continue;
     }
     
-    console.log(`Composite Trust Score: ${score.trustScore.toFixed(2)}/100`);
-    console.log(`  - Verification Track Record (50% weight): ${score.verificationTrackRecord!.toFixed(2)}%`);
-    console.log(`  - Verification Coverage (35% weight):     ${score.verificationCoverage!.toFixed(2)}%`);
-    console.log(`  - Timing Accuracy (15% weight):           ${score.timingAccuracy!.toFixed(2)}%\n`);
+    if (score.trustScore === null) {
+      console.log(`Composite Trust Score: N/A (no independently verified events)`);
+    } else {
+      console.log(`Composite Trust Score: ${score.trustScore.toFixed(2)}/100`);
+    }
+    console.log(`Confidence Level: ${score.confidenceLevel}\n`);
     
     console.log(`Events Analyzed: ${score.eventsAnalyzed}`);
     console.log('Breakdown:');
@@ -43,11 +45,15 @@ async function main() {
   console.log('======================================================\n');
   
   if (leaderboard.length === 0) {
-    console.log('No issuers with valid trust scores yet.');
+    console.log('No issuers yet.');
   } else {
     leaderboard.forEach((entry, i) => {
       console.log(`${i+1}. ${entry.issuer}`);
-      console.log(`   Average Trust Score: ${entry.averageTrustScore.toFixed(2)} (across ${entry.assetsCount} valid assets)`);
+      if (entry.averageTrustScore === null) {
+        console.log(`   Average Trust Score: N/A - insufficient verified data yet (across ${entry.assetsCount} of ${entry.totalAssetsForIssuer} assets)`);
+      } else {
+        console.log(`   Average Trust Score: ${entry.averageTrustScore.toFixed(2)} (across ${entry.assetsCount} of ${entry.totalAssetsForIssuer} assets)`);
+      }
     });
   }
 }
