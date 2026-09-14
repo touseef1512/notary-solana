@@ -98,6 +98,14 @@ export async function verifyAssetHolding(mintAddress: string): Promise<Verificat
   }
 }
 
+export async function verifyAllHoldings(mintAddresses: string[]): Promise<Record<string, VerificationStatusResult>> {
+  const results: Record<string, VerificationStatusResult> = {};
+  for (const mint of mintAddresses) {
+    results[mint] = await verifyAssetHolding(mint);
+  }
+  return results;
+}
+
 export async function getTrustLeaderboardAction() {
   const { getIssuerLeaderboard } = await import('@/lib/trust-score');
   try {

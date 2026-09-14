@@ -5,6 +5,8 @@ import "./globals.css";
 import { SolanaWalletProvider } from "@/components/WalletProvider";
 import { ActiveAddressProvider } from "@/components/ActiveAddressProvider";
 
+export const maxDuration = 60;
+
 const firaSans = Fira_Sans({ 
   subsets: ["latin"], 
   weight: ["400", "500", "600", "700"],

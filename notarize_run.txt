@@ -1,0 +1,16 @@
+
+--- Notarization test for NVDAx ---
+Generating notarization transaction on Devnet...
+
+NOTARIZATION SUCCESSFUL!
+Transaction Signature: 64bKZAc764iyu2gEJ9GqAUfu4Q2R8zCx9NVYtj7eSDAD1s6R7YSGdH5x3afCJEtppuaJdBbdZRh6BmWThD1uMhmM
+View on Explorer: https://explorer.solana.com/tx/64bKZAc764iyu2gEJ9GqAUfu4Q2R8zCx9NVYtj7eSDAD1s6R7YSGdH5x3afCJEtppuaJdBbdZRh6BmWThD1uMhmM?cluster=devnet
+
+
+--- Notarization test for AAPLx ---
+Generating notarization transaction on Devnet...
+
+NOTARIZATION SUCCESSFUL!
+Transaction Signature: 251HidB29MDnm3viyRods8ZP6VPWJmD6F5SFsWNR1gKwTPXo6vncuEtcYgzTvudtrn6Q5UC7qXGq8jXexmdw4ubn
+View on Explorer: https://explorer.solana.com/tx/251HidB29MDnm3viyRods8ZP6VPWJmD6F5SFsWNR1gKwTPXo6vncuEtcYgzTvudtrn6Q5UC7qXGq8jXexmdw4ubn?cluster=devnet
+

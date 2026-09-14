@@ -2,29 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
-import { verifyAssetHolding, VerificationStatusResult, getHoldingsWithPrices, TokenHoldingWithPrice } from '@/app/actions';
+import { verifyAllHoldings, VerificationStatusResult, getHoldingsWithPrices, TokenHoldingWithPrice } from '@/app/actions';
 
 const HoldingRow = ({
   holding, 
-  onVerified 
+  verification 
 }: { 
   holding: TokenHoldingWithPrice, 
-  onVerified: () => void 
+  verification: VerificationStatusResult | null 
 }) => {
-  const [verification, setVerification] = useState<VerificationStatusResult | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
-
-  useEffect(() => {
-    let mounted = true;
-    verifyAssetHolding(holding.mintAddress).then(res => {
-      if (!mounted) return;
-      setVerification(res);
-      if (res.status === 'verified') {
-        onVerified();
-      }
-    });
-    return () => { mounted = false; };
-  }, [holding.mintAddress, onVerified]);
 
   const renderBadge = () => {
     if (!verification) {
@@ -126,24 +113,34 @@ const HoldingRow = ({
 export const HoldingsView = () => {
   const { activeAddress } = useActiveAddress();
   const [holdings, setHoldings] = useState<TokenHoldingWithPrice[]>([]);
+  const [verificationResults, setVerificationResults] = useState<Record<string, VerificationStatusResult>>({});
   const [totalPortfolioValue, setTotalPortfolioValue] = useState<number | null>(null);
-  const [verifiedCount, setVerifiedCount] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const pubKeyString = activeAddress;
+  const verifiedCount = Object.values(verificationResults).filter(v => v.status === 'verified').length;
 
   useEffect(() => {
     if (pubKeyString) {
       setLoading(true);
       setError(null);
-      setVerifiedCount(0);
+      setVerificationResults({});
       
       getHoldingsWithPrices(pubKeyString)
-        .then((data) => {
+        .then(async (data) => {
           setHoldings(data);
           const total = data.reduce((acc, h) => acc + (h.totalValue || 0), 0);
           setTotalPortfolioValue(data.length > 0 ? total : null);
+
+          if (data.length > 0) {
+            try {
+              const results = await verifyAllHoldings(data.map(h => h.mintAddress));
+              setVerificationResults(results);
+            } catch (err) {
+              console.error('Failed to verify all holdings:', err);
+            }
+          }
         })
         .catch((err) => {
           console.error(err);
@@ -155,7 +152,7 @@ export const HoldingsView = () => {
     } else {
       setHoldings([]);
       setTotalPortfolioValue(null);
-      setVerifiedCount(0);
+      setVerificationResults({});
       setError(null);
     }
   }, [pubKeyString]);
@@ -171,10 +168,6 @@ export const HoldingsView = () => {
       <td className="py-3 px-2"><div className="h-4 w-10 bg-brand-border rounded-sm mx-auto"></div></td>
     </tr>
   );
-
-  const handleVerified = React.useCallback(() => {
-    setVerifiedCount(prev => prev + 1);
-  }, []);
 
   return (
     <div className="flex flex-col items-center justify-start w-full">
@@ -250,7 +243,7 @@ export const HoldingsView = () => {
                         <HoldingRow 
                           key={holding.mintAddress} 
                           holding={holding} 
-                          onVerified={handleVerified}
+                          verification={verificationResults[holding.mintAddress] ?? null}
                         />
                       ))
                     )}
