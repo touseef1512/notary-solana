@@ -49,7 +49,7 @@ export type VerificationStatusResult = {
 
 export async function verifyAssetHolding(mintAddress: string): Promise<VerificationStatusResult> {
   const { KNOWN_ASSETS_MAP } = await import('@/lib/known-assets');
-  const { getDividendHistory, getStockPrice, delay } = await import('@/lib/market-data');
+  const { getDividendHistory, getStockPrice } = await import('@/lib/market-data');
   const { verifyDividendEvent, getDiscrepancyBucket } = await import('@/lib/verification');
   const { narrateVerificationResult } = await import('@/lib/narration');
 
@@ -68,9 +68,6 @@ export async function verifyAssetHolding(mintAddress: string): Promise<Verificat
     const d = new Date(latestDividend.ex_dividend_date);
     d.setDate(d.getDate() - 1);
     const refDate = d.toISOString().split('T')[0];
-
-    // Throttle slightly to respect Alpha Vantage rate limits if hitting multiple assets concurrently
-    await delay(1200);
     const priceData = await getStockPrice(asset.underlyingTicker, refDate);
     if (!priceData) {
       return { status: 'error', error: 'Could not fetch historical price' };
