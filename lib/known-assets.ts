@@ -4,6 +4,7 @@ export interface KnownAsset {
   issuer: string;
   mintAddress: string;
   underlyingTicker: string;
+  notarizationSignature?: string;
 }
 
 export const KNOWN_ASSETS: KnownAsset[] = [
@@ -12,7 +13,8 @@ export const KNOWN_ASSETS: KnownAsset[] = [
     name: "Apple xStock",
     issuer: "xStocks",
     mintAddress: "XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp",
-    underlyingTicker: "AAPL"
+    underlyingTicker: "AAPL",
+    notarizationSignature: "251HidB29MDnm3viyRods8ZP6VPWJmD6F5SFsWNR1gKwTPXo6vncuEtcYgzTvudtrn6Q5UC7qXGq8jXexmdw4ubn"
   },
   {
     symbol: "TSLAx",
@@ -26,7 +28,8 @@ export const KNOWN_ASSETS: KnownAsset[] = [
     name: "NVIDIA xStock",
     issuer: "xStocks",
     mintAddress: "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
-    underlyingTicker: "NVDA"
+    underlyingTicker: "NVDA",
+    notarizationSignature: "64bKZAc764iyu2gEJ9GqAUfu4Q2R8zCx9NVYtj7eSDAD1s6R7YSGdH5x3afCJEtppuaJdBbdZRh6BmWThD1uMhmM"
   },
   {
     symbol: "AAPLon",

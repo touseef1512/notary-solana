@@ -140,9 +140,21 @@ export const TrustScoreView = () => {
                           <td className="py-2.5 px-3">
                             <div className="flex items-center justify-center gap-1.5 flex-wrap">
                               {totalVerified > 0 && (
-                                <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-positive border border-positive uppercase" title="Verified Events">
-                                  {totalVerified} VERIFIED
-                                </span>
+                                <div className="flex items-center gap-2">
+                                  <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-positive border border-positive uppercase" title="Verified Events">
+                                    {totalVerified} VERIFIED
+                                  </span>
+                                  {score.asset.notarizationSignature && (
+                                    <a 
+                                      href={`https://explorer.solana.com/tx/${score.asset.notarizationSignature}?cluster=devnet`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-brand-accent hover:text-white text-[10px] font-mono uppercase underline tracking-wider"
+                                    >
+                                      View on-chain proof ↗
+                                    </a>
+                                  )}
+                                </div>
                               )}
                               {unexplained > 0 && (
                                 <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-negative border border-negative uppercase" title="Unexplained Anomalies">

@@ -16,8 +16,12 @@ import {
   Menu,
   X,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  AlertTriangle,
+  BookOpen
 } from 'lucide-react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { HoldingsView } from '@/components/views/HoldingsView';
 import { TrustScoreView } from '@/components/views/TrustScoreView';
 import { ReserveAttestationView } from '@/components/views/ReserveAttestationView';
@@ -25,6 +29,7 @@ import { AskNotaryView } from '@/components/views/AskNotaryView';
 import { AlertsView } from '@/components/views/AlertsView';
 import { TaxExportView } from '@/components/views/TaxExportView';
 import { ComparatorView } from '@/components/views/ComparatorView';
+import { TrustRegistryView } from '@/components/views/TrustRegistryView';
 
 // The WalletMultiButton uses client-side APIs and can cause hydration errors if not loaded dynamically
 const WalletMultiButtonDynamic = dynamic(
@@ -32,7 +37,7 @@ const WalletMultiButtonDynamic = dynamic(
   { ssr: false }
 );
 
-type TabId = 'holdings' | 'trust-score' | 'reserve' | 'ask' | 'alerts' | 'tax' | 'comparator';
+type TabId = 'holdings' | 'trust-score' | 'reserve' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry';
 
 interface NavItem {
   id: TabId;
@@ -41,6 +46,7 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
+  { id: 'registry', label: 'Trust Registry', icon: BookOpen },
   { id: 'holdings', label: 'Holdings & Verification', icon: WalletCards },
   { id: 'trust-score', label: 'Trust Score & Leaderboard', icon: Trophy },
   { id: 'reserve', label: 'Reserve Attestation', icon: Landmark },
@@ -59,6 +65,10 @@ export default function AppShell() {
   const [alerts, setAlerts] = useState<AlertResult[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  const { connected } = useWallet();
+  const { isViewMode, activeAddress, setViewAddress } = useActiveAddress();
+  const [viewInput, setViewInput] = useState('');
 
   useEffect(() => {
     setMounted(true);
@@ -101,6 +111,8 @@ export default function AppShell() {
         return <TrustScoreView />;
       case 'reserve':
         return <ReserveAttestationView />;
+      case 'registry':
+        return <TrustRegistryView />;
       case 'ask':
         return <AskNotaryView />;
       case 'alerts':
@@ -204,6 +216,25 @@ export default function AppShell() {
       </aside>
 
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+        {isViewMode && (
+          <div className="w-full bg-brand-accent/20 border-b border-brand-accent p-2 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-2 px-4 md:px-8">
+              <AlertTriangle className="w-4 h-4 text-brand-accent" />
+              <span className="text-brand-accent font-bold text-xs uppercase tracking-widest font-mono">
+                Viewing (Read-Only): {activeAddress?.slice(0,4)}...{activeAddress?.slice(-4)}
+              </span>
+            </div>
+            <div className="px-4 md:px-8">
+              <button 
+                onClick={() => { setViewAddress(null); setViewInput(''); }}
+                className="text-brand-accent hover:text-white text-[10px] font-mono uppercase underline tracking-wider cursor-pointer"
+              >
+                Exit View Mode
+              </button>
+            </div>
+          </div>
+        )}
+        
         {/* Top Bar */}
         <header className="h-16 flex items-center justify-between px-4 md:px-8 border-b border-brand-border bg-brand-bg sticky top-0 z-30 shrink-0">
           <div className="flex items-center">
@@ -221,6 +252,31 @@ export default function AppShell() {
           </div>
           
           <div className="flex items-center gap-6">
+            {!connected && !isViewMode && (
+              <div className="hidden md:flex items-center gap-2 mr-4">
+                <input 
+                  type="text" 
+                  placeholder="Enter Solana Address to View"
+                  value={viewInput}
+                  onChange={(e) => setViewInput(e.target.value)}
+                  className="bg-[#050505] border border-brand-border text-brand-text px-3 py-1 font-mono text-xs w-64 focus:border-brand-accent focus:outline-none placeholder:text-brand-muted/50"
+                />
+                <button
+                  onClick={() => {
+                    const trimmed = viewInput.trim();
+                    if (trimmed.length >= 32 && trimmed.length <= 44) {
+                      setViewAddress(trimmed);
+                    } else {
+                      alert("Please enter a valid base58 Solana address");
+                    }
+                  }}
+                  className="bg-brand-card border border-brand-border hover:bg-[#1a1a1a] px-3 py-1 text-xs font-mono text-brand-muted hover:text-brand-text transition-colors uppercase cursor-pointer"
+                >
+                  View
+                </button>
+              </div>
+            )}
+
             <div className="hidden md:flex items-center gap-2 px-2 py-1 border border-brand-border bg-brand-card">
               <div className="w-2 h-2 rounded-full bg-brand-accent animate-pulse" />
               <span className="font-mono text-xs text-brand-accent uppercase">NETWORK: DEVNET</span>

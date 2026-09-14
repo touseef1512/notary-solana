@@ -3,6 +3,7 @@ import { Fira_Sans, IBM_Plex_Mono } from "next/font/google";
 import '@solana/wallet-adapter-react-ui/styles.css';
 import "./globals.css";
 import { SolanaWalletProvider } from "@/components/WalletProvider";
+import { ActiveAddressProvider } from "@/components/ActiveAddressProvider";
 
 const firaSans = Fira_Sans({ 
   subsets: ["latin"], 
@@ -30,7 +31,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${firaSans.variable} ${ibmPlexMono.variable} font-sans min-h-screen bg-brand-bg text-brand-text`}>
         <SolanaWalletProvider>
-          {children}
+          <ActiveAddressProvider>
+            {children}
+          </ActiveAddressProvider>
         </SolanaWalletProvider>
       </body>
     </html>

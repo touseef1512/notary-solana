@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { generateTaxCsvAction, getTokenizedStockHoldings } from '@/app/actions';
 import { KNOWN_ASSETS } from '@/lib/known-assets';
 import { Download, FileText, ChevronDown } from 'lucide-react';
 import type { TokenHolding } from '@/lib/solana';
 
 export const TaxExportView = () => {
-  const { publicKey } = useWallet();
-  const pubKeyString = publicKey?.toBase58();
+  const { activeAddress } = useActiveAddress();
+  const pubKeyString = activeAddress;
 
   const [selectedAsset, setSelectedAsset] = useState<string>(KNOWN_ASSETS[0].mintAddress);
   const [purchaseDate, setPurchaseDate] = useState<string>('');
@@ -154,7 +154,7 @@ export const TaxExportView = () => {
             {/* Shares */}
             <div className="flex flex-col gap-2">
               <label htmlFor="tax-shares" className="text-xs font-mono uppercase tracking-widest text-brand-muted">
-                Shares {pubKeyString && <span className="text-[10px] text-brand-accent ml-2">(Auto-filled from wallet balance)</span>}
+                Shares {pubKeyString && <span className="text-[10px] text-brand-accent ml-2">(Auto-filled from address balance)</span>}
               </label>
               <input
                 id="tax-shares"

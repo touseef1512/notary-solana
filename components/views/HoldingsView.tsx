@@ -1,11 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { verifyAssetHolding, VerificationStatusResult, getHoldingsWithPrices, TokenHoldingWithPrice } from '@/app/actions';
-
-// TODO: remove before submission
-const DEV_TEST_WALLET = "S7vYFFWH6BjJyEsdrPQpqpYTqLTrPRK6KW3VwsJuRaS";
 
 const HoldingRow = ({
   holding, 
@@ -41,9 +38,21 @@ const HoldingRow = ({
     switch (verification.status) {
       case 'verified':
         return (
-          <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-positive border border-positive uppercase">
-            VERIFIED
-          </span>
+          <div className="flex items-center gap-2 justify-end">
+            <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-positive border border-positive uppercase">
+              VERIFIED
+            </span>
+            {holding.notarizationSignature && (
+              <a 
+                href={`https://explorer.solana.com/tx/${holding.notarizationSignature}?cluster=devnet`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-accent hover:text-white text-[10px] font-mono uppercase underline tracking-wider"
+              >
+                View on-chain proof ↗
+              </a>
+            )}
+          </div>
         );
       case 'anomaly':
         return (
@@ -115,38 +124,26 @@ const HoldingRow = ({
 };
 
 export const HoldingsView = () => {
-  const { publicKey, connected } = useWallet();
+  const { activeAddress } = useActiveAddress();
   const [holdings, setHoldings] = useState<TokenHoldingWithPrice[]>([]);
   const [totalPortfolioValue, setTotalPortfolioValue] = useState<number | null>(null);
   const [verifiedCount, setVerifiedCount] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isDemoData, setIsDemoData] = useState(false);
 
-  const pubKeyString = publicKey?.toBase58();
+  const pubKeyString = activeAddress;
 
   useEffect(() => {
-    if (connected && pubKeyString) {
+    if (pubKeyString) {
       setLoading(true);
       setError(null);
-      setIsDemoData(false);
       setVerifiedCount(0);
       
       getHoldingsWithPrices(pubKeyString)
         .then((data) => {
-          if (data.length > 0) {
-            setHoldings(data);
-            const total = data.reduce((acc, h) => acc + (h.totalValue || 0), 0);
-            setTotalPortfolioValue(total);
-          } else {
-            // Fallback to demo data
-            setIsDemoData(true);
-            return getHoldingsWithPrices(DEV_TEST_WALLET).then((demoData) => {
-              setHoldings(demoData);
-              const demoTotal = demoData.reduce((acc, h) => acc + (h.totalValue || 0), 0);
-              setTotalPortfolioValue(demoTotal);
-            });
-          }
+          setHoldings(data);
+          const total = data.reduce((acc, h) => acc + (h.totalValue || 0), 0);
+          setTotalPortfolioValue(data.length > 0 ? total : null);
         })
         .catch((err) => {
           console.error(err);
@@ -160,9 +157,8 @@ export const HoldingsView = () => {
       setTotalPortfolioValue(null);
       setVerifiedCount(0);
       setError(null);
-      setIsDemoData(false);
     }
-  }, [connected, pubKeyString]);
+  }, [pubKeyString]);
 
   const SkeletonCard = () => (
     <tr className="border-b border-brand-border animate-pulse">
@@ -182,7 +178,7 @@ export const HoldingsView = () => {
 
   return (
     <div className="flex flex-col items-center justify-start w-full">
-      {connected && (
+      {pubKeyString && (
         <div className="w-full max-w-6xl px-4 mt-2 mb-6">
           <div className="flex flex-row items-center gap-6 border-b border-brand-border pb-4">
             <div className="flex flex-col">
@@ -206,21 +202,12 @@ export const HoldingsView = () => {
       )}
       
       <div className="w-full max-w-6xl px-4">
-        {!connected ? (
+        {!pubKeyString ? (
           <div className="flex items-center justify-center h-48 border border-brand-border bg-brand-card">
-            <p className="text-brand-muted font-mono text-sm uppercase tracking-widest">Connect wallet to view terminal</p>
+            <p className="text-brand-muted font-mono text-sm uppercase tracking-widest">Connect wallet or enter address to view terminal</p>
           </div>
         ) : (
           <div className="flex flex-col space-y-4">
-            {isDemoData && publicKey && (
-              <div className="bg-brand-card border border-brand-accent p-3 flex items-center">
-                <p className="text-brand-accent text-sm">
-                  <span className="uppercase font-bold tracking-wider text-xs mr-2 border border-brand-accent px-1.5 py-0.5">DEMO MODE</span>
-                  Showing demo data for <span className="font-mono mx-1">{publicKey.toString().slice(0, 4)}...{publicKey.toString().slice(-4)}</span> (your wallet has no known holdings)
-                </p>
-              </div>
-            )}
-            
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-bold text-brand-text uppercase tracking-widest">Your Portfolio</h2>
               <span className="text-xs font-mono text-brand-muted">
@@ -233,9 +220,9 @@ export const HoldingsView = () => {
                 <p className="text-negative font-mono text-sm uppercase">{error}</p>
               </div>
             ) : holdings.length === 0 && !loading ? (
-               <div className="flex flex-col items-center justify-center h-32 border border-brand-border bg-brand-card">
-                <p className="text-brand-muted font-mono text-sm uppercase mb-1">No tokenized stocks found</p>
-                <p className="text-brand-muted text-xs max-w-md text-center">Your wallet is connected, but we didn&apos;t find any known assets.</p>
+               <div className="flex flex-col items-center justify-center h-48 border border-brand-border bg-brand-card px-4">
+                <p className="text-brand-muted font-mono text-sm uppercase tracking-widest mb-2 text-center">No known holdings for this address</p>
+                <p className="text-brand-muted text-xs max-w-md text-center font-sans">We didn&apos;t find any supported tokenized assets associated with this public key.</p>
               </div>
             ) : (
               <div className="w-full overflow-x-auto border border-brand-border bg-brand-bg">

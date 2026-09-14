@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { askNotaryAction } from '@/app/actions';
-import { Send, Terminal, ChevronDown } from 'lucide-react';
+import { Send, Terminal, ChevronDown, Bot } from 'lucide-react';
 import { KNOWN_ASSETS } from '@/lib/known-assets';
 
 type Message = {
@@ -12,8 +12,8 @@ type Message = {
 };
 
 export const AskNotaryView = () => {
-  const { publicKey } = useWallet();
-  const pubKeyString = publicKey?.toBase58();
+  const { activeAddress } = useActiveAddress();
+  const pubKeyString = activeAddress;
   
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -57,7 +57,14 @@ export const AskNotaryView = () => {
 
   return (
     <div className="flex flex-col items-center justify-start w-full h-[calc(100vh-8rem)]">
-      <div className="w-full max-w-4xl px-4 mt-2 flex flex-col h-full">
+      {!pubKeyString ? (
+        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+          <Bot className="w-12 h-12 text-brand-muted mb-4 opacity-50" />
+          <p className="text-brand-muted font-mono text-sm uppercase tracking-widest mb-2">Not Connected</p>
+          <p className="text-brand-muted/70 font-sans text-sm max-w-sm">Connect your wallet or enter an address to give Notary access to your verifiable portfolio context.</p>
+        </div>
+      ) : (
+        <div className="w-full max-w-4xl px-4 mt-2 flex flex-col h-full">
         
         <div className="mb-4 shrink-0">
           <h2 className="text-xl font-bold text-brand-text uppercase tracking-widest mb-2 flex items-center gap-2">
@@ -145,6 +152,7 @@ export const AskNotaryView = () => {
         </form>
 
       </div>
+      )}
     </div>
   );
 };
