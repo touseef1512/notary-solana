@@ -12,47 +12,58 @@ export interface SplitRecord {
   effective_date: string;
   split_factor: number;
 }
+import { Redis } from '@upstash/redis';
 
 export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-let requestQueue: Promise<unknown> = Promise.resolve();
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL!,
+  token: process.env.KV_REST_API_TOKEN!,
+});
 
 async function fetchFromAlphaVantage(functionName: 'DIVIDENDS' | 'SPLITS', ticker: string) {
-  const actualFetchLogic = async () => {
-    const apiKey = process.env.MARKET_DATA_API_KEY;
-    if (!apiKey) {
-      console.warn('MARKET_DATA_API_KEY is not configured, API limits will be strict');
+  const lockKey = 'av:rate_limit_lock';
+  
+  // Approach: Atomic SET with a short expiry (NX and PX)
+  // We use Redis's atomic SET command with the NX (Not Exists) and PX (expire in ms) flags.
+  // By setting the key with an 1100ms expiration, we create a distributed lock.
+  // If the SET succeeds (returns 'OK'), it means no other instance has made a call 
+  // in the last 1100ms, so we can proceed immediately.
+  // If it fails (returns null), another instance is currently within the 1100ms window, 
+  // so we wait and poll again. This is safe against race conditions because Redis executes 
+  // the SET NX atomically, ensuring exactly one concurrent instance wins the lock.
+  const lockStartTime = Date.now();
+  while (true) {
+    if (Date.now() - lockStartTime > 15000) {
+      throw new Error('Could not acquire Alpha Vantage rate limit lock after 15s — Redis may be unavailable');
     }
-    
-    // Alpha Vantage uses "demo" key if apiKey is empty or undefined for some endpoints, 
-    // but it's safer to pass what we have.
-    const url = `https://www.alphavantage.co/query?function=${functionName}&symbol=${ticker}&apikey=${apiKey || 'demo'}`;
-    const response = await fetch(url, { next: { revalidate: 86400 } });
-    const data = await response.json();
-
-    if (data.Note || data.Information) {
-      throw new Error(`Alpha Vantage API rate limit exceeded: ${data.Note || data.Information}`);
+    const acquired = await redis.set(lockKey, Date.now().toString(), { nx: true, px: 1100 });
+    if (acquired) {
+      break;
     }
-    
-    if (data['Error Message']) {
-        throw new Error(`Alpha Vantage API error: ${data['Error Message']}`);
-    }
+    await delay(150);
+  }
 
-    return data;
-  };
+  const apiKey = process.env.MARKET_DATA_API_KEY;
+  if (!apiKey) {
+    console.warn('MARKET_DATA_API_KEY is not configured, API limits will be strict');
+  }
+  
+  // Alpha Vantage uses "demo" key if apiKey is empty or undefined for some endpoints, 
+  // but it's safer to pass what we have.
+  const url = `https://www.alphavantage.co/query?function=${functionName}&symbol=${ticker}&apikey=${apiKey || 'demo'}`;
+  const response = await fetch(url, { next: { revalidate: 86400 } });
+  const data = await response.json();
 
-  return new Promise<Awaited<ReturnType<typeof actualFetchLogic>>>((resolve, reject) => {
-    requestQueue = requestQueue.catch(() => {}).then(async () => {
-      try {
-        const result = await actualFetchLogic();
-        resolve(result);
-      } catch (err) {
-        reject(err);
-      } finally {
-        await delay(1100);
-      }
-    });
-  });
+  if (data.Note || data.Information) {
+    throw new Error(`Alpha Vantage API rate limit exceeded: ${data.Note || data.Information}`);
+  }
+  
+  if (data['Error Message']) {
+      throw new Error(`Alpha Vantage API error: ${data['Error Message']}`);
+  }
+
+  return data;
 }
 
 export async function getDividendHistory(ticker: string): Promise<DividendRecord[]> {
