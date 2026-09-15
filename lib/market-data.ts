@@ -22,6 +22,11 @@ const redis = new Redis({
 });
 
 async function fetchFromAlphaVantage(functionName: 'DIVIDENDS' | 'SPLITS', ticker: string) {
+  const cached = await redis.get(`av:cache:${functionName}:${ticker}`);
+  if (cached) {
+    return typeof cached === 'string' ? JSON.parse(cached) : cached;
+  }
+
   const lockKey = 'av:rate_limit_lock';
   
   // Approach: Atomic SET with a short expiry (NX and PX)
@@ -52,7 +57,7 @@ async function fetchFromAlphaVantage(functionName: 'DIVIDENDS' | 'SPLITS', ticke
   // Alpha Vantage uses "demo" key if apiKey is empty or undefined for some endpoints, 
   // but it's safer to pass what we have.
   const url = `https://www.alphavantage.co/query?function=${functionName}&symbol=${ticker}&apikey=${apiKey || 'demo'}`;
-  const response = await fetch(url, { next: { revalidate: 86400 } });
+  const response = await fetch(url, { cache: 'no-store' });
   const data = await response.json();
 
   if (data.Note || data.Information) {
@@ -62,6 +67,8 @@ async function fetchFromAlphaVantage(functionName: 'DIVIDENDS' | 'SPLITS', ticke
   if (data['Error Message']) {
       throw new Error(`Alpha Vantage API error: ${data['Error Message']}`);
   }
+
+  await redis.set(`av:cache:${functionName}:${ticker}`, JSON.stringify(data), { ex: 86400 });
 
   return data;
 }
