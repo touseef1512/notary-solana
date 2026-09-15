@@ -74,7 +74,7 @@ export default function TestEndorsePage() {
 
       setSignature(signature);
     } catch (err) {
-      setError(`Endorse error: ${err instanceof Error ? err.message : String(err)}`);
+      console.error('Full endorse error object:', err); setError(`Endorse error: ${JSON.stringify(err, Object.getOwnPropertyNames(err))} | logs: ${JSON.stringify((err as { logs?: unknown })?.logs ?? null)}`);
     }
   };
 
