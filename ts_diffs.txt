@@ -1,0 +1,544 @@
+diff --git a/app/api/test-kamino/route.ts b/app/api/test-kamino/route.ts
+new file mode 100644
+index 0000000..61c83d3
+--- /dev/null
++++ b/app/api/test-kamino/route.ts
+@@ -0,0 +1,20 @@
++import { NextResponse } from 'next/server';
++import { getKaminoPositions } from '@/lib/kamino';
++
++export async function GET() {
++  try {
++    // Testing with a recent, healthy obligation in the xStocks market
++    const testWallet = 'Fa7LNzj3SCV364hya9dx9evL29pC1awx24iHeCEwX6vU';
++    const positions = await getKaminoPositions(testWallet);
++    
++    return NextResponse.json({
++      success: true,
++      wallet: testWallet,
++      positions
++    });
++  } catch (error: unknown) {
++    console.error('Error fetching Kamino positions:', error);
++    const msg = error instanceof Error ? error.message : String(error);
++    return NextResponse.json({ success: false, error: msg }, { status: 500 });
++  }
++}
+diff --git a/lib/alerts.ts b/lib/alerts.ts
+index 33c40ad..7de1388 100644
+--- a/lib/alerts.ts
++++ b/lib/alerts.ts
+@@ -20,7 +20,10 @@ export async function getAllUpcomingAlerts(): Promise<AlertResult[]> {
+     return alertsCache.data;
+   }
+   
+-  const data = await Promise.all(KNOWN_ASSETS.map(asset => getUpcomingAlerts(asset)));
++  const data: AlertResult[] = [];
++  for (const asset of KNOWN_ASSETS) {
++    data.push(await getUpcomingAlerts(asset));
++  }
+   alertsCache = { timestamp: now, data };
+   return data;
+ }
+diff --git a/lib/kamino.ts b/lib/kamino.ts
+new file mode 100644
+index 0000000..a67f21e
+--- /dev/null
++++ b/lib/kamino.ts
+@@ -0,0 +1,257 @@
++import { Connection, PublicKey } from '@solana/web3.js';
++import * as anchor from '@coral-xyz/anchor';
++import { struct, u64, u8, publicKey, u128, array, u32 } from '@coral-xyz/borsh';
++import BN from 'bn.js';
++
++// Hardcoded for xStocks market as per requirements
++const KLEND_PROGRAM_ID = new PublicKey('KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD');
++const XSTOCKS_MARKET = new PublicKey('5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua');
++
++// Kamino Scaled Fraction base (2^60)
++const SF_BASE = new BN(2).pow(new BN(60));
++
++// Metaplex Token Metadata program ID
++const TOKEN_METADATA_PROGRAM_ID = new PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
++
++// We bypass anchor.BorshAccountsCoder because the full kamino IDL has nested arrays 
++// that cause Anchor 0.29.0 to throw during layout instantiation. 
++// Instead, we manually define the borsh layout matching the IDL exactly up to the fields we need.
++const OBLIGATION_LAYOUT = struct([
++  u64('tag'),
++  struct([
++    u64('slot'),
++    u8('stale'),
++    u8('priceStatus'),
++    array(u8(), 2, 'alignmentPadding'),
++    u32('timestamp'),
++  ], 'lastUpdate'),
++  publicKey('lendingMarket'),
++  publicKey('owner'),
++  array(
++    struct([
++      publicKey('depositReserve'),
++      u64('depositedAmount'),
++      u128('marketValueSf'),
++      u64('borrowedAmountAgainstThisCollateralInElevationGroup'),
++      array(u64(), 9, 'padding'),
++    ]),
++    8,
++    'deposits'
++  ),
++  u64('lowestReserveDepositLiquidationLtv'),
++  u128('depositedValueSf'),
++  array(
++    struct([
++      publicKey('borrowReserve'),
++      struct([array(u64(), 4, 'value')], 'cumulativeBorrowRateBsf'),
++      u64('lastBorrowedAtTimestamp'),
++      u128('borrowedAmountSf'),
++      u128('marketValueSf'),
++      u128('borrowFactorAdjustedMarketValueSf'),
++      u64('borrowedAmountOutsideElevationGroups'),
++      struct([u8('rolloverStrategy'), array(u8(), 7, 'padding')], 'fixedTermBorrowRolloverConfig'),
++      u64('borrowedAmountAtExpiration'),
++      array(u64(), 4, 'padding2'),
++    ]),
++    5,
++    'borrows'
++  ),
++  u128('borrowFactorAdjustedDebtValueSf')
++]);
++
++function sfToReal(sfValue: BN | number | string): number {
++  if (!sfValue) return 0;
++  const val = new BN(sfValue.toString());
++  return Number(val.toString()) / Number(SF_BASE.toString());
++}
++
++interface ReserveData {
++  symbol: string;
++  decimals: number;
++  price: number;
++}
++
++async function getReserveData(connection: Connection, reservePubkey: PublicKey): Promise<ReserveData> {
++  const fallback = { symbol: reservePubkey.toBase58(), decimals: 0, price: 0 };
++  try {
++    const accountInfo = await connection.getAccountInfo(reservePubkey);
++    if (!accountInfo) return fallback;
++    
++    // Extract price and decimals from ReserveLiquidity
++    const priceSf = new BN(accountInfo.data.subarray(248, 264), 'le');
++    const price = sfToReal(priceSf);
++    const decimals = Number(accountInfo.data.readBigUInt64LE(272));
++
++    // Reserve data layout: discriminator(8) + version(8) + lastUpdate(16) + lendingMarket(32) + farmCollateral(32) + farmDebt(32)
++    // The mint pubkey sits exactly at offset 8+8+16+32+32+32 = 128
++    const mintPubkey = new PublicKey(accountInfo.data.subarray(128, 160));
++
++    // Fetch metaplex metadata for the mint
++    const [metadataPda] = PublicKey.findProgramAddressSync(
++      [
++        Buffer.from('metadata'),
++        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
++        mintPubkey.toBuffer(),
++      ],
++      TOKEN_METADATA_PROGRAM_ID
++    );
++
++    const metadataAccountInfo = await connection.getAccountInfo(metadataPda);
++    if (metadataAccountInfo) {
++      const data = metadataAccountInfo.data;
++      const nameLen = data.readUInt32LE(65);
++      const symbolOffset = 69 + nameLen;
++      const symbolLen = data.readUInt32LE(symbolOffset);
++      const symbolBytes = data.subarray(symbolOffset + 4, symbolOffset + 4 + symbolLen);
++      const symbol = symbolBytes.toString('utf8').replace(/\0/g, '').trim();
++      if (symbol) return { symbol, decimals, price };
++    }
++    
++    // Fallback: Fetch mint account info to check for Token-2022 metadata extension (type 19)
++    const mintAccountInfo = await connection.getAccountInfo(mintPubkey);
++    if (mintAccountInfo && mintAccountInfo.data.length > 82) {
++      const extBytes = Buffer.from([19, 0]);
++      let index = mintAccountInfo.data.indexOf(extBytes, 82);
++      while (index !== -1) {
++        const len = mintAccountInfo.data.readUInt16LE(index + 2);
++        if (index + 4 + len <= mintAccountInfo.data.length) {
++          try {
++            let ptr = index + 4 + 32 + 32; // Skip update_authority (32) and mint (32)
++            const nameLen = mintAccountInfo.data.readUInt32LE(ptr); ptr += 4;
++            ptr += nameLen;
++            const symLen = mintAccountInfo.data.readUInt32LE(ptr); ptr += 4;
++            const sym = mintAccountInfo.data.subarray(ptr, ptr + symLen).toString('utf8').replace(/\0/g, '').trim();
++            if (sym.length > 0 && sym.length < 20) {
++              return { symbol: sym, decimals, price };
++            }
++          } catch (e) {
++            void e;
++            // Not a valid TokenMetadata struct, continue searching
++          }
++        }
++        index = mintAccountInfo.data.indexOf(extBytes, index + 1);
++      }
++    }
++    
++    return { symbol: mintPubkey.toBase58(), decimals, price };
++  } catch (err) {
++    console.error("Error resolving reserve data:", err);
++    return fallback;
++  }
++}
++
++export interface KaminoPosition {
++  type: 'deposit' | 'borrow';
++  reservePubkey: string;
++  symbol: string;
++  amount: number;
++  valueUsd: number;
++}
++
++export interface KaminoObligationData {
++  obligationPubkey: string;
++  positions: KaminoPosition[];
++  depositedValue: number;
++  borrowedValue: number;
++  currentLtv: number;
++  liquidationLtvThreshold: number;
++}
++
++export async function getKaminoPositions(walletAddress: string): Promise<KaminoObligationData[]> {
++  const connection = new Connection(process.env.SOLANA_RPC_URL || process.env.MAINNET_RPC_URL || 'https://api.mainnet-beta.solana.com');
++  const walletPubkey = new PublicKey(walletAddress);
++
++  const discriminator = Buffer.from([168, 206, 141, 106, 88, 76, 172, 167]); // sha256("account:Obligation").slice(0, 8)
++
++  const accounts = await connection.getProgramAccounts(KLEND_PROGRAM_ID, {
++    filters: [
++      { memcmp: { offset: 0, bytes: anchor.utils.bytes.bs58.encode(discriminator) } },
++      { memcmp: { offset: 32, bytes: XSTOCKS_MARKET.toBase58() } },
++      { memcmp: { offset: 64, bytes: walletPubkey.toBase58() } },
++    ],
++  });
++
++  if (accounts.length === 0) return [];
++
++  const results: KaminoObligationData[] = [];
++  const reserveCache = new Map<string, ReserveData>();
++
++  const resolveReserve = async (reserve: PublicKey) => {
++    const key = reserve.toBase58();
++    if (reserveCache.has(key)) return reserveCache.get(key)!;
++    const data = await getReserveData(connection, reserve);
++    reserveCache.set(key, data);
++    return data;
++  };
++
++  for (const account of accounts) {
++    // Slice off the 8-byte discriminator before passing to standard borsh layout
++    const buffer = account.account.data.subarray(8);
++    const data = OBLIGATION_LAYOUT.decode(buffer);
++
++    // We do NOT rely on data.depositedValueSf or data.borrowFactorAdjustedDebtValueSf
++    // because obligations are often stale on Kamino and those fields drop to 0 until a refresh_obligation.
++    // Instead, we compute live values per-item using the live market prices.
++    let liveDepositedValue = 0;
++    let liveBorrowedValue = 0;
++
++    const positions: KaminoPosition[] = [];
++
++    for (const d of data.deposits) {
++      if (d.depositReserve.equals(PublicKey.default)) continue;
++      const rawAmount = Number(d.depositedAmount.toString());
++      if (rawAmount > 0) {
++        const rData = await resolveReserve(d.depositReserve);
++        const amount = rawAmount / Math.pow(10, rData.decimals);
++        const valueUsd = amount * rData.price;
++        liveDepositedValue += valueUsd;
++        positions.push({
++          type: 'deposit',
++          reservePubkey: d.depositReserve.toBase58(),
++          symbol: rData.symbol,
++          amount,
++          valueUsd,
++        });
++      }
++    }
++
++    for (const b of data.borrows) {
++      if (b.borrowReserve.equals(PublicKey.default)) continue;
++      const rawAtomicAmount = sfToReal(b.borrowedAmountSf);
++      if (rawAtomicAmount > 0) {
++        const rData = await resolveReserve(b.borrowReserve);
++        const amount = rawAtomicAmount / Math.pow(10, rData.decimals);
++        
++        // Note: We use principal at live price rather than accrued interest.
++        // True value would involve multiplying by (current_reserve_rate / obligation_rate),
++        // but this is an acceptable approximation for reading active balances.
++        const valueUsd = amount * rData.price;
++        liveBorrowedValue += valueUsd;
++
++        positions.push({
++          type: 'borrow',
++          reservePubkey: b.borrowReserve.toBase58(),
++          symbol: rData.symbol,
++          amount,
++          valueUsd,
++        });
++      }
++    }
++    
++    let currentLtv = 0;
++    if (liveDepositedValue > 0) {
++        currentLtv = liveBorrowedValue / liveDepositedValue;
++    }
++
++    results.push({
++      obligationPubkey: account.pubkey.toBase58(),
++      positions,
++      depositedValue: liveDepositedValue,
++      borrowedValue: liveBorrowedValue,
++      currentLtv,
++      liquidationLtvThreshold: Number(data.lowestReserveDepositLiquidationLtv.toString()) / 100,
++    });
++  }
++
++  return results;
++}
+diff --git a/lib/risk-math.ts b/lib/risk-math.ts
+new file mode 100644
+index 0000000..7422ae0
+--- /dev/null
++++ b/lib/risk-math.ts
+@@ -0,0 +1,80 @@
++import { KaminoObligationData } from './kamino';
++
++/**
++ * computeSurvivableDrawdown
++ * 
++ * Derivation of Portfolio Survivable Drawdown:
++ * Let D = total deposited value, B = total borrowed value, T = liquidation threshold.
++ * At liquidation, the new deposit value D' satisfies B / D' = T => D' = B / T.
++ * The entire portfolio must drop by a fraction X such that D' = D * (1 - X).
++ * Therefore, D * (1 - X) = B / T 
++ * 1 - X = (B / T) / D 
++ * X = 1 - (B / T) / D
++ * 
++ * To find the % price drop X_i for a specific asset i (with deposited value D_i) 
++ * holding all other assets constant, its value must drop by the exact same absolute dollar amount 
++ * as the entire portfolio would. 
++ * Absolute drop required = D - D' = D - B / T.
++ * So X_i = (D - B / T) / D_i.
++ * 
++ * We use the base formula `1 - (B / T) / D` for the portfolio, and scale it by (D / D_i) for each asset.
++ */
++export function computeSurvivableDrawdown(obligation: KaminoObligationData): Record<string, number | "Insufficient Data"> {
++  const D = obligation.depositedValue;
++  const B = obligation.borrowedValue;
++  const T = obligation.liquidationLtvThreshold;
++
++  const result: Record<string, number | "Insufficient Data"> = {};
++
++  if (D === undefined || B === undefined || T === undefined || T === 0) {
++    obligation.positions.filter(p => p.type === 'deposit').forEach(p => {
++      result[p.symbol] = "Insufficient Data";
++    });
++    return result;
++  }
++  
++  if (D === 0) {
++    obligation.positions.filter(p => p.type === 'deposit').forEach(p => {
++      result[p.symbol] = "Insufficient Data";
++    });
++    return result;
++  }
++
++  for (const pos of obligation.positions) {
++    if (pos.type === 'deposit') {
++      result[pos.symbol] = (D - B / T) / pos.valueUsd;
++    }
++  }
++
++  return result;
++}
++
++export function computeGapStressedHealthFactor(
++  obligation: KaminoObligationData,
++  gapPercentages: Record<string, number>
++): number | "Insufficient Data" {
++  const D = obligation.depositedValue;
++  const B = obligation.borrowedValue;
++  const T = obligation.liquidationLtvThreshold;
++
++  if (D === undefined || B === undefined || T === undefined || T === 0) {
++    return "Insufficient Data";
++  }
++
++  let newD = 0;
++  let newB = 0;
++
++  for (const pos of obligation.positions) {
++    const gap = gapPercentages[pos.symbol] || 0;
++    if (pos.type === 'deposit') {
++      newD += pos.valueUsd * (1 + gap / 100);
++    } else if (pos.type === 'borrow') {
++      newB += pos.valueUsd * (1 + gap / 100);
++    }
++  }
++
++  if (newB === 0) return "Insufficient Data";
++
++  const newHealthFactor = (newD * T) / newB;
++  return newHealthFactor;
++}
+diff --git a/scratch.ts b/scratch.ts
+index 805e64e..b96e37f 100644
+--- a/scratch.ts
++++ b/scratch.ts
+@@ -1,7 +1 @@
+-import { Connection, PublicKey } from '@solana/web3.js';
+-async function main() {
+-  const connection = new Connection('https://api.mainnet-beta.solana.com');
+-  const info = await connection.getParsedAccountInfo(new PublicKey('Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh'));
+-  console.log(JSON.stringify((info.value?.data as any).parsed.info.extensions, null, 2));
+-}
+-main();
++import { KaminoMarket } from '@kamino-finance/klend-sdk'; console.log(Object.keys(KaminoMarket.prototype));
+diff --git a/scripts/test-market-data.ts b/scripts/test-market-data.ts
+index 8d7a3de..f566b26 100644
+--- a/scripts/test-market-data.ts
++++ b/scripts/test-market-data.ts
+@@ -1,33 +1,31 @@
+-import { loadEnvConfig } from '@next/env';
+-import { resolve } from 'path';
+-
+-// Load .env.local variables
+-const projectDir = resolve(process.cwd());
+-loadEnvConfig(projectDir);
+-
+-import { getMarketData, delay } from '../lib/market-data';
++import { getDividendHistory } from '../lib/market-data';
+ 
+ async function main() {
+-  const tickers = ['AAPL', 'TSLA', 'NVDA'];
+-  
+-  for (let i = 0; i < tickers.length; i++) {
+-    const ticker = tickers[i];
+-    console.log(`\nFetching market data for ${ticker}...`);
+-    try {
+-      const { dividends, splits } = await getMarketData(ticker);
+-      console.log(`Dividends (${dividends.length} records):`);
+-      console.log(dividends.slice(0, 3)); // show first 3
+-      
+-      console.log(`Splits (${splits.length} records):`);
+-      console.log(splits.slice(0, 3)); // show first 3
+-    } catch (error) {
+-      console.error(`Failed to fetch data for ${ticker}:`, (error as Error).message);
+-    }
++  console.log('--- Test 1: TSLA (first call, should hit Alpha Vantage fresh) ---');
++  try {
++    const tsla1 = await getDividendHistory('TSLA');
++    console.log('TSLA result 1:', JSON.stringify(tsla1));
++  } catch (err) {
++    console.log('TSLA call 1 threw:', err);
++  }
++
++  console.log('--- Test 2: TSLA (second call, should hit Redis cache, no new AV request) ---');
++  const start = Date.now();
++  try {
++    const tsla2 = await getDividendHistory('TSLA');
++    console.log('TSLA result 2:', JSON.stringify(tsla2));
++    console.log('Second call took', Date.now() - start, 'ms');
++  } catch (err) {
++    console.log('TSLA call 2 threw:', err);
++  }
+ 
+-    if (i < tickers.length - 1) {
+-      await delay(1200);
+-    }
++  console.log('--- Test 3: AAPL (confirm still working) ---');
++  try {
++    const aapl = await getDividendHistory('AAPL');
++    console.log('AAPL result:', JSON.stringify(aapl));
++  } catch (err) {
++    console.log('AAPL call threw:', err);
+   }
+ }
+ 
+-main().catch(console.error);
++main();
+diff --git a/scripts/test-risk-math.ts b/scripts/test-risk-math.ts
+new file mode 100644
+index 0000000..bdc3152
+--- /dev/null
++++ b/scripts/test-risk-math.ts
+@@ -0,0 +1,71 @@
++import { getKaminoPositions } from '../lib/kamino.js';
++import { computeSurvivableDrawdown, computeGapStressedHealthFactor } from '../lib/risk-math.js';
++import fs from 'fs';
++
++const envContent = fs.readFileSync('.env.local', 'utf8');
++const rpcMatch = envContent.match(/MAINNET_RPC_URL=(.*)/);
++if (rpcMatch) {
++  process.env.MAINNET_RPC_URL = rpcMatch[1].trim().replace(/^"|"$/g, '');
++}
++
++async function main() {
++  const WALLETS = [
++    'Fa7LNzj3SCV364hya9dx9evL29pC1awx24iHeCEwX6vU',
++    'QqxKVDPcxMLQ8UL8wet8RTLuwtpjLH8841pcNYTNBYK'
++  ];
++
++  for (const wallet of WALLETS) {
++    console.log(`\nFetching Kamino positions for demo wallet: ${wallet}`);
++    const obligations = await getKaminoPositions(wallet);
++    
++    if (obligations.length === 0) {
++      console.log('No obligations found.');
++      continue;
++    }
++  
++  const gapPercentages = {
++    'CRCLx': -4.71,
++    'METAx': 3.67,
++    'TSLAx': -2.39,
++    'NVDAx': -2.64,
++    'HOODx': -1.89,
++    'QQQx': -1.17,
++    'MSTRx': -1.01,
++    'SPYx': -0.36,
++    'AAPLx': 0.03,
++    'GOOGLx': 2.16
++  };
++
++  for (const obs of obligations) {
++    console.log(`\nObligation: ${obs.obligationPubkey}`);
++    console.log(`Deposited: $${obs.depositedValue.toFixed(4)}, Borrowed: $${obs.borrowedValue.toFixed(4)}`);
++    console.log(`Liquidation Threshold: ${obs.liquidationLtvThreshold * 100}%`);
++    const currentHealth = (obs.depositedValue * obs.liquidationLtvThreshold) / obs.borrowedValue;
++    console.log(`Current Health Factor: ${currentHealth.toFixed(4)}`);
++    
++    const drawdowns = computeSurvivableDrawdown(obs);
++    console.log('\nSurvivable Drawdown:');
++    for (const [symbol, dd] of Object.entries(drawdowns)) {
++      if (typeof dd === 'number') {
++        console.log(`  ${symbol}: ${(dd * 100).toFixed(2)}% drop`);
++      } else {
++        console.log(`  ${symbol}: ${dd}`);
++      }
++    }
++    
++    const stressedHealth = computeGapStressedHealthFactor(obs, gapPercentages);
++    console.log('\nGap-Stressed Health Factor (Fri close vs. now):');
++    if (typeof stressedHealth === 'number') {
++      console.log(`  ${stressedHealth.toFixed(4)}`);
++      if (stressedHealth < 1) {
++        console.log('  WARNING: Position is underwater under stress!');
++      }
++    } else {
++      console.log(`  ${stressedHealth}`);
++    }
++    console.log('--------------------------------------------------');
++  }
++  }
++}
++
++main().catch(console.error);

@@ -1,0 +1,64 @@
+Found 13 reserves in XSTOCKS_MARKET
+
+Market Status: US Markets are currently CLOSED
+---------------------------------------------------------
+[SPYx] (Reserve: UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d) Underlying: SPY
+  Source: Tiingo API
+  Kamino Price: $761.5673 (Ts: 2026-09-16T00:50:16.000Z)
+  Tiingo Price: $757.3900 (Ts: 2026-09-15)
+  Difference:   $4.1773 (+0.55%)
+---------------------------------------------------------
+[QQQx] (Reserve: 2jerdAXR8r2B6z3P7P6VgSiePQX7wqcpbEqdDbm8mgeB) Underlying: QQQ
+  Source: Tiingo API
+  Kamino Price: $706.5100 (Ts: 2026-09-16T00:50:16.000Z)
+  Tiingo Price: $704.5400 (Ts: 2026-09-15)
+  Difference:   $1.9700 (+0.28%)
+---------------------------------------------------------
+[HOODx] (Reserve: 4UBJu5Xp1aziV9frBQBhc1RnKrgXHAWHYejQytkYr8gq) Underlying: HOOD
+  Source: Tiingo API
+  Kamino Price: $110.4450 (Ts: 2026-09-16T00:50:16.000Z)
+  Tiingo Price: $110.4500 (Ts: 2026-09-15)
+  Difference:   $0.0050 (-0.00%)
+---------------------------------------------------------
+[GOOGLx] (Reserve: 4wg6rEkGgHaEuxMduP46C1xFZ24Lnp5YgdNkZAHxFzsN) Underlying: GOOGL
+  Source: Tiingo API
+  Kamino Price: $345.8101 (Ts: 2026-09-16T00:50:16.000Z)
+  Tiingo Price: $344.9800 (Ts: 2026-09-15)
+  Difference:   $0.8301 (+0.24%)
+---------------------------------------------------------
+[CRCLx] (Reserve: 57qagnQFuWw1seEqi6Z5JBvkm5xH5svdmq9dtqxG1rYy) Underlying: CRCL
+  Source: Tiingo API
+  Kamino Price: $86.3300 (Ts: 2026-09-16T00:26:43.000Z)
+  Tiingo Price: $86.3000 (Ts: 2026-09-15)
+  Difference:   $0.0300 (+0.03%)
+---------------------------------------------------------
+[TSLAx] (Reserve: 5iTiczqgUegqA3PpoNpotizMbY9n1sRWr3oL6igKvWuf) Underlying: TSLA
+  Source: Tiingo API
+  Kamino Price: $356.7200 (Ts: 2026-09-16T00:50:16.000Z)
+  Tiingo Price: $356.5800 (Ts: 2026-09-15)
+  Difference:   $0.1400 (+0.04%)
+---------------------------------------------------------
+[NVDAx] (Reserve: 7B66Az3tJhAo4bLkX8PzTixQ9ZGyHkkjxfVLhF26sP5q) Underlying: NVDA
+  Source: Tiingo API
+  Kamino Price: $212.5259 (Ts: 2026-09-16T00:50:16.000Z)
+  Tiingo Price: $212.1700 (Ts: 2026-09-15)
+  Difference:   $0.3559 (+0.17%)
+---------------------------------------------------------
+[METAx] (Reserve: AJPrye7NZGex2rUZhRwiAPJYxai1Ptb7DNWR3yYjtk3G) Underlying: META
+  Source: Tiingo API
+  Kamino Price: $671.8305 (Ts: 2026-09-16T00:35:11.000Z)
+  Tiingo Price: $670.2400 (Ts: 2026-09-15)
+  Difference:   $1.5905 (+0.24%)
+---------------------------------------------------------
+[AAPLx] (Reserve: CKJbqakbPGyhziowm19LPYz636UszuezfkitmpRtcLSH) Underlying: AAPL
+  Source: Tiingo API
+  Kamino Price: $332.3830 (Ts: 2026-09-16T00:50:16.000Z)
+  Tiingo Price: $331.3400 (Ts: 2026-09-15)
+  Difference:   $1.0430 (+0.31%)
+---------------------------------------------------------
+[MSTRx] (Reserve: Cwy2WJoswCMyfPtWTrmiaDLXC3phz3qwr1TaT4kaSAyD) Underlying: MSTR
+  Source: Tiingo API
+  Kamino Price: $129.6500 (Ts: 2026-09-16T00:50:16.000Z)
+  Tiingo Price: $129.6000 (Ts: 2026-09-15)
+  Difference:   $0.0500 (+0.04%)
+---------------------------------------------------------

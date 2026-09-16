@@ -20,7 +20,10 @@ export async function getAllUpcomingAlerts(): Promise<AlertResult[]> {
     return alertsCache.data;
   }
   
-  const data = await Promise.all(KNOWN_ASSETS.map(asset => getUpcomingAlerts(asset)));
+  const data: AlertResult[] = [];
+  for (const asset of KNOWN_ASSETS) {
+    data.push(await getUpcomingAlerts(asset));
+  }
   alertsCache = { timestamp: now, data };
   return data;
 }

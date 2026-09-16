@@ -15,18 +15,24 @@
     "test:total-return": "tsx scripts/test-total-return.ts"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.32.1",
+    "@dialectlabs/blinks": "^0.22.5",
+    "@kamino-finance/klend-sdk": "^12.0.0",
     "@solana/wallet-adapter-react": "^0.15.40",
     "@solana/wallet-adapter-react-ui": "^0.9.40",
     "@solana/wallet-adapter-wallets": "^0.19.39",
     "@solana/web3.js": "^1.99.0",
     "@upstash/redis": "^1.38.4",
+    "decimal.js": "^10.6.0",
     "groq-sdk": "^1.6.0",
     "lucide-react": "^1.45.0",
     "next": "14.2.35",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sas-lib": "^1.0.10"
   },
   "devDependencies": {
+    "@types/bn.js": "^5.2.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -1,0 +1,16 @@
+Fetching Kamino positions for demo wallet: Fa7LNzj3SCV364hya9dx9evL29pC1awx24iHeCEwX6vU
+
+Obligation: 7BACsXdze3FporEnXEbuSHStPPQ58tpZuWb7jgsUYmV
+Deposited: $326.0315, Borrowed: $28622.9462
+Liquidation Threshold: 40%
+Current Health Factor: 0.0046
+
+Survivable Drawdown:
+  NVDAx: -21847.99% drop
+  GOOGLx: -21847.99% drop
+  MSTRx: -21847.99% drop
+
+Gap-Stressed Health Factor (Fri close vs. now):
+  0.0044
+  WARNING: Position is underwater under stress!
+--------------------------------------------------

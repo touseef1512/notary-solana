@@ -6,6 +6,7 @@ import type { TrustScoreResult } from '@/lib/trust-score';
 import type { AttestationResult } from '@/lib/attestation';
 import { KNOWN_ASSETS } from '@/lib/known-assets';
 import { BookOpen, Loader2 } from 'lucide-react';
+import { EndorseButton } from '@/components/EndorseButton';
 
 export const TrustRegistryView = () => {
   const [scores, setScores] = useState<Record<string, TrustScoreResult>>({});
@@ -91,6 +92,7 @@ export const TrustRegistryView = () => {
                   <th className="py-3 px-4 font-medium text-center">Verified Events</th>
                   <th className="py-3 px-4 font-medium text-right">Reserve Ratio</th>
                   <th className="py-3 px-4 font-medium text-center">On-Chain Proof</th>
+                  <th className="py-3 px-4 font-medium text-center">Endorse</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-border font-mono text-sm">
@@ -163,6 +165,9 @@ export const TrustRegistryView = () => {
                         ) : (
                           <span className="text-brand-muted/50 text-[10px] uppercase tracking-widest">UNAVAILABLE</span>
                         )}
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <EndorseButton symbol={asset.symbol} />
                       </td>
                     </tr>
                   );

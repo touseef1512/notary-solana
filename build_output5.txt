@@ -1,0 +1,36 @@
+
+> notary-solana@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/8) ...
+   Generating static pages (2/8) 
+   Generating static pages (4/8) 
+   Generating static pages (6/8) 
+ ✓ Generating static pages (8/8)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    17.2 kB         190 kB
+├ ○ /_not-found                          873 B          88.3 kB
+├ ƒ /actions.json                        0 B                0 B
+├ ƒ /api/actions/verify/[symbol]         0 B                0 B
+├ ƒ /api/notary                          0 B                0 B
+├ ○ /api/test-kamino                     0 B                0 B
+└ ○ /test-endorse                        1.53 kB         174 kB
++ First Load JS shared by all            87.4 kB
+  ├ chunks/117-f135a17745a554d4.js       31.7 kB
+  ├ chunks/fd9d1056-b9b281d6c2728617.js  53.6 kB
+  └ other shared chunks (total)          2.01 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

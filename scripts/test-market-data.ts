@@ -1,33 +1,31 @@
-import { loadEnvConfig } from '@next/env';
-import { resolve } from 'path';
-
-// Load .env.local variables
-const projectDir = resolve(process.cwd());
-loadEnvConfig(projectDir);
-
-import { getMarketData, delay } from '../lib/market-data';
+import { getDividendHistory } from '../lib/market-data';
 
 async function main() {
-  const tickers = ['AAPL', 'TSLA', 'NVDA'];
-  
-  for (let i = 0; i < tickers.length; i++) {
-    const ticker = tickers[i];
-    console.log(`\nFetching market data for ${ticker}...`);
-    try {
-      const { dividends, splits } = await getMarketData(ticker);
-      console.log(`Dividends (${dividends.length} records):`);
-      console.log(dividends.slice(0, 3)); // show first 3
-      
-      console.log(`Splits (${splits.length} records):`);
-      console.log(splits.slice(0, 3)); // show first 3
-    } catch (error) {
-      console.error(`Failed to fetch data for ${ticker}:`, (error as Error).message);
-    }
+  console.log('--- Test 1: TSLA (first call, should hit Alpha Vantage fresh) ---');
+  try {
+    const tsla1 = await getDividendHistory('TSLA');
+    console.log('TSLA result 1:', JSON.stringify(tsla1));
+  } catch (err) {
+    console.log('TSLA call 1 threw:', err);
+  }
 
-    if (i < tickers.length - 1) {
-      await delay(1200);
-    }
+  console.log('--- Test 2: TSLA (second call, should hit Redis cache, no new AV request) ---');
+  const start = Date.now();
+  try {
+    const tsla2 = await getDividendHistory('TSLA');
+    console.log('TSLA result 2:', JSON.stringify(tsla2));
+    console.log('Second call took', Date.now() - start, 'ms');
+  } catch (err) {
+    console.log('TSLA call 2 threw:', err);
+  }
+
+  console.log('--- Test 3: AAPL (confirm still working) ---');
+  try {
+    const aapl = await getDividendHistory('AAPL');
+    console.log('AAPL result:', JSON.stringify(aapl));
+  } catch (err) {
+    console.log('AAPL call threw:', err);
   }
 }
 
-main().catch(console.error);
+main();
