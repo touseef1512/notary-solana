@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from 'react';
-import { VersionedTransaction } from '@solana/web3.js';
+import { VersionedTransaction, Connection } from '@solana/web3.js';
 import { Buffer } from 'buffer';
 
 interface PhantomProvider {
   isPhantom?: boolean;
   connect: () => Promise<{ publicKey: { toString: () => string } }>;
   signAndSendTransaction: (tx: VersionedTransaction) => Promise<{ signature: string }>;
+  signTransaction: (tx: VersionedTransaction) => Promise<VersionedTransaction>;
 }
 
 export default function TestEndorsePage() {
@@ -15,6 +16,7 @@ export default function TestEndorsePage() {
   const [actionInfo, setActionInfo] = useState<{ title: string; description: string } | null>(null);
   const [signature, setSignature] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [simulation, setSimulation] = useState<{ value: { err: unknown; logs: string[] | null } } | null>(null);
 
   const getPhantom = (): PhantomProvider | null => {
     return (window as unknown as { solana?: PhantomProvider }).solana ?? null;
@@ -40,6 +42,7 @@ export default function TestEndorsePage() {
       setError(null);
       setSignature(null);
       setActionInfo(null);
+      setSimulation(null);
 
       const getRes = await fetch('/api/actions/verify/AAPLx');
       if (!getRes.ok) {
@@ -66,11 +69,18 @@ export default function TestEndorsePage() {
       const txBuffer = Buffer.from(transactionBase64, 'base64');
       const versionedTx = VersionedTransaction.deserialize(txBuffer);
 
+      const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+      const simResult = await connection.simulateTransaction(versionedTx);
+      console.log('Simulation result:', JSON.stringify(simResult, null, 2));
+      setSimulation(simResult);
+
       const solana = getPhantom();
       if (!solana) {
         throw new Error('Phantom wallet not found');
       }
-      const { signature } = await solana.signAndSendTransaction(versionedTx);
+      const signedTx = await solana.signTransaction(versionedTx);
+      const signature = await connection.sendRawTransaction(signedTx.serialize());
+      await connection.confirmTransaction(signature, 'confirmed');
 
       setSignature(signature);
     } catch (err) {
@@ -118,9 +128,18 @@ export default function TestEndorsePage() {
       )}
 
       {error && (
-        <div style={{ padding: '10px', border: '1px solid red', backgroundColor: '#ffeaea', color: 'red' }}>
+        <div style={{ padding: '10px', border: '1px solid red', backgroundColor: '#ffeaea', color: 'red', marginBottom: '20px' }}>
           <h3>Error</h3>
           <pre style={{ whiteSpace: 'pre-wrap' }}>{error}</pre>
+        </div>
+      )}
+
+      {simulation && (
+        <div style={{ padding: '10px', border: '1px solid orange', backgroundColor: '#fff4e6', color: '#d97706' }}>
+          <h3>Simulation Result</h3>
+          <p><strong>Error:</strong> {simulation.value.err ? JSON.stringify(simulation.value.err) : 'None'}</p>
+          <p><strong>Logs:</strong></p>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{simulation.value.logs ? simulation.value.logs.join('\n') : 'None'}</pre>
         </div>
       )}
     </div>

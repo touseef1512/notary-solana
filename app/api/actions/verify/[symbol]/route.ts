@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { KNOWN_ASSETS } from '@/lib/known-assets';
 import { computeTrustScore } from '@/lib/trust-score';
 import { getSolanaConnection } from '@/lib/solana';
-import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js';
+import { TransactionInstruction, PublicKey, TransactionMessage, VersionedTransaction } from '@solana/web3.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -113,14 +113,18 @@ export async function POST(req: NextRequest, { params }: { params: { symbol: str
       data: Buffer.from(JSON.stringify(memoData), 'utf-8'),
     });
 
-    const transaction = new Transaction().add(instruction);
     const connection = getSolanaConnection('devnet');
     const { blockhash } = await connection.getLatestBlockhash('confirmed');
-    
-    transaction.recentBlockhash = blockhash;
-    transaction.feePayer = visitorPubkey;
 
-    const base64Tx = transaction.serialize({ requireAllSignatures: false, verifySignatures: false }).toString('base64');
+    const messageV0 = new TransactionMessage({
+      payerKey: visitorPubkey,
+      recentBlockhash: blockhash,
+      instructions: [instruction],
+    }).compileToV0Message();
+
+    const versionedTx = new VersionedTransaction(messageV0);
+
+    const base64Tx = Buffer.from(versionedTx.serialize()).toString('base64');
 
     return NextResponse.json({
       transaction: base64Tx,
