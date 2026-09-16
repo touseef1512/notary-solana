@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+"postinstall": "node scripts/cleanup-types.js",   
+ "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -30,7 +31,7 @@
     "react": "^18",
     "react-dom": "^18",
     "sas-lib": "^1.0.10"
-  },
+  }, 
   "devDependencies": {
     "@types/bn.js": "^5.2.0",
     "@types/node": "^20",
