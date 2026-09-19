@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { verifyAllHoldings, VerificationStatusResult, getHoldingsWithPrices, TokenHoldingWithPrice } from '@/app/actions';
 import { PlainNote } from '@/components/PlainNote';
+import { PortfolioProof } from '@/components/PortfolioProof';
 import { groupExposure } from '@/lib/exposure';
 
 const HoldingRow = ({
@@ -192,6 +193,7 @@ export const HoldingsView = () => {
               <span className="font-mono text-xl text-brand-accent">{verifiedCount}</span>
             </div>
           </div>
+          <div className="mt-4"><PortfolioProof walletAddress={pubKeyString} /></div>
         </div>
       )}
       
