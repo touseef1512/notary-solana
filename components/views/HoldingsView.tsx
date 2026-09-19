@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { verifyAllHoldings, VerificationStatusResult, getHoldingsWithPrices, TokenHoldingWithPrice } from '@/app/actions';
 import { PlainNote } from '@/components/PlainNote';
+import { groupExposure } from '@/lib/exposure';
 
 const HoldingRow = ({
   holding, 
@@ -190,10 +191,6 @@ export const HoldingsView = () => {
               <span className="text-[10px] text-brand-muted uppercase tracking-widest mb-1">VERIFIED_ASSETS</span>
               <span className="font-mono text-xl text-brand-accent">{verifiedCount}</span>
             </div>
-            <div className="flex flex-col border-l border-brand-border pl-6">
-              <span className="text-[10px] text-brand-muted uppercase tracking-widest mb-1">ACTIVE_ALERTS</span>
-              <span className="font-mono text-xl text-brand-accent">0</span>
-            </div>
           </div>
         </div>
       )}
@@ -222,38 +219,91 @@ export const HoldingsView = () => {
                 <p className="text-brand-muted text-xs max-w-md text-center font-sans">We didn&apos;t find any supported tokenized assets associated with this public key.</p>
               </div>
             ) : (
-              <div className="w-full overflow-x-auto border border-brand-border bg-brand-bg">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-brand-border text-xs text-brand-muted uppercase tracking-wider bg-brand-card">
-                      <th className="py-2.5 px-3 font-medium">Symbol</th>
-                      <th className="py-2.5 px-3 font-medium">Name</th>
-                      <th className="py-2.5 px-3 font-medium">Issuer</th>
-                      <th className="py-2.5 px-3 font-medium text-right">Balance</th>
-                      <th className="py-2.5 px-3 font-medium text-right">Price</th>
-                      <th className="py-2.5 px-3 font-medium text-right">Value</th>
-                      <th className="py-2.5 px-3 font-medium text-center">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-sm">
-                    {loading && holdings.length === 0 ? (
-                      <>
-                        <SkeletonCard />
-                        <SkeletonCard />
-                        <SkeletonCard />
-                      </>
-                    ) : (
-                      holdings.map((holding) => (
-                        <HoldingRow 
-                          key={holding.mintAddress} 
-                          holding={holding} 
-                          verification={verificationResults[holding.mintAddress] ?? null}
-                        />
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
+              <>
+                <div className="w-full overflow-x-auto border border-brand-border bg-brand-bg">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="border-b border-brand-border text-xs text-brand-muted uppercase tracking-wider bg-brand-card">
+                        <th className="py-2.5 px-3 font-medium">Symbol</th>
+                        <th className="py-2.5 px-3 font-medium">Name</th>
+                        <th className="py-2.5 px-3 font-medium">Issuer</th>
+                        <th className="py-2.5 px-3 font-medium text-right">Balance</th>
+                        <th className="py-2.5 px-3 font-medium text-right">Price</th>
+                        <th className="py-2.5 px-3 font-medium text-right">Value</th>
+                        <th className="py-2.5 px-3 font-medium text-center">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-sm">
+                      {loading && holdings.length === 0 ? (
+                        <>
+                          <SkeletonCard />
+                          <SkeletonCard />
+                          <SkeletonCard />
+                        </>
+                      ) : (
+                        holdings.map((holding) => (
+                          <HoldingRow 
+                            key={holding.mintAddress} 
+                            holding={holding} 
+                            verification={verificationResults[holding.mintAddress] ?? null}
+                          />
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                {holdings.length > 0 && !loading && (
+                  <div className="mt-8 flex flex-col space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-sm font-bold text-brand-text uppercase tracking-widest">Exposure by company</h2>
+                    </div>
+                    <p className="text-brand-muted text-xs">
+                      Same company, different issuers. Each issuer token has its own legal terms and reserves, so this shows combined economic exposure, not legal equivalence.
+                    </p>
+                    <div className="w-full overflow-x-auto border border-brand-border bg-brand-bg">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-brand-border text-xs text-brand-muted uppercase tracking-wider bg-brand-card">
+                            <th className="py-2.5 px-3 font-medium">Company</th>
+                            <th className="py-2.5 px-3 font-medium">Held via</th>
+                            <th className="py-2.5 px-3 font-medium text-right">Combined balance</th>
+                            <th className="py-2.5 px-3 font-medium text-right">Combined value</th>
+                          </tr>
+                        </thead>
+                        <tbody className="text-sm">
+                          {groupExposure(holdings.map(h => ({
+                            symbol: h.symbol,
+                            issuer: h.issuer,
+                            underlyingTicker: h.underlyingTicker,
+                            balance: h.balance,
+                            totalValue: h.totalValue
+                          }))).map((group, idx) => (
+                            <tr key={idx} className="border-b border-brand-border hover:bg-brand-card transition-colors">
+                              <td className="py-2.5 px-3 font-bold text-brand-text">{group.ticker}</td>
+                              <td className="py-2.5 px-3 text-brand-text">
+                                {group.legs.map(l => l.symbol).join(' + ')}
+                                {group.issuerCount > 1 && (
+                                  <span className="ml-2 text-[10px] text-brand-accent uppercase">
+                                    across {group.issuerCount} issuers
+                                  </span>
+                                )}
+                              </td>
+                              <td className="py-2.5 px-3 font-mono text-brand-text text-right">
+                                {group.combinedBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+                              </td>
+                              <td className="py-2.5 px-3 font-mono text-right">
+                                {group.combinedValue !== null
+                                  ? <span className="text-brand-text">${group.combinedValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                  : <span className="text-brand-muted">N/A</span>}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
