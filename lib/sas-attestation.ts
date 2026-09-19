@@ -3,6 +3,7 @@ import path from 'path';
 
 import {
   getCreateAttestationInstruction,
+  getCloseAttestationInstruction,
   deriveAttestationPda,
   fetchMaybeSchema,
   fetchMaybeAttestation,
@@ -171,6 +172,112 @@ export async function publishRiskAttestation(
   });
 
   const signature = await buildAndSend(rpc, rpcSubs, signer, attestationIx);
+  const explorerUrl = `https://explorer.solana.com/tx/${signature}?cluster=devnet`;
+
+  return { signature, explorerUrl, attestationPda };
+}
+
+async function buildAndSendTwo(
+  rpc: ReturnType<typeof createSolanaRpc>,
+  rpcSubs: ReturnType<typeof createSolanaRpcSubscriptions>,
+  signer: Awaited<ReturnType<typeof createKeyPairSignerFromBytes>>,
+  instruction1: Parameters<typeof appendTransactionMessageInstruction>[0],
+  instruction2: Parameters<typeof appendTransactionMessageInstruction>[0]
+): Promise<string> {
+  const { blockhash, lastValidBlockHeight } = await getLatestBlockhash(rpc);
+
+  const txMsg = pipe(
+    createTransactionMessage({ version: 0 }),
+    (m: Parameters<typeof setTransactionMessageFeePayerSigner>[1]) => setTransactionMessageFeePayerSigner(signer, m),
+    (m: Parameters<typeof setTransactionMessageLifetimeUsingBlockhash>[1]) =>
+      setTransactionMessageLifetimeUsingBlockhash({ blockhash, lastValidBlockHeight }, m),
+    (m: Parameters<typeof appendTransactionMessageInstruction>[1]) =>
+      appendTransactionMessageInstruction(instruction1, m),
+    (m: Parameters<typeof appendTransactionMessageInstruction>[1]) =>
+      appendTransactionMessageInstruction(instruction2, m),
+  );
+
+  const signed = await signTransactionMessageWithSigners(txMsg);
+
+  const sendAndConfirm = sendAndConfirmTransactionFactory({ rpc, rpcSubscriptions: rpcSubs });
+  await sendAndConfirm(signed, { commitment: 'confirmed' });
+
+  return getSignatureFromTransaction(signed) as string;
+}
+
+export async function refreshRiskAttestation(
+  obligation: KaminoObligationData, 
+  worstAssetSymbol: string, 
+  worstDrawdownValue: number, 
+  gapStressedHealth: number
+): Promise<{ signature: string; explorerUrl: string; attestationPda: string }> {
+  if (obligation.borrowedValue <= 0) {
+    throw new Error('Obligation has no borrowed value');
+  }
+  if (!Number.isFinite(worstDrawdownValue) || !Number.isFinite(gapStressedHealth)) {
+    throw new Error('worstDrawdownValue and gapStressedHealth must be finite numbers');
+  }
+
+  const env = loadEnv();
+  if (!env['NOTARY_KEYPAIR']) throw new Error('NOTARY_KEYPAIR not found in .env.local');
+  const keypairBytes = new Uint8Array(JSON.parse(env['NOTARY_KEYPAIR']));
+  const signer = await createKeyPairSignerFromBytes(keypairBytes);
+
+  const rpc = createSolanaRpc('https://api.devnet.solana.com');
+  const rpcSubs = createSolanaRpcSubscriptions('wss://api.devnet.solana.com');
+
+  const config = getSasConfig();
+  const credentialPda = address(config.credentialPubkey);
+  const schemaPda = address(config.schemaPubkey);
+
+  const schemaAccount = await fetchMaybeSchema(rpc as Parameters<typeof fetchMaybeSchema>[0], schemaPda);
+  if (!schemaAccount.exists) {
+    throw new Error('Schema account not found on-chain. Did you run setup-sas.ts?');
+  }
+
+  const nonce = address(obligation.obligationPubkey);
+  const [attestationPda] = await deriveAttestationPda({ credential: credentialPda, schema: schemaPda, nonce });
+
+  const existingAttestation = await fetchMaybeAttestation(rpc as Parameters<typeof fetchMaybeAttestation>[0], attestationPda);
+  if (!existingAttestation.exists) {
+    throw new Error('No attestation to refresh; use publish instead');
+  }
+
+  const currentHealth = (obligation.depositedValue * obligation.liquidationLtvThreshold) / obligation.borrowedValue;
+
+  const dataObject = {
+    obligationPubkey: obligation.obligationPubkey,
+    depositedValueUsdCents: BigInt(Math.round(obligation.depositedValue * 100)),
+    borrowedValueUsdCents: BigInt(Math.round(obligation.borrowedValue * 100)),
+    liquidationThresholdBps: Math.round(obligation.liquidationLtvThreshold * 10000),
+    currentHealthFactorBps: Math.round(currentHealth * 10000),
+    worstAssetSymbol: worstAssetSymbol,
+    worstAssetSurvivableDrawdownBps: BigInt(Math.round(worstDrawdownValue * 10000)),
+    gapStressedHealthFactorBps: Math.round(gapStressedHealth * 10000),
+    computedAtUnixTs: BigInt(Math.floor(Date.now() / 1000)),
+  };
+
+  const serializedData = serializeAttestationData(schemaAccount.data, dataObject);
+
+  const closeIx = getCloseAttestationInstruction({
+    payer: signer,
+    authority: signer,
+    credential: credentialPda,
+    attestation: attestationPda,
+  });
+
+  const createIx = getCreateAttestationInstruction({
+    payer: signer,
+    authority: signer,
+    credential: credentialPda,
+    schema: schemaPda,
+    attestation: attestationPda,
+    nonce,
+    data: serializedData,
+    expiry: 0,
+  });
+
+  const signature = await buildAndSendTwo(rpc, rpcSubs, signer, closeIx, createIx);
   const explorerUrl = `https://explorer.solana.com/tx/${signature}?cluster=devnet`;
 
   return { signature, explorerUrl, attestationPda };
