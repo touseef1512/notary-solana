@@ -25,6 +25,7 @@ export interface TotalReturnResult {
   missingYieldPct: number;
   missingDollarAmount: number;
   verifiedDiscrepancyRate: number | null;
+  latestRateVerified: boolean;
   events: DividendEventDetail[];
   verifiedEventCount: number;
   totalEventCount: number;
@@ -46,6 +47,7 @@ export async function computeTrueTotalReturn(
   
   let verifiedDiscrepancyRate = 0;
   let latestReferencePrice = 0;
+  let latestRateVerified = false;
   
   // 3. Find the discrepancy rate mathematically using the latest dividend event (Fallback)
   if (dividends.length > 0) {
@@ -64,6 +66,7 @@ export async function computeTrueTotalReturn(
         const verification = await verifyDividendEvent(asset, refPriceData.price, refPriceData.date, latest);
         if (verification) {
           verifiedDiscrepancyRate = verification.discrepancy;
+          latestRateVerified = true;
         }
       } catch (e) {
         console.warn(`Could not verify discrepancy rate for ${asset.symbol}:`, e);
@@ -89,7 +92,7 @@ export async function computeTrueTotalReturn(
       // 1. Most recent event: proven by step 3 verification
       eventDiscrepancyRate = verifiedDiscrepancyRate;
       eventReferencePrice = latestReferencePrice;
-      independentlyVerified = true;
+      independentlyVerified = latestRateVerified;
     } else {
       // 2. Older events: try getHistoricalMultiplierChange
       const divTimestamp = Math.floor(new Date(div.ex_dividend_date).getTime() / 1000);
@@ -164,6 +167,7 @@ export async function computeTrueTotalReturn(
     missingYieldPct,
     missingDollarAmount,
     verifiedDiscrepancyRate,
+    latestRateVerified,
     events,
     verifiedEventCount,
     totalEventCount: holdingDividends.length

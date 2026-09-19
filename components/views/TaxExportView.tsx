@@ -95,7 +95,7 @@ export const TaxExportView = () => {
           Tax Export
         </h2>
         <p className="text-brand-muted text-sm mb-6 max-w-3xl">
-          Generate an IRS-compatible CSV ledger of your corporate actions, accounting for cross-border withholding tax and cumulative cost basis adjustments.
+          Generate a CSV of dividend events for the selected token, with an estimated withholding rate for each event. Rows Notary could not verify independently are labeled. It does not include trades or capital gains.
         </p>
 
         <div className="border border-brand-border bg-brand-bg p-6 max-w-2xl">
