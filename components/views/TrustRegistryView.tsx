@@ -1,15 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { getAssetTrustRiskProfilesAction } from '@/app/actions';
+import { getAssetTrustRiskProfilesAction, getAssetHistoryAction } from '@/app/actions';
 import type { TrustRiskProfile } from '@/lib/trust-risk-profile';
 import { KNOWN_ASSETS } from '@/lib/known-assets';
+import { AssetSnapshot, summarizeHistory } from '@/lib/history-types';
 import { PlainNote } from '@/components/PlainNote';
 import { BookOpen, Loader2 } from 'lucide-react';
 import { EndorseButton } from '@/components/EndorseButton';
 
 export const TrustRegistryView = () => {
   const [profiles, setProfiles] = useState<Record<string, TrustRiskProfile>>({});
+  const [history, setHistory] = useState<Record<string, AssetSnapshot[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,6 +31,14 @@ export const TrustRegistryView = () => {
           });
           setProfiles(profilesMap);
           setError(null);
+        }
+        
+        try {
+          const hist = await getAssetHistoryAction();
+          if (mounted) {
+            setHistory(hist);
+          }
+        } catch {
         }
       } catch (err) {
         if (mounted) {
@@ -73,6 +83,7 @@ export const TrustRegistryView = () => {
             <p className="text-brand-muted font-mono text-sm uppercase tracking-widest">Compiling registry data...</p>
           </div>
         ) : (
+          <>
           <div className="w-full overflow-x-auto border border-brand-border bg-brand-bg">
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
@@ -83,6 +94,7 @@ export const TrustRegistryView = () => {
                   <th className="py-3 px-4 font-medium text-right">Trust Score</th>
                   <th className="py-3 px-4 font-medium text-center">Verified Events</th>
                   <th className="py-3 px-4 font-medium text-right">Reserve Ratio</th>
+                  <th className="py-3 px-4 font-medium text-right">History</th>
                   <th className="py-3 px-4 font-medium text-center">On-Chain Proof</th>
                   <th className="py-3 px-4 font-medium text-center">Endorse</th>
                 </tr>
@@ -142,6 +154,42 @@ export const TrustRegistryView = () => {
                         )}
                       </td>
                       
+                      {/* History */}
+                      <td className="py-3 px-4 text-right">
+                        {(() => {
+                          const snapshots = history[asset.symbol] ?? [];
+                          const summary = summarizeHistory(snapshots);
+                          if (summary.count === 0) {
+                            return <span className="text-brand-muted uppercase text-[10px] tracking-widest">No history</span>;
+                          } else if (summary.count === 1 && summary.firstTs !== null) {
+                            const dateStr = new Date(summary.firstTs * 1000).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+                            return <span className="text-brand-muted text-[10px] uppercase tracking-widest">1 check, {dateStr}</span>;
+                          } else if (summary.count >= 2 && summary.firstTs !== null) {
+                            const dateStr = new Date(summary.firstTs * 1000).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+                            const changes: string[] = [];
+                            if (summary.backingRatioChangePoints !== null) {
+                              const sign = summary.backingRatioChangePoints >= 0 ? '+' : '';
+                              changes.push(`Reserve ${sign}${summary.backingRatioChangePoints.toFixed(2)} pts`);
+                            }
+                            if (summary.trustScoreChange !== null) {
+                              const sign = summary.trustScoreChange >= 0 ? '+' : '';
+                              changes.push(`Score ${sign}${summary.trustScoreChange.toFixed(0)} pts`);
+                            }
+                            return (
+                              <div className="flex flex-col items-end">
+                                <span>{summary.count} checks since {dateStr}</span>
+                                {changes.length > 0 && (
+                                  <span className="text-[10px] text-brand-muted uppercase tracking-widest mt-1">
+                                    {changes.join(', ')}
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
+                      </td>
+                      
                       {/* On-Chain Proof */}
                       <td className="py-3 px-4 text-center">
                         {asset.notarizationSignature ? (
@@ -166,6 +214,10 @@ export const TrustRegistryView = () => {
               </tbody>
             </table>
           </div>
+          <p className="text-brand-muted text-xs mt-4">
+            History is recorded whenever this page loads, at most once per hour per asset. It is not continuous monitoring, so early trends are short.
+          </p>
+          </>
         )}
       </div>
     </div>

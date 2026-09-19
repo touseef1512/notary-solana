@@ -4,6 +4,7 @@ import { GAP_PERCENTAGES } from '@/lib/gap-percentages';
 import { getTokenizedStockHoldings as fetchHoldings } from "@/lib/solana";
 import { TokenHolding } from "@/lib/solana";
 import type { TokenHolding as AskNotaryTokenHolding } from "@/lib/ask-notary";
+import type { AssetSnapshot } from '@/lib/history-types';
 
 export async function getTokenizedStockHoldings(walletAddress: string): Promise<TokenHolding[]> {
   return await fetchHoldings(walletAddress);
@@ -134,10 +135,32 @@ export async function getAssetTrustRiskProfilesAction() {
   const { KNOWN_ASSETS } = await import('@/lib/known-assets');
   const { buildAssetTrustRiskProfile } = await import('@/lib/trust-risk-profile');
   try {
-    return await Promise.all(KNOWN_ASSETS.map(asset => buildAssetTrustRiskProfile(asset)));
+    const profiles = await Promise.all(KNOWN_ASSETS.map(asset => buildAssetTrustRiskProfile(asset)));
+    try {
+      const { recordAssetSnapshot } = await import('@/lib/history');
+      await Promise.all(profiles.map(p => recordAssetSnapshot(p)));
+    } catch {
+    }
+    return profiles;
   } catch (error) {
     console.error('Error building trust risk profiles:', error);
     throw new Error('Failed to load trust risk profiles');
+  }
+}
+
+export async function getAssetHistoryAction(): Promise<Record<string, AssetSnapshot[]>> {
+  try {
+    const { KNOWN_ASSETS } = await import('@/lib/known-assets');
+    const { getAssetHistory } = await import('@/lib/history');
+    
+    const results = await Promise.all(KNOWN_ASSETS.map(asset => getAssetHistory(asset.symbol, 60)));
+    const record: Record<string, AssetSnapshot[]> = {};
+    KNOWN_ASSETS.forEach((asset, index) => {
+      record[asset.symbol] = results[index];
+    });
+    return record;
+  } catch {
+    return {};
   }
 }
 
