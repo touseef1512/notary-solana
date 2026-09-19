@@ -19,7 +19,8 @@ import {
   ChevronRight,
   AlertTriangle,
   BookOpen,
-  ShieldAlert
+  ShieldAlert,
+  Code2
 } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
@@ -32,6 +33,7 @@ import { AlertsView } from '@/components/views/AlertsView';
 import { TaxExportView } from '@/components/views/TaxExportView';
 import { ComparatorView } from '@/components/views/ComparatorView';
 import { TrustRegistryView } from '@/components/views/TrustRegistryView';
+import { DeveloperApiView } from '@/components/views/DeveloperApiView';
 
 // The WalletMultiButton uses client-side APIs and can cause hydration errors if not loaded dynamically
 const WalletMultiButtonDynamic = dynamic(
@@ -39,7 +41,7 @@ const WalletMultiButtonDynamic = dynamic(
   { ssr: false }
 );
 
-type TabId = 'holdings' | 'trust-score' | 'reserve' | 'collateral-risk' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry';
+type TabId = 'holdings' | 'trust-score' | 'reserve' | 'collateral-risk' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry' | 'developer';
 
 interface NavItem {
   id: TabId;
@@ -57,6 +59,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'alerts', label: 'Alerts', icon: Bell },
   { id: 'tax', label: 'Tax Export', icon: FileDown },
   { id: 'comparator', label: 'Comparator', icon: Scale },
+  { id: 'developer', label: 'Developers', icon: Code2 },
 ];
 
 export default function AppShell() {
@@ -141,6 +144,8 @@ export default function AppShell() {
         return <TaxExportView />;
       case 'comparator':
         return <ComparatorView />;
+      case 'developer':
+        return <DeveloperApiView />;
       default:
         return <HoldingsView />;
     }
