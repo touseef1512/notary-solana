@@ -18,13 +18,15 @@ import {
   ChevronLeft,
   ChevronRight,
   AlertTriangle,
-  BookOpen
+  BookOpen,
+  ShieldAlert
 } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { HoldingsView } from '@/components/views/HoldingsView';
 import { TrustScoreView } from '@/components/views/TrustScoreView';
 import { ReserveAttestationView } from '@/components/views/ReserveAttestationView';
+import { CollateralRiskView } from '@/components/views/CollateralRiskView';
 import { AskNotaryView } from '@/components/views/AskNotaryView';
 import { AlertsView } from '@/components/views/AlertsView';
 import { TaxExportView } from '@/components/views/TaxExportView';
@@ -37,7 +39,7 @@ const WalletMultiButtonDynamic = dynamic(
   { ssr: false }
 );
 
-type TabId = 'holdings' | 'trust-score' | 'reserve' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry';
+type TabId = 'holdings' | 'trust-score' | 'reserve' | 'collateral-risk' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry';
 
 interface NavItem {
   id: TabId;
@@ -50,6 +52,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'holdings', label: 'Holdings & Verification', icon: WalletCards },
   { id: 'trust-score', label: 'Trust Score & Leaderboard', icon: Trophy },
   { id: 'reserve', label: 'Reserve Attestation', icon: Landmark },
+  { id: 'collateral-risk', label: 'Collateral Risk', icon: ShieldAlert },
   { id: 'ask', label: 'Ask Notary', icon: MessageSquare },
   { id: 'alerts', label: 'Alerts', icon: Bell },
   { id: 'tax', label: 'Tax Export', icon: FileDown },
@@ -111,6 +114,8 @@ export default function AppShell() {
         return <TrustScoreView />;
       case 'reserve':
         return <ReserveAttestationView />;
+      case 'collateral-risk':
+        return <CollateralRiskView />;
       case 'registry':
         return <TrustRegistryView />;
       case 'ask':

@@ -16,7 +16,7 @@ import {
   deriveCredentialPda,
   deriveSchemaPda,
   getCreateCredentialInstruction,
-  getCreateSchemaInstruction,
+  getChangeSchemaVersionInstruction,
   fetchMaybeCredential,
   fetchMaybeSchema,
 } from 'sas-lib';
@@ -32,6 +32,7 @@ import {
   setTransactionMessageLifetimeUsingBlockhash,
   signTransactionMessageWithSigners,
   sendAndConfirmTransactionFactory,
+  getSignatureFromTransaction,
   address,
   pipe,
 } from './sas-kit-shim';
@@ -39,7 +40,7 @@ import {
 // ── Config ──────────────────────────────────────────────────────────────────
 const CREDENTIAL_NAME = 'Notary Risk Oracle';
 const SCHEMA_NAME     = 'KaminoObligationRisk';
-const SCHEMA_VERSION  = 1;
+const SCHEMA_VERSION  = 2;
 const SCHEMA_DESCRIPTION = 'Kamino obligation risk metrics published by the Notary protocol';
 
 /*
@@ -58,7 +59,7 @@ const SCHEMA_DESCRIPTION = 'Kamino obligation risk metrics published by the Nota
  *   gapStressedHealthFactorBps    → 2   (u32  — HF*10000)
  *   computedAtUnixTs              → 8   (i64  — unix timestamp)
  */
-const SCHEMA_LAYOUT      = Uint8Array.from([12, 3, 3, 2, 2, 12, 2, 2, 8]);
+const SCHEMA_LAYOUT      = Uint8Array.from([12, 3, 3, 2, 2, 12, 8, 2, 3]);
 const SCHEMA_FIELD_NAMES = [
   'obligationPubkey',
   'depositedValueUsdCents',
@@ -113,9 +114,7 @@ async function buildAndSend(
   await sendAndConfirm(signed, { commitment: 'confirmed' });
 
   // Extract signature from signed tx
-  const sigs = Object.entries(signed.signatures ?? {});
-  const sig = sigs.length > 0 ? sigs[0][1] : 'unknown';
-  const sigBase58 = Buffer.from(sig as Uint8Array).toString('base58') ?? sig;
+  const sigBase58 = getSignatureFromTransaction(signed);
   console.log(`  ✓ ${label} confirmed`);
   console.log(`    Signature: ${sigBase58}`);
   console.log(`    Explorer:  https://explorer.solana.com/tx/${sigBase58}?cluster=devnet`);
@@ -162,28 +161,29 @@ async function main() {
     console.log('  → Credential already exists, skipping.');
   }
 
-  // 5. Derive Schema PDA
+  // 5. Derive Schema PDAs
+  const [oldSchemaPda] = await deriveSchemaPda({ credential: credentialPda, name: SCHEMA_NAME, version: 1 });
   const [schemaPda] = await deriveSchemaPda({ credential: credentialPda, name: SCHEMA_NAME, version: SCHEMA_VERSION });
-  console.log(`\nSchema PDA: ${schemaPda}`);
+  console.log(`\nOld Schema PDA (v1): ${oldSchemaPda}`);
+  console.log(`New Schema PDA (v2): ${schemaPda}`);
 
   // 6. Check if schema already exists
   const existingSchema = await fetchMaybeSchema(rpc as Parameters<typeof fetchMaybeSchema>[0], schemaPda);
   let schemaSig = 'already-existed';
   if (!existingSchema.exists) {
-    console.log('  → Creating schema...');
-    const schemaIx = getCreateSchemaInstruction({
-      payer:       signer,
-      authority:   signer,
-      credential:  credentialPda,
-      schema:      schemaPda,
-      name:        SCHEMA_NAME,
-      description: SCHEMA_DESCRIPTION,
-      layout:      SCHEMA_LAYOUT,
-      fieldNames:  SCHEMA_FIELD_NAMES,
+    console.log('  → Upgrading schema to v2...');
+    const schemaIx = getChangeSchemaVersionInstruction({
+      payer:          signer,
+      authority:      signer,
+      credential:     credentialPda,
+      existingSchema: oldSchemaPda,
+      newSchema:      schemaPda,
+      layout:         SCHEMA_LAYOUT,
+      fieldNames:     SCHEMA_FIELD_NAMES,
     });
-    schemaSig = await buildAndSend(rpc, rpcSubs, signer, schemaIx, 'createSchema');
+    schemaSig = await buildAndSend(rpc, rpcSubs, signer, schemaIx, 'changeSchemaVersion');
   } else {
-    console.log('  → Schema already exists, skipping.');
+    console.log('  → Schema v2 already exists, skipping.');
   }
 
   // 7. Fetch and decode both accounts from chain

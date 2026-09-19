@@ -182,3 +182,102 @@ export async function askNotaryAction(question: string, walletAddress?: string, 
     throw new Error('Failed to communicate with Notary');
   }
 }
+
+export async function getKaminoRiskAction(walletAddress: string) {
+  const { getKaminoPositions } = await import('@/lib/kamino');
+  const { computeSurvivableDrawdown, computeGapStressedHealthFactor } = await import('@/lib/risk-math');
+  const { getAttestationStatus } = await import('@/lib/sas-attestation');
+
+  try {
+    const obligations = await getKaminoPositions(walletAddress);
+    
+    const gapPercentages = { 'CRCLx': -4.71, 'METAx': 3.67, 'TSLAx': -2.39, 'NVDAx': -2.64, 'HOODx': -1.89, 'QQQx': -1.17, 'MSTRx': -1.01, 'SPYx': -0.36, 'AAPLx': 0.03, 'GOOGLx': 2.16 };
+
+    return await Promise.all(obligations.map(async (obligation) => {
+      let currentHealth: number | "Insufficient Data" = "Insufficient Data";
+      if (obligation.borrowedValue > 0) {
+        currentHealth = (obligation.depositedValue * obligation.liquidationLtvThreshold) / obligation.borrowedValue;
+      }
+
+      const drawdowns = computeSurvivableDrawdown(obligation);
+      
+      let worstAssetSymbol: string | null = null;
+      let worstDrawdownValue: number | null = null;
+      
+      for (const [symbol, dd] of Object.entries(drawdowns)) {
+        if (typeof dd === 'number') {
+          if (worstDrawdownValue === null || dd < worstDrawdownValue) {
+            worstDrawdownValue = dd;
+            worstAssetSymbol = symbol;
+          }
+        }
+      }
+
+      const gapStressedHealth = computeGapStressedHealthFactor(obligation, gapPercentages);
+
+      let attestationStatus = null;
+      try {
+        attestationStatus = await getAttestationStatus(obligation.obligationPubkey);
+      } catch (e) {
+        console.warn(`Failed to get attestation status for obligation ${obligation.obligationPubkey}:`, e);
+      }
+
+      return {
+        ...obligation,
+        currentHealth,
+        drawdowns,
+        worstAssetSymbol,
+        worstDrawdownValue,
+        gapStressedHealth,
+        attestationStatus
+      };
+    }));
+  } catch (error) {
+    console.error('Error getting Kamino risk data:', error);
+    throw new Error('Failed to load Kamino risk data');
+  }
+}
+
+export async function publishAttestationAction(obligationPubkey: string, walletAddress: string) {
+  const { getKaminoPositions } = await import('@/lib/kamino');
+  const { computeSurvivableDrawdown, computeGapStressedHealthFactor } = await import('@/lib/risk-math');
+  const { publishRiskAttestation } = await import('@/lib/sas-attestation');
+
+  try {
+    const obligations = await getKaminoPositions(walletAddress);
+    const obligation = obligations.find(o => o.obligationPubkey === obligationPubkey);
+    
+    if (!obligation) {
+      throw new Error(`Obligation not found for pubkey ${obligationPubkey}`);
+    }
+
+    const drawdowns = computeSurvivableDrawdown(obligation);
+    
+    let worstAssetSymbol: string | null = null;
+    let worstDrawdownValue: number | null = null;
+    
+    for (const [symbol, dd] of Object.entries(drawdowns)) {
+      if (typeof dd === 'number') {
+        if (worstDrawdownValue === null || dd < worstDrawdownValue) {
+          worstDrawdownValue = dd;
+          worstAssetSymbol = symbol;
+        }
+      }
+    }
+
+    const gapPercentages = { 'CRCLx': -4.71, 'METAx': 3.67, 'TSLAx': -2.39, 'NVDAx': -2.64, 'HOODx': -1.89, 'QQQx': -1.17, 'MSTRx': -1.01, 'SPYx': -0.36, 'AAPLx': 0.03, 'GOOGLx': 2.16 };
+    const gapStressedHealth = computeGapStressedHealthFactor(obligation, gapPercentages);
+
+    if (worstAssetSymbol === null || worstDrawdownValue === null || typeof gapStressedHealth !== 'number') {
+      throw new Error("Insufficient data to publish attestation: missing worst asset drawdown or gap-stressed health");
+    }
+
+    return await publishRiskAttestation(obligation, drawdowns, worstAssetSymbol, worstDrawdownValue, gapStressedHealth);
+  } catch (error) {
+    console.error('Error publishing attestation:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Failed to publish attestation');
+  }
+}

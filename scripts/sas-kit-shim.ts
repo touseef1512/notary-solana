@@ -31,10 +31,12 @@ export {
   // Signing + sending
   signTransactionMessageWithSigners,
   sendAndConfirmTransactionFactory,
+  getSignatureFromTransaction,
 
   // Address utilities
   address,
 
   // Blockhash helper
   pipe,
+  // @ts-ignore
 } from '../node_modules/sas-lib/node_modules/@solana/kit/dist/index.node.mjs';

@@ -1,0 +1,9 @@
+{
+  "credentialPubkey": "A2bA2dPZkSBHjZsBT4CiKTnnTpNZvmQypgQYUiMbDQ2A",
+  "schemaPubkey": "BBPdZbpRZQt7STM9mYccfkXQUcBBhF3YyzGr2r5vUm4w",
+  "schemaName": "KaminoObligationRisk",
+  "schemaVersion": 2,
+  "credentialTxSig": "already-existed",
+  "schemaTxSig": "2hRDV4ndrmyWCHgVfvWDDahxWRxZJnnL6ZcFZ91WZa1yQop1v7e9ywRBH18ZRJzxB37YYnBSZNGvSAjeAuchoVJq",
+  "createdAt": "2026-09-16T08:43:32.626Z"
+}
