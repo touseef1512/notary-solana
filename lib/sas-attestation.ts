@@ -27,6 +27,7 @@ import {
 } from '../scripts/sas-kit-shim';
 
 import { KaminoObligationData } from './kamino';
+import sasConfig from './sas-config.json';
 
 function loadEnv(): Record<string, string> {
   const envPath = path.resolve(process.cwd(), '.env.local');
@@ -71,9 +72,7 @@ async function buildAndSend(
 }
 
 function getSasConfig() {
-  const configPath = path.resolve(process.cwd(), 'lib', 'sas-config.json');
-  if (!fs.existsSync(configPath)) throw new Error('sas-config.json not found');
-  return JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  return sasConfig;
 }
 
 export async function getAttestationStatus(obligationPubkey: string): Promise<{ exists: boolean; decoded: Record<string, unknown> | null; attestationPda: string }> {
