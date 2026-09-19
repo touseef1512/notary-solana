@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useActiveAddress } from "@/components/ActiveAddressProvider";
 import { getKaminoRiskAction, publishAttestationAction } from "@/app/actions";
 import { WhatIfSimulator } from './WhatIfSimulator';
+import { PlainNote } from '@/components/PlainNote';
 
 // Define the type we expect from getKaminoRiskAction
 type KaminoRiskData = {
@@ -196,6 +197,7 @@ export const CollateralRiskView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-6xl px-4 mt-6">
+        <PlainNote text="This shows how close a Kamino loan backed by tokenized stocks is to liquidation, where the collateral can be sold. Health factor above 1 means the loan is not currently liquidatable, and below 1 means it can be liquidated. Gap-stressed health factor re-checks it after the weekend price gap last observed, because tokens trade around the clock while stocks do not. An attestation is a public on-chain record of this check, published on Solana devnet." />
         {!activeAddress ? (
           <div className="flex items-center justify-center h-48 border border-brand-border bg-brand-card">
             <p className="text-brand-muted font-mono text-sm uppercase tracking-widest">Connect wallet or enter address to view terminal</p>

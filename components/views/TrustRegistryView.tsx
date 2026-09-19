@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { getAssetTrustRiskProfilesAction } from '@/app/actions';
 import type { TrustRiskProfile } from '@/lib/trust-risk-profile';
 import { KNOWN_ASSETS } from '@/lib/known-assets';
+import { PlainNote } from '@/components/PlainNote';
 import { BookOpen, Loader2 } from 'lucide-react';
 import { EndorseButton } from '@/components/EndorseButton';
 
@@ -51,6 +52,7 @@ export const TrustRegistryView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full h-[calc(100vh-8rem)]">
       <div className="w-full max-w-6xl px-4 mt-2 mb-6">
+        <PlainNote text="Before buying a tokenized stock, check whether its issuer publishes reserve data and whether Notary could verify it. Insufficient Data means no verifiable reserve data was available. It does not mean the asset is safe or unsafe." />
         <div className="flex flex-col mb-4">
           <h2 className="text-xl font-bold text-brand-text uppercase tracking-widest mb-2 flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-brand-accent" />

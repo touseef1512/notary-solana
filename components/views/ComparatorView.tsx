@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { generateSettlementComparison } from '@/lib/comparator';
 import type { SettlementComparison } from '@/lib/comparator';
 import { Scale, Calendar, AlertTriangle } from 'lucide-react';
+import { PlainNote } from '@/components/PlainNote';
 
 export const ComparatorView = () => {
   // Use today's date as default
@@ -17,12 +18,13 @@ export const ComparatorView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-4xl px-4 mt-2 mb-6">
+        <PlainNote text="This compares how long a dividend or stock split takes to settle in traditional finance versus on Solana, for a date and event type you choose. It shows timelines only and does not predict prices." />
         <h2 className="text-xl font-bold text-brand-text uppercase tracking-widest mb-2 flex items-center gap-2">
           <Scale className="w-5 h-5 text-brand-accent" />
           Settlement Comparator
         </h2>
         <p className="text-brand-muted text-sm mb-6 max-w-3xl">
-          Compare the settlement timelines of corporate actions between traditional finance (T+2) and tokenized assets on Solana (T+0).
+          Compare the settlement timelines of corporate actions between traditional finance (T+1) and tokenized assets on Solana (T+0).
         </p>
 
         <div className="border border-brand-border bg-brand-bg p-6 max-w-2xl mx-auto mb-8">
@@ -91,7 +93,7 @@ export const ComparatorView = () => {
             {/* Traditional Card */}
             <div className="border border-brand-border bg-brand-bg flex flex-col h-full">
               <div className="bg-brand-card border-b border-brand-border p-3">
-                <h3 className="text-xs font-mono uppercase tracking-widest text-brand-muted text-center">Traditional (T+2)</h3>
+                <h3 className="text-xs font-mono uppercase tracking-widest text-brand-muted text-center">Traditional (T+1)</h3>
               </div>
               <div className="p-6 flex flex-col items-center justify-center flex-1">
                 <Calendar className="w-8 h-8 text-brand-muted mb-4 opacity-50" />

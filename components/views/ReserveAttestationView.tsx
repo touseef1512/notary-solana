@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getReserveAttestationsAction } from '@/app/actions';
 import type { AttestationResult } from '@/lib/attestation';
+import { PlainNote } from '@/components/PlainNote';
 
 export const ReserveAttestationView = () => {
   const [attestations, setAttestations] = useState<AttestationResult[] | null>(null);
@@ -42,6 +43,7 @@ export const ReserveAttestationView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-6xl px-4 mt-2 mb-6">
+        <PlainNote text="This compares the tokens an issuer has in circulation with the reserves it reports. A ratio at or above 1 means reported reserves cover the tokens. The figures come from the issuer, and for xStocks the ratio uses supply across all blockchains, not only Solana." />
         <h2 className="text-xl font-bold text-brand-text uppercase tracking-widest mb-2">Reserve Attestation</h2>
         <p className="text-brand-muted text-sm mb-6 max-w-3xl">
           Verify cryptographic proofs of off-chain asset reserves. Real-time attestations validate that tokenized assets are fully backed 1:1 by traditional securities.

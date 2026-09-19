@@ -40,6 +40,9 @@ export interface SettlementComparison {
   isEventDateWeekendOrHoliday: boolean;
 }
 
+// US equities settle T+1 since 28 May 2024.
+const TRADITIONAL_SETTLEMENT_DAYS = 1;
+
 export function generateSettlementComparison(
   eventDate: string,
   eventType: "dividend" | "split"
@@ -57,7 +60,7 @@ export function generateSettlementComparison(
   }
   
   let traditionalSettlementDate = traditionalStart;
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < TRADITIONAL_SETTLEMENT_DAYS; i++) {
     traditionalSettlementDate = getNextBusinessDay(traditionalSettlementDate);
   }
   

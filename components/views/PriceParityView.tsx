@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { getPriceParityAction } from "@/app/actions";
 import { getMarketStatus, formatDuration } from "@/lib/market-hours";
+import { PlainNote } from '@/components/PlainNote';
 
 interface PriceParityResult {
   symbol: string;
@@ -47,6 +48,7 @@ export const PriceParityView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-6xl px-4 mt-6 flex flex-col gap-6">
+        <PlainNote text="This compares what a tokenized stock trades for on Solana with the last closing price of the real stock. A gap after the market closes can be normal because tokens keep trading. Thin liquidity means few funds are in the pool, so the price is less reliable." />
         
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-bold text-brand-text uppercase tracking-widest">Price Parity</h2>

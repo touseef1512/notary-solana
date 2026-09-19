@@ -6,6 +6,7 @@ import { generateTaxCsvAction, getTokenizedStockHoldings } from '@/app/actions';
 import { KNOWN_ASSETS } from '@/lib/known-assets';
 import { Download, FileText, ChevronDown } from 'lucide-react';
 import type { TokenHolding } from '@/lib/solana';
+import { PlainNote } from '@/components/PlainNote';
 
 export const TaxExportView = () => {
   const { activeAddress } = useActiveAddress();
@@ -88,6 +89,7 @@ export const TaxExportView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-4xl px-4 mt-2 mb-6">
+        <PlainNote text="This exports a CSV of dividend events for a tokenized stock: the ex-dividend date, gross amount, tax withheld, net received, and whether Notary could verify it independently. It does not include trades or capital gains. Notary does not give tax advice, and tax rules differ by country." />
         <h2 className="text-xl font-bold text-brand-text uppercase tracking-widest mb-2 flex items-center gap-2">
           <FileText className="w-5 h-5 text-brand-accent" />
           Tax Export

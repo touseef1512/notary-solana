@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { PlainNote } from '@/components/PlainNote';
 
 export const DeveloperApiView = () => {
   const [origin, setOrigin] = useState("");
@@ -92,6 +93,7 @@ export const DeveloperApiView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-6xl px-4 mt-6 flex flex-col gap-8">
+        <PlainNote text="Notary publishes its risk checks through a free public API so other apps can read them. This page shows the endpoints and lets you try them." />
         
         <div className="border border-brand-border bg-brand-bg p-4 flex flex-col gap-4">
           <p className="font-mono text-sm text-brand-text">

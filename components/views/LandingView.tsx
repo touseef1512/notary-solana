@@ -27,7 +27,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
               <div className="flex flex-col gap-2">
                 <h3 className="text-sm font-bold text-brand-text uppercase tracking-widest">I am new and want to research before buying</h3>
                 <p className="font-mono text-xs text-brand-muted">
-                  See which tokenized stocks are backed by real reserves before you spend anything.
+                  See how well the reserves behind each tokenized stock are documented and checked before you spend anything.
                 </p>
               </div>
               <button 
@@ -72,7 +72,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
               <div className="flex flex-col gap-2">
                 <h3 className="text-sm font-bold text-brand-text uppercase tracking-widest">I need reports</h3>
                 <p className="font-mono text-xs text-brand-muted">
-                  Export a CSV of your activity for tax reporting.
+                  Export a CSV of the dividend history on a tokenized stock for tax reporting.
                 </p>
               </div>
               <button 

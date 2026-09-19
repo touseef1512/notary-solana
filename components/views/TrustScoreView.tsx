@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getTrustLeaderboardAction } from '@/app/actions';
 import type { TrustScoreResult } from '@/lib/trust-score';
+import { PlainNote } from '@/components/PlainNote';
 
 type LeaderboardData = {
   leaderboard: { issuer: string, averageTrustScore: number | null, assetsCount: number, totalAssetsForIssuer: number }[],
@@ -46,6 +47,7 @@ export const TrustScoreView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-6xl px-4 mt-2 mb-6">
+        <PlainNote text="The score shows how often past dividend adjustments for each issuer matched independently sourced market data in Notary checks. It is a comparison aid, not a recommendation." />
         <h2 className="text-xl font-bold text-brand-text uppercase tracking-widest mb-2">Issuer Leaderboard</h2>
         <p className="text-brand-muted text-sm mb-6 max-w-3xl">
           On-chain trust scores represent the percentage of historical corporate actions (like dividends) that have been mathematically verified against independently sourced market data.

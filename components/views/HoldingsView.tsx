@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { verifyAllHoldings, VerificationStatusResult, getHoldingsWithPrices, TokenHoldingWithPrice } from '@/app/actions';
+import { PlainNote } from '@/components/PlainNote';
 
 const HoldingRow = ({
   holding, 
@@ -171,6 +172,9 @@ export const HoldingsView = () => {
 
   return (
     <div className="flex flex-col items-center justify-start w-full">
+      <div className="w-full max-w-6xl px-4 mt-6">
+        <PlainNote text="This lists the tokenized stocks in a wallet and checks how dividends were applied to them. Dividends are applied automatically as a multiplier on your balance, so your balance can change without you doing anything." />
+      </div>
       {pubKeyString && (
         <div className="w-full max-w-6xl px-4 mt-2 mb-6">
           <div className="flex flex-row items-center gap-6 border-b border-brand-border pb-4">

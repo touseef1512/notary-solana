@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { getUpcomingAlertsAction } from '@/app/actions';
 import type { AlertResult } from '@/lib/alerts';
 import { BellRing } from 'lucide-react';
+import { PlainNote } from '@/components/PlainNote';
 
 export const AlertsView = () => {
   const [alerts, setAlerts] = useState<AlertResult[] | null>(null);
@@ -41,6 +42,7 @@ export const AlertsView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-6xl px-4 mt-2 mb-6">
+        <PlainNote text="Alerts list upcoming dividend adjustments for tracked tokenized stocks, which can change your token balance without any action from you. Warnings about loans near liquidation and reserve problems appear in the bell menu at the top of the page, and loan warnings need a wallet address." />
         <h2 className="text-xl font-bold text-brand-text uppercase tracking-widest mb-2 flex items-center gap-2">
           <BellRing className="w-5 h-5 text-brand-accent" />
           Proactive Alerts
