@@ -20,7 +20,8 @@ import {
   AlertTriangle,
   BookOpen,
   ShieldAlert,
-  Code2
+  Code2,
+  LineChart
 } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
@@ -34,6 +35,7 @@ import { TaxExportView } from '@/components/views/TaxExportView';
 import { ComparatorView } from '@/components/views/ComparatorView';
 import { TrustRegistryView } from '@/components/views/TrustRegistryView';
 import { DeveloperApiView } from '@/components/views/DeveloperApiView';
+import { PriceParityView } from '@/components/views/PriceParityView';
 
 // The WalletMultiButton uses client-side APIs and can cause hydration errors if not loaded dynamically
 const WalletMultiButtonDynamic = dynamic(
@@ -41,7 +43,7 @@ const WalletMultiButtonDynamic = dynamic(
   { ssr: false }
 );
 
-type TabId = 'holdings' | 'trust-score' | 'reserve' | 'collateral-risk' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry' | 'developer';
+type TabId = 'holdings' | 'trust-score' | 'reserve' | 'collateral-risk' | 'price-parity' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry' | 'developer';
 
 interface NavItem {
   id: TabId;
@@ -55,6 +57,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'trust-score', label: 'Trust Score & Leaderboard', icon: Trophy },
   { id: 'reserve', label: 'Reserve Attestation', icon: Landmark },
   { id: 'collateral-risk', label: 'Collateral Risk', icon: ShieldAlert },
+  { id: 'price-parity', label: 'Price Parity', icon: LineChart },
   { id: 'ask', label: 'Ask Notary', icon: MessageSquare },
   { id: 'alerts', label: 'Alerts', icon: Bell },
   { id: 'tax', label: 'Tax Export', icon: FileDown },
@@ -134,6 +137,8 @@ export default function AppShell() {
         return <ReserveAttestationView />;
       case 'collateral-risk':
         return <CollateralRiskView />;
+      case 'price-parity':
+        return <PriceParityView />;
       case 'registry':
         return <TrustRegistryView />;
       case 'ask':

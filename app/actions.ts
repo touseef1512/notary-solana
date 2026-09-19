@@ -326,3 +326,13 @@ export async function simulateLoanAction(input: { depositSymbol: string, deposit
 export async function getGapSymbolsAction() {
   return Object.keys(GAP_PERCENTAGES);
 }
+
+export async function getPriceParityAction() {
+  const { buildPriceParity } = await import('@/lib/price-parity');
+  try {
+    return await buildPriceParity();
+  } catch (error) {
+    console.error('Error getting price parity:', error);
+    throw new Error('Failed to load price parity');
+  }
+}
