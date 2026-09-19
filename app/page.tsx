@@ -21,7 +21,8 @@ import {
   BookOpen,
   ShieldAlert,
   Code2,
-  LineChart
+  LineChart,
+  Home
 } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
@@ -36,6 +37,7 @@ import { ComparatorView } from '@/components/views/ComparatorView';
 import { TrustRegistryView } from '@/components/views/TrustRegistryView';
 import { DeveloperApiView } from '@/components/views/DeveloperApiView';
 import { PriceParityView } from '@/components/views/PriceParityView';
+import { LandingView } from '@/components/views/LandingView';
 
 // The WalletMultiButton uses client-side APIs and can cause hydration errors if not loaded dynamically
 const WalletMultiButtonDynamic = dynamic(
@@ -43,7 +45,7 @@ const WalletMultiButtonDynamic = dynamic(
   { ssr: false }
 );
 
-type TabId = 'holdings' | 'trust-score' | 'reserve' | 'collateral-risk' | 'price-parity' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry' | 'developer';
+type TabId = 'home' | 'holdings' | 'trust-score' | 'reserve' | 'collateral-risk' | 'price-parity' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry' | 'developer';
 
 interface NavItem {
   id: TabId;
@@ -52,6 +54,7 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
+  { id: 'home', label: 'Home', icon: Home },
   { id: 'registry', label: 'Trust Registry', icon: BookOpen },
   { id: 'holdings', label: 'Holdings & Verification', icon: WalletCards },
   { id: 'trust-score', label: 'Trust Score & Leaderboard', icon: Trophy },
@@ -66,7 +69,7 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export default function AppShell() {
-  const [activeTab, setActiveTab] = useState<TabId>('holdings');
+  const [activeTab, setActiveTab] = useState<TabId>('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -129,6 +132,15 @@ export default function AppShell() {
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'home':
+        return (
+          <LandingView 
+            onNavigate={(id) => { 
+              const match = NAV_ITEMS.find((n) => n.id === id); 
+              if (match) setActiveTab(match.id); 
+            }} 
+          />
+        );
       case 'holdings':
         return <HoldingsView />;
       case 'trust-score':
