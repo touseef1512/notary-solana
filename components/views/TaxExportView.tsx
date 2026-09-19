@@ -89,13 +89,13 @@ export const TaxExportView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-4xl px-4 mt-2 mb-6">
-        <PlainNote text="This exports a CSV of dividend events for a tokenized stock: the ex-dividend date, gross amount, tax withheld, net received, and whether Notary could verify it independently. It does not include trades or capital gains. Notary does not give tax advice, and tax rules differ by country." />
+        <PlainNote text="This exports a CSV of dividend events for a tokenized stock: the ex-dividend date, gross amount, tax withheld, net received, and whether Notary could verify it independently. It also adds a rough estimate of your unrealized gain or loss from the purchase price and share count you enter. It does not include trades or realized capital gains. Notary does not give tax advice, and tax rules differ by country." />
         <h2 className="text-xl font-bold text-brand-text uppercase tracking-widest mb-2 flex items-center gap-2">
           <FileText className="w-5 h-5 text-brand-accent" />
           Tax Export
         </h2>
         <p className="text-brand-muted text-sm mb-6 max-w-3xl">
-          Generate a CSV of dividend events for the selected token, with an estimated withholding rate for each event. Rows Notary could not verify independently are labeled. It does not include trades or capital gains.
+          Generate a CSV of dividend events for the selected token, with an estimated withholding rate for each event and a rough unrealized gain estimate from your entered figures. Rows Notary could not verify independently are labeled. It does not include trades or realized capital gains.
         </p>
 
         <div className="border border-brand-border bg-brand-bg p-6 max-w-2xl">
