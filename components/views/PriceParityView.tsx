@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getPriceParityAction } from "@/app/actions";
+import { getMarketStatus, formatDuration } from "@/lib/market-hours";
 
 interface PriceParityResult {
   symbol: string;
@@ -41,6 +42,8 @@ export const PriceParityView = () => {
     fetchData();
   }, []);
 
+  const marketStatus = getMarketStatus(new Date());
+
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-6xl px-4 mt-6 flex flex-col gap-6">
@@ -54,6 +57,15 @@ export const PriceParityView = () => {
           >
             {loading ? "REFRESHING..." : "Refresh"}
           </button>
+        </div>
+
+        <div className="flex flex-col gap-1 p-4 border border-brand-border bg-brand-card">
+          <p className={`font-mono text-sm tracking-widest ${marketStatus.isOpen ? 'text-positive' : 'text-brand-accent'}`}>
+            US stock market: {marketStatus.isOpen ? 'OPEN' : 'CLOSED'}. {marketStatus.isOpen ? `Closes in ${formatDuration(marketStatus.minutesUntilChange)}. Gaps below reflect normal price movement.` : `Reopens in ${formatDuration(marketStatus.minutesUntilChange)}. Tokens keep trading 24/7, so the gaps below can widen until then.`}
+          </p>
+          <p className="font-mono text-[10px] text-brand-muted uppercase tracking-widest">
+            Regular session only (9:30 AM to 4:00 PM New York time, Mon to Fri). Holidays are not modelled.
+          </p>
         </div>
 
         {error && (
