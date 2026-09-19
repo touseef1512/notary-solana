@@ -1,0 +1,37 @@
+name: Refresh attestations
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-attestations
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Check secrets are present and well-formed
+        env:
+          NOTARY_KEYPAIR: ${{ secrets.NOTARY_KEYPAIR }}
+          SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
+        run: |
+          node -e "const k=process.env.NOTARY_KEYPAIR||'';const u=process.env.SOLANA_RPC_URL||'';let ok=false;try{const a=JSON.parse(k);ok=Array.isArray(a)&&a.length===64&&a.every(n=>Number.isInteger(n)&&n>=0&&n<=255)}catch{ok=false}if(!ok){console.error('NOTARY_KEYPAIR secret missing or not a 64-number JSON array');process.exit(1)}if(!u.startsWith('https://')){console.error('SOLANA_RPC_URL secret missing or not an https URL');process.exit(1)}console.log('secrets look well-formed')"
+      - name: Refresh attestations
+        env:
+          NOTARY_KEYPAIR: ${{ secrets.NOTARY_KEYPAIR }}
+          SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
+        run: npx tsx scripts/refresh-attestations.ts --send
