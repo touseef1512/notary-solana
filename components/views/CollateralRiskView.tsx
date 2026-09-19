@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useActiveAddress } from "@/components/ActiveAddressProvider";
 import { getKaminoRiskAction, publishAttestationAction } from "@/app/actions";
+import { WhatIfSimulator } from './WhatIfSimulator';
 
 // Define the type we expect from getKaminoRiskAction
 type KaminoRiskData = {
@@ -236,6 +237,7 @@ export const CollateralRiskView = () => {
             )}
           </div>
         )}
+        <WhatIfSimulator />
       </div>
     </div>
   );

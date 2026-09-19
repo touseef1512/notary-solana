@@ -1,16 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { getTrustLeaderboardAction, getReserveAttestationsAction } from '@/app/actions';
-import type { TrustScoreResult } from '@/lib/trust-score';
-import type { AttestationResult } from '@/lib/attestation';
+import { getAssetTrustRiskProfilesAction } from '@/app/actions';
+import type { TrustRiskProfile } from '@/lib/trust-risk-profile';
 import { KNOWN_ASSETS } from '@/lib/known-assets';
 import { BookOpen, Loader2 } from 'lucide-react';
 import { EndorseButton } from '@/components/EndorseButton';
 
 export const TrustRegistryView = () => {
-  const [scores, setScores] = useState<Record<string, TrustScoreResult>>({});
-  const [attestations, setAttestations] = useState<Record<string, AttestationResult>>({});
+  const [profiles, setProfiles] = useState<Record<string, TrustRiskProfile>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,23 +18,15 @@ export const TrustRegistryView = () => {
     async function fetchData() {
       try {
         setLoading(true);
-        const [leaderboardData, attestationsData] = await Promise.all([
-          getTrustLeaderboardAction(),
-          getReserveAttestationsAction()
-        ]);
+        const profilesData = await getAssetTrustRiskProfilesAction();
         
         if (mounted) {
-          const scoresMap: Record<string, TrustScoreResult> = {};
-          leaderboardData.scores.forEach((s: TrustScoreResult) => {
-            scoresMap[s.asset.mintAddress] = s;
+          const profilesMap: Record<string, TrustRiskProfile> = {};
+          profilesData.forEach((p: TrustRiskProfile) => {
+            if (!p.asset) return;
+            profilesMap[p.asset.mintAddress] = p;
           });
-          setScores(scoresMap);
-
-          const attestationsMap: Record<string, AttestationResult> = {};
-          attestationsData.forEach((a: AttestationResult) => {
-            attestationsMap[a.asset.mintAddress] = a;
-          });
-          setAttestations(attestationsMap);
+          setProfiles(profilesMap);
           setError(null);
         }
       } catch (err) {
@@ -97,13 +87,12 @@ export const TrustRegistryView = () => {
               </thead>
               <tbody className="divide-y divide-brand-border font-mono text-sm">
                 {KNOWN_ASSETS.map((asset) => {
-                  const scoreData = scores[asset.mintAddress];
-                  const attestationData = attestations[asset.mintAddress];
+                  const profileData = profiles[asset.mintAddress];
                   
                   // Calculate total verified events
                   let verifiedEvents = 0;
-                  if (scoreData?.breakdown) {
-                    verifiedEvents = scoreData.breakdown.filter(e => e.independentlyVerified).length;
+                  if (profileData?.breakdown) {
+                    verifiedEvents = profileData.breakdown.filter(e => e.independentlyVerified).length;
                   }
 
                   return (
@@ -118,10 +107,10 @@ export const TrustRegistryView = () => {
                       
                       {/* Trust Score */}
                       <td className="py-3 px-4 text-right">
-                        {scoreData?.trustScore === null ? (
+                        {profileData?.trustScore === null ? (
                           <span className="text-brand-muted uppercase text-[10px] tracking-widest">Insufficient Data</span>
-                        ) : scoreData?.trustScore !== undefined ? (
-                          <span className="text-brand-accent text-base">{scoreData.trustScore.toFixed(0)}%</span>
+                        ) : profileData?.trustScore !== undefined ? (
+                          <span className="text-brand-accent text-base">{profileData.trustScore.toFixed(0)}%</span>
                         ) : (
                           <span className="text-brand-muted">-</span>
                         )}
@@ -142,10 +131,10 @@ export const TrustRegistryView = () => {
                       
                       {/* Reserve Ratio */}
                       <td className="py-3 px-4 text-right">
-                        {attestationData?.backingRatio === null ? (
+                        {profileData?.backingRatio === null ? (
                           <span className="text-brand-muted uppercase text-[10px] tracking-widest">Insufficient Data</span>
-                        ) : attestationData?.backingRatio !== undefined ? (
-                          <span className="text-brand-accent text-base">{(attestationData.backingRatio * 100).toFixed(2)}%</span>
+                        ) : profileData?.backingRatio !== undefined ? (
+                          <span className="text-brand-accent text-base">{(profileData.backingRatio * 100).toFixed(2)}%</span>
                         ) : (
                           <span className="text-brand-muted">-</span>
                         )}

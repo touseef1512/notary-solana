@@ -1,5 +1,6 @@
 "use server";
 
+import { GAP_PERCENTAGES } from '@/lib/gap-percentages';
 import { getTokenizedStockHoldings as fetchHoldings } from "@/lib/solana";
 import { TokenHolding } from "@/lib/solana";
 import type { TokenHolding as AskNotaryTokenHolding } from "@/lib/ask-notary";
@@ -129,6 +130,17 @@ export async function getReserveAttestationsAction() {
   }
 }
 
+export async function getAssetTrustRiskProfilesAction() {
+  const { KNOWN_ASSETS } = await import('@/lib/known-assets');
+  const { buildAssetTrustRiskProfile } = await import('@/lib/trust-risk-profile');
+  try {
+    return await Promise.all(KNOWN_ASSETS.map(asset => buildAssetTrustRiskProfile(asset)));
+  } catch (error) {
+    console.error('Error building trust risk profiles:', error);
+    throw new Error('Failed to load trust risk profiles');
+  }
+}
+
 export async function getUpcomingAlertsAction() {
   const { getAllUpcomingAlerts } = await import('@/lib/alerts');
   try {
@@ -136,6 +148,16 @@ export async function getUpcomingAlertsAction() {
   } catch (error) {
     console.error(`Error getting upcoming alerts:`, error);
     throw new Error('Failed to load upcoming alerts');
+  }
+}
+
+export async function getNotaryAlertsAction(walletAddress?: string) {
+  const { getAllNotaryAlerts } = await import('@/lib/alert-engine');
+  try {
+    return await getAllNotaryAlerts(walletAddress);
+  } catch (error) {
+    console.error('Error getting Notary alerts:', error);
+    throw new Error('Failed to load alerts');
   }
 }
 
@@ -187,11 +209,12 @@ export async function getKaminoRiskAction(walletAddress: string) {
   const { getKaminoPositions } = await import('@/lib/kamino');
   const { computeSurvivableDrawdown, computeGapStressedHealthFactor } = await import('@/lib/risk-math');
   const { getAttestationStatus } = await import('@/lib/sas-attestation');
+  const { buildLendingRiskProfile } = await import('@/lib/trust-risk-profile');
 
   try {
     const obligations = await getKaminoPositions(walletAddress);
     
-    const gapPercentages = { 'CRCLx': -4.71, 'METAx': 3.67, 'TSLAx': -2.39, 'NVDAx': -2.64, 'HOODx': -1.89, 'QQQx': -1.17, 'MSTRx': -1.01, 'SPYx': -0.36, 'AAPLx': 0.03, 'GOOGLx': 2.16 };
+    const gapPercentages = GAP_PERCENTAGES;
 
     return await Promise.all(obligations.map(async (obligation) => {
       let currentHealth: number | "Insufficient Data" = "Insufficient Data";
@@ -229,7 +252,20 @@ export async function getKaminoRiskAction(walletAddress: string) {
         worstAssetSymbol,
         worstDrawdownValue,
         gapStressedHealth,
-        attestationStatus
+        attestationStatus,
+        profile: buildLendingRiskProfile({
+          obligationPubkey: obligation.obligationPubkey,
+          positions: obligation.positions,
+          depositedValue: obligation.depositedValue,
+          borrowedValue: obligation.borrowedValue,
+          currentLtv: obligation.currentLtv,
+          liquidationLtvThreshold: obligation.liquidationLtvThreshold,
+          currentHealth,
+          drawdowns,
+          worstAssetSymbol,
+          worstDrawdownValue,
+          gapStressedHealth,
+        }),
       };
     }));
   } catch (error) {
@@ -265,7 +301,7 @@ export async function publishAttestationAction(obligationPubkey: string, walletA
       }
     }
 
-    const gapPercentages = { 'CRCLx': -4.71, 'METAx': 3.67, 'TSLAx': -2.39, 'NVDAx': -2.64, 'HOODx': -1.89, 'QQQx': -1.17, 'MSTRx': -1.01, 'SPYx': -0.36, 'AAPLx': 0.03, 'GOOGLx': 2.16 };
+    const gapPercentages = GAP_PERCENTAGES;
     const gapStressedHealth = computeGapStressedHealthFactor(obligation, gapPercentages);
 
     if (worstAssetSymbol === null || worstDrawdownValue === null || typeof gapStressedHealth !== 'number') {
@@ -280,4 +316,13 @@ export async function publishAttestationAction(obligationPubkey: string, walletA
     }
     throw new Error('Failed to publish attestation');
   }
+}
+
+export async function simulateLoanAction(input: { depositSymbol: string, depositUsd: number, borrowUsd: number, liquidationLtvThreshold: number }) {
+  const { simulateHypotheticalLoan } = await import('@/lib/what-if');
+  return simulateHypotheticalLoan(input);
+}
+
+export async function getGapSymbolsAction() {
+  return Object.keys(GAP_PERCENTAGES);
 }

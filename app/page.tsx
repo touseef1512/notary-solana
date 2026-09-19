@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { getUpcomingAlertsAction } from '@/app/actions';
-import type { AlertResult } from '@/lib/alerts';
+import { getNotaryAlertsAction } from '@/app/actions';
+import type { NotaryAlert } from '@/lib/alert-engine';
 import { 
   ShieldCheck, 
   WalletCards, 
@@ -65,7 +65,7 @@ export default function AppShell() {
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
   
-  const [alerts, setAlerts] = useState<AlertResult[]>([]);
+  const [alerts, setAlerts] = useState<NotaryAlert[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   
@@ -76,16 +76,31 @@ export default function AppShell() {
   useEffect(() => {
     setMounted(true);
     let isSubscribed = true;
-    getUpcomingAlertsAction()
+    getNotaryAlertsAction(activeAddress ?? undefined)
       .then(res => {
         if (!isSubscribed) return;
-        const qualifying = res.filter(a => a.confidenceLevel !== "no-data" && a.daysUntil !== null && a.daysUntil <= 90);
-        qualifying.sort((a, b) => (a.daysUntil || 0) - (b.daysUntil || 0));
+        const qualifying = res.filter(a => {
+          if (a.kind === 'dividend-event') {
+            return a.daysUntil !== null && a.daysUntil <= 90;
+          }
+          if (a.kind === 'liquidation-risk') {
+            return true;
+          }
+          return true;
+        });
+        qualifying.sort((a, b) => {
+          if (a.severity === 'critical' && b.severity !== 'critical') return -1;
+          if (b.severity === 'critical' && a.severity !== 'critical') return 1;
+          if (a.daysUntil === null && b.daysUntil === null) return 0;
+          if (a.daysUntil === null) return 1;
+          if (b.daysUntil === null) return -1;
+          return a.daysUntil - b.daysUntil;
+        });
         setAlerts(qualifying);
       })
       .catch(console.error);
     return () => { isSubscribed = false; };
-  }, []);
+  }, [activeAddress]);
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
@@ -313,23 +328,24 @@ export default function AppShell() {
                         No upcoming events within 90 days.
                       </div>
                     ) : (
-                      alerts.map((alert) => (
-                        <div key={alert.asset.mintAddress} className="flex justify-between items-center p-3 border-b border-brand-border hover:bg-[#1A1A1A] transition-colors">
-                          <div className="flex flex-col">
-                            <span className="text-sm font-bold text-brand-text uppercase">{alert.asset.symbol}</span>
-                            <span className="text-[10px] text-brand-muted font-mono uppercase tracking-wider">Dividend</span>
+                      alerts.map((alert) => {
+                        const isCritical = alert.severity === 'critical';
+                        return (
+                          <div key={alert.obligationPubkey ?? alert.assetSymbol} className={`flex justify-between items-center p-3 border-b ${isCritical ? 'border-negative bg-negative/5' : 'border-brand-border hover:bg-[#1A1A1A]'} transition-colors`}>
+                            <div className="flex flex-col">
+                              <span className={`text-sm font-bold uppercase ${isCritical ? 'text-negative' : 'text-brand-accent'}`}>{alert.title}</span>
+                              <span className="text-[10px] text-brand-muted font-mono uppercase tracking-wider max-w-[200px] truncate" title={alert.note}>{alert.note}</span>
+                            </div>
+                            <div className="flex flex-col items-end">
+                              {alert.daysUntil !== null && (
+                                <span className="text-[10px] text-brand-muted font-mono uppercase mt-0.5">
+                                  {alert.daysUntil} days
+                                </span>
+                              )}
+                            </div>
                           </div>
-                          <div className="flex flex-col items-end">
-                            <span className={`font-mono text-xs ${alert.confidenceLevel === 'estimated' ? 'text-brand-accent' : 'text-brand-text'}`}>
-                              {alert.nextEventDate}
-                              {alert.confidenceLevel === 'estimated' && <span className="ml-1 text-[10px] text-brand-accent uppercase">(EST)</span>}
-                            </span>
-                            <span className="text-[10px] text-brand-muted font-mono uppercase mt-0.5">
-                              {alert.daysUntil} days
-                            </span>
-                          </div>
-                        </div>
-                      ))
+                        );
+                      })
                     )}
                   </div>
                   
