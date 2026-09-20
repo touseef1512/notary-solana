@@ -7,6 +7,7 @@ import type { TokenHolding as AskNotaryTokenHolding } from "@/lib/ask-notary";
 import type { AssetSnapshot } from '@/lib/history-types';
 import type { ProofObligationInput } from '@/lib/portfolio-proof';
 import type { DigestHolding, DigestObligation } from '@/lib/wallet-digest';
+import type { TradeCostResult } from '@/lib/trade-cost';
 
 export async function getTokenizedStockHoldings(walletAddress: string): Promise<TokenHolding[]> {
   return await fetchHoldings(walletAddress);
@@ -522,4 +523,26 @@ export async function getWalletDigestAction(walletAddress: string): Promise<{ te
   }
 
   return { text: template, mode: "template", generatedAt };
+}
+
+export async function getTradeCostAction(mintAddress: string, usdAmount: number): Promise<TradeCostResult> {
+  const { getParityAssets } = await import('@/lib/parity-assets');
+  const { getTradeCost, ALLOWED_USD_SIZES } = await import('@/lib/trade-cost');
+  
+  const assets = getParityAssets();
+  const isParityAsset = assets.some(a => a.mintAddress === mintAddress);
+  if (!isParityAsset) {
+    throw new Error("Unknown asset");
+  }
+  
+  if (!ALLOWED_USD_SIZES.includes(usdAmount)) {
+    throw new Error("Unsupported trade size");
+  }
+  
+  try {
+    return await getTradeCost(mintAddress, usdAmount);
+  } catch (error) {
+    console.error("Error in getTradeCostAction:", error);
+    throw new Error("Failed to check trade cost");
+  }
 }

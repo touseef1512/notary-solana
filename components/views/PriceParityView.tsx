@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { getPriceParityAction } from "@/app/actions";
 import { getMarketStatus, formatDuration } from "@/lib/market-hours";
 import { PlainNote } from '@/components/PlainNote';
+import { TradeCostCheck } from '@/components/TradeCostCheck';
 
 interface PriceParityResult {
   symbol: string;
@@ -207,6 +208,10 @@ export const PriceParityView = () => {
               </tbody>
             </table>
           </div>
+        )}
+
+        {data.length > 0 && (
+          <TradeCostCheck assets={data.map((r) => ({ symbol: r.symbol, mint: r.mint }))} />
         )}
 
         <div className="border border-brand-border bg-brand-bg p-4 flex flex-col gap-2 mb-12">
