@@ -85,7 +85,7 @@ export function buildDigestFacts(input: DigestInput): string[] {
         }
 
         if (o.worstAssetSymbol !== null) {
-          facts.push(`The collateral asset with the least room is ${o.worstAssetSymbol}.`);
+          facts.push(`The collateral asset with the least room in loan ${name} is ${o.worstAssetSymbol}.`);
         }
 
         if (o.attestationExists === true && o.attestationAgeHours !== null) {
@@ -113,7 +113,7 @@ export function buildTemplateDigest(facts: string[]): string {
 }
 
 export function buildDigestPrompt(facts: string[]): string {
-  const instructions = "Rewrite these facts as a short friendly summary for someone with no technical background, at most 120 words, plain sentences only (no markdown, no bullet points, no numbered lists, no headings), use ONLY information present in the facts, every number must appear exactly as written in the facts, add no advice, no predictions and no opinions, keep the closing not-advice sentence. Do not copy the facts sentence by sentence: combine them into a few flowing sentences in your own words.";
+  const instructions = "Rewrite these facts as a short friendly summary for someone with no technical background, at most 120 words, plain sentences only (no markdown, no bullet points, no numbered lists, no headings), use ONLY information present in the facts, every number must appear exactly as written in the facts, add no advice, no predictions and no opinions, keep the closing not-advice sentence. Do not copy the facts sentence by sentence: combine them into a few flowing sentences in your own words. Never describe anything as safe, risky, healthy or secure. Keep every fact about a loan attached to that loan and never attribute it to a holding. Keep the phrase weekend price gap last observed as written.";
   return instructions + "\n" + facts.join("\n");
 }
 
@@ -129,7 +129,7 @@ export function stripThinking(text: string): string {
 export function isDigestTextSafe(candidate: string, facts: string[]): boolean {
   const trimmed = candidate.trim();
   if (trimmed === "" || trimmed.length > 1200) return false;
-  if (/\b(buy|sell|invest|invests|investing|recommend|recommends|should)\b/i.test(trimmed)) return false;
+  if (/\b(buy|sell|invest|invests|investing|recommend|recommends|should|safe|safely|secure|secured|guarantee|guaranteed|risk-free|worry|worried)\b/i.test(trimmed)) return false;
 
   const extractNumbers = (text: string) => {
     const noCommas = text.replace(/,/g, '');
