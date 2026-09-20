@@ -113,7 +113,7 @@ export function buildTemplateDigest(facts: string[]): string {
 }
 
 export function buildDigestPrompt(facts: string[]): string {
-  const instructions = "Rewrite these facts as a short friendly summary for someone with no technical background, at most 120 words, plain sentences only (no markdown, no bullet points, no numbered lists, no headings), use ONLY information present in the facts, every number must appear exactly as written in the facts, add no advice, no predictions and no opinions, keep the closing not-advice sentence.";
+  const instructions = "Rewrite these facts as a short friendly summary for someone with no technical background, at most 120 words, plain sentences only (no markdown, no bullet points, no numbered lists, no headings), use ONLY information present in the facts, every number must appear exactly as written in the facts, add no advice, no predictions and no opinions, keep the closing not-advice sentence. Do not copy the facts sentence by sentence: combine them into a few flowing sentences in your own words.";
   return instructions + "\n" + facts.join("\n");
 }
 
@@ -149,4 +149,17 @@ export function isDigestTextSafe(candidate: string, facts: string[]): boolean {
   }
 
   return true;
+}
+
+export function isEchoOfFacts(candidate: string, facts: string[]): boolean {
+  const norm = (t: string) => t.replace(/\s+/g, ' ').trim().toLowerCase();
+  const text = norm(candidate);
+  const body = facts.slice(0, facts.length - 1);
+  if (body.length === 0) return false;
+  if (text === norm(facts.join(' '))) return true;
+  let verbatim = 0;
+  for (let i = 0; i < body.length; i++) {
+    if (text.includes(norm(body[i]))) verbatim++;
+  }
+  return verbatim >= Math.ceil(body.length * 0.7);
 }

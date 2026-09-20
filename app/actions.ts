@@ -489,7 +489,7 @@ export async function getWalletDigestAction(walletAddress: string): Promise<{ te
     kaminoStatus = "unavailable";
   }
 
-  const { buildDigestFacts, buildTemplateDigest, buildDigestPrompt, stripThinking, isDigestTextSafe } = await import('@/lib/wallet-digest');
+  const { buildDigestFacts, buildTemplateDigest, buildDigestPrompt, stripThinking, isDigestTextSafe, isEchoOfFacts } = await import('@/lib/wallet-digest');
   const facts = buildDigestFacts({ holdings, kaminoStatus, obligations });
   const template = buildTemplateDigest(facts);
   const generatedAt = new Date().toISOString();
@@ -513,7 +513,7 @@ export async function getWalletDigestAction(walletAddress: string): Promise<{ te
       let text = completion.choices[0]?.message?.content;
       if (typeof text === 'string') {
         text = stripThinking(text);
-        if (isDigestTextSafe(text, facts)) {
+        if (isDigestTextSafe(text, facts) && !isEchoOfFacts(text, facts)) {
           return { text, mode: "ai", generatedAt };
         }
       }
