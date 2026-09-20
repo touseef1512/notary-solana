@@ -5,6 +5,7 @@ import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { askNotaryAction } from '@/app/actions';
 import { Send, Terminal, ChevronDown, Bot } from 'lucide-react';
 import { KNOWN_ASSETS } from '@/lib/known-assets';
+import { WalletDigest } from '@/components/WalletDigest';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -95,6 +96,7 @@ export const AskNotaryView = () => {
               </div>
             </div>
           </div>
+          <div className="mt-4"><WalletDigest walletAddress={pubKeyString} /></div>
         </div>
 
         {/* Chat History */}

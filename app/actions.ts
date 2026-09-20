@@ -6,6 +6,7 @@ import { TokenHolding } from "@/lib/solana";
 import type { TokenHolding as AskNotaryTokenHolding } from "@/lib/ask-notary";
 import type { AssetSnapshot } from '@/lib/history-types';
 import type { ProofObligationInput } from '@/lib/portfolio-proof';
+import type { DigestHolding, DigestObligation } from '@/lib/wallet-digest';
 
 export async function getTokenizedStockHoldings(walletAddress: string): Promise<TokenHolding[]> {
   return await fetchHoldings(walletAddress);
@@ -436,4 +437,89 @@ export async function generatePortfolioProofAction(walletAddress: string): Promi
     if (e instanceof Error && e.message === "Invalid wallet address") throw e;
     throw new Error("Failed to build portfolio proof");
   }
+}
+
+export async function getWalletDigestAction(walletAddress: string): Promise<{ text: string; mode: "ai" | "template"; generatedAt: string }> {
+  const { PublicKey } = await import('@solana/web3.js');
+  try {
+    new PublicKey(walletAddress);
+  } catch {
+    throw new Error("Invalid wallet address");
+  }
+
+  let enrichedHoldings: TokenHoldingWithPrice[];
+  try {
+    enrichedHoldings = await getHoldingsWithPrices(walletAddress);
+  } catch (e) {
+    console.error(e);
+    throw new Error("Failed to build wallet digest");
+  }
+
+  const holdings: DigestHolding[] = enrichedHoldings.map(h => ({
+    symbol: h.symbol,
+    balance: h.balance,
+    value: h.totalValue
+  }));
+
+  let obligations: DigestObligation[] = [];
+  let kaminoStatus: "ok" | "unavailable" = "ok";
+  const { numberOrNull } = await import('@/lib/portfolio-proof');
+
+  try {
+    const risk = await getKaminoRiskAction(walletAddress);
+    obligations = risk.map(o => {
+      let attestationAgeHours: number | null = null;
+      const computedAtUnixTs = o.attestationStatus?.decoded ? numberOrNull(o.attestationStatus.decoded.computedAtUnixTs) : null;
+      if (computedAtUnixTs !== null) {
+        attestationAgeHours = (Date.now() / 1000 - computedAtUnixTs) / 3600;
+      }
+      return {
+        obligationPubkey: o.obligationPubkey,
+        depositedValueUsd: numberOrNull(o.depositedValue),
+        borrowedValueUsd: numberOrNull(o.borrowedValue),
+        currentHealthFactor: numberOrNull(o.currentHealth),
+        gapStressedHealthFactor: numberOrNull(o.gapStressedHealth),
+        worstAssetSymbol: typeof o.worstAssetSymbol === 'string' ? o.worstAssetSymbol : null,
+        attestationExists: o.attestationStatus ? o.attestationStatus.exists : null,
+        attestationAgeHours
+      };
+    });
+  } catch {
+    obligations = [];
+    kaminoStatus = "unavailable";
+  }
+
+  const { buildDigestFacts, buildTemplateDigest, buildDigestPrompt, stripThinking, isDigestTextSafe } = await import('@/lib/wallet-digest');
+  const facts = buildDigestFacts({ holdings, kaminoStatus, obligations });
+  const template = buildTemplateDigest(facts);
+  const generatedAt = new Date().toISOString();
+
+  try {
+    const { default: groq } = await import('@/lib/llm');
+    if (groq !== null) {
+      const completion = await groq.chat.completions.create({
+        messages: [
+          {
+            role: 'user',
+            content: buildDigestPrompt(facts),
+          },
+        ],
+        model: 'qwen/qwen3.8-27b'
+      }, {
+        timeout: 6000,
+        maxRetries: 0
+      });
+
+      let text = completion.choices[0]?.message?.content;
+      if (typeof text === 'string') {
+        text = stripThinking(text);
+        if (isDigestTextSafe(text, facts)) {
+          return { text, mode: "ai", generatedAt };
+        }
+      }
+    }
+  } catch {
+  }
+
+  return { text: template, mode: "template", generatedAt };
 }
