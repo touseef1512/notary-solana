@@ -19,6 +19,8 @@ interface PriceParityResult {
   fetchedAt: string;
   status: "ok" | "Insufficient Data";
   reason?: string;
+  inKaminoMarket: boolean;
+  modelGapPercent: number | null;
 }
 
 export const PriceParityView = () => {
@@ -86,6 +88,7 @@ export const PriceParityView = () => {
                   <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal text-right">DEX Price</th>
                   <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal text-right">Underlying Close</th>
                   <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal text-right">Gap %</th>
+                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal text-right">Risk model gap %</th>
                   <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal text-right">Liquidity</th>
                   <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Source Note</th>
                 </tr>
@@ -93,13 +96,13 @@ export const PriceParityView = () => {
               <tbody className="divide-y divide-brand-border">
                 {loading && data.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-brand-muted uppercase tracking-widest">
+                    <td colSpan={8} className="p-8 text-center text-brand-muted uppercase tracking-widest">
                       LOADING...
                     </td>
                   </tr>
                 ) : data.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-brand-muted uppercase tracking-widest">
+                    <td colSpan={8} className="p-8 text-center text-brand-muted uppercase tracking-widest">
                       No parity data available.
                     </td>
                   </tr>
@@ -122,12 +125,19 @@ export const PriceParityView = () => {
 
                     return (
                       <tr key={row.mint} className="hover:bg-[#1A1A1A] transition-colors">
-                        <td className="p-3 text-brand-text font-bold">{row.symbol}</td>
+                        <td className="p-3 text-brand-text font-bold">
+                          {row.symbol}
+                          {row.inKaminoMarket && (
+                            <span className="inline-flex px-1 py-0.5 text-[9px] ml-2 border border-brand-accent text-brand-accent uppercase tracking-widest">
+                              Kamino
+                            </span>
+                          )}
+                        </td>
                         <td className="p-3 text-brand-text">{row.issuer}</td>
                         
                         {!isOk ? (
                           <>
-                            <td colSpan={4} className="p-3 text-brand-muted text-center uppercase tracking-widest">
+                            <td colSpan={5} className="p-3 text-brand-muted text-center uppercase tracking-widest">
                               Insufficient Data ({row.reason})
                             </td>
                             <td className="p-3 text-brand-muted text-xs">
@@ -158,6 +168,13 @@ export const PriceParityView = () => {
                                 row.gapPercent > 0 ? `+${row.gapPercent.toFixed(2)}%` : `${row.gapPercent.toFixed(2)}%`
                               ) : (
                                 "N/A"
+                              )}
+                            </td>
+                            <td className="p-3 text-right text-brand-muted">
+                              {row.modelGapPercent !== null ? (
+                                row.modelGapPercent > 0 ? `+${row.modelGapPercent.toFixed(2)}%` : `${row.modelGapPercent.toFixed(2)}%`
+                              ) : (
+                                "-"
                               )}
                             </td>
                             <td className="p-3 text-right">
@@ -195,6 +212,9 @@ export const PriceParityView = () => {
         <div className="border border-brand-border bg-brand-bg p-4 flex flex-col gap-2 mb-12">
           <p className="font-mono text-xs text-brand-muted">
             DEX prices from Jupiter, underlying closes from Tiingo (dated). During market hours the gap includes normal price movement. For tokens with a multiplier, one displayed token equals one share and Jupiter reports the price per displayed token, so no adjustment is applied.
+          </p>
+          <p className="font-mono text-xs text-brand-muted">
+            Risk model gap is the fixed table used by the loan health checks (last set on Sep 11). Gap % is measured now: the DEX price against the last close. When the US market is closed it approximates the weekend gap; when open it also includes normal price movement. These are two different measurements, and the fixed table is not updated automatically.
           </p>
         </div>
 

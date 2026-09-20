@@ -1,5 +1,6 @@
-import { KNOWN_ASSETS } from './known-assets';
 import { getStockPrice } from './market-data';
+import { getParityAssets, KAMINO_COLLATERAL_SYMBOLS } from './parity-assets';
+import { GAP_PERCENTAGES } from './gap-percentages';
 
 // best-effort per server instance
 const jupiterCache = new Map<string, { data: JupiterPriceResult | null; expiresAt: number }>();
@@ -112,32 +113,57 @@ export interface PriceParityResult {
   fetchedAt: string;
   status: "ok" | "Insufficient Data";
   reason?: string;
+  inKaminoMarket: boolean;
+  modelGapPercent: number | null;
 }
 
 export async function buildPriceParity(): Promise<PriceParityResult[]> {
-  const assets = KNOWN_ASSETS.filter(a => a.mintAddress && a.underlyingTicker);
+  const assets = getParityAssets();
   const mints = assets.map(a => a.mintAddress);
   const jupPrices = await getJupiterPrices(mints);
 
   const results: PriceParityResult[] = [];
   const fetchedAt = new Date().toISOString();
 
-  // Call getStockPrice sequentially
+  // get unique underlying tickers
+  const uniqueTickers = new Set<string>();
+  for (let i = 0; i < assets.length; i++) {
+    uniqueTickers.add(assets[i].underlyingTicker);
+  }
+
+  const tickerArray = Array.from(uniqueTickers);
+  const pricePromises = tickerArray.map(async (ticker) => {
+    try {
+      const priceData = await getStockPrice(ticker);
+      return { ticker, priceData };
+    } catch {
+      return { ticker, priceData: null };
+    }
+  });
+
+  const priceResponses = await Promise.all(pricePromises);
+  const pricesByTicker: Record<string, { price: number; date: string } | null> = {};
+  for (let i = 0; i < priceResponses.length; i++) {
+    const res = priceResponses[i];
+    if (res.priceData && res.priceData.price !== 0 && Number.isFinite(res.priceData.price)) {
+      pricesByTicker[res.ticker] = { price: res.priceData.price, date: res.priceData.date };
+    } else {
+      pricesByTicker[res.ticker] = null;
+    }
+  }
+
   for (let i = 0; i < assets.length; i++) {
     const asset = assets[i];
+    
+    const pData = pricesByTicker[asset.underlyingTicker];
     let underlyingClose: number | null = null;
     let closeDate: string | null = null;
     let underlyingError = false;
 
-    try {
-      const priceData = await getStockPrice(asset.underlyingTicker);
-      if (priceData && priceData.price !== 0 && Number.isFinite(priceData.price)) {
-        underlyingClose = priceData.price;
-        closeDate = priceData.date;
-      } else {
-        underlyingError = true;
-      }
-    } catch {
+    if (pData) {
+      underlyingClose = pData.price;
+      closeDate = pData.date;
+    } else {
       underlyingError = true;
     }
 
@@ -176,6 +202,15 @@ export async function buildPriceParity(): Promise<PriceParityResult[]> {
       }
     }
 
+    const inKaminoMarket = KAMINO_COLLATERAL_SYMBOLS.includes(asset.symbol);
+    let modelGapPercent: number | null = null;
+    if (Object.prototype.hasOwnProperty.call(GAP_PERCENTAGES, asset.symbol)) {
+      const g = GAP_PERCENTAGES[asset.symbol];
+      if (Number.isFinite(g)) {
+        modelGapPercent = g;
+      }
+    }
+
     results.push({
       symbol: asset.symbol,
       mint: asset.mintAddress,
@@ -189,9 +224,18 @@ export async function buildPriceParity(): Promise<PriceParityResult[]> {
       gapPercent,
       fetchedAt,
       status,
-      reason
+      reason,
+      inKaminoMarket,
+      modelGapPercent
     });
   }
+
+  // Sort the final results: assets with issuer "xStocks" first, then all others, and alphabetically by symbol within each group.
+  results.sort((a, b) => {
+    if (a.issuer === "xStocks" && b.issuer !== "xStocks") return -1;
+    if (a.issuer !== "xStocks" && b.issuer === "xStocks") return 1;
+    return a.symbol.localeCompare(b.symbol);
+  });
 
   return results;
 }
