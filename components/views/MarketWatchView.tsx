@@ -164,7 +164,7 @@ export const MarketWatchView = () => {
         ) : null}
 
         <div className="border border-brand-border bg-brand-bg p-4 mb-12">
-          <p className="text-xs text-brand-muted mb-2">Watching since is when Notary started recording this list, not when Kamino first listed an asset. Notary only checks the lending market when someone opens this page or presses Refresh, and at most once every 10 minutes, so this is a record, not continuous monitoring.</p>
+          <p className="text-xs text-brand-muted mb-2">Watching since is when Notary started recording this list, not when Kamino first listed an asset. Notary checks the lending market automatically, typically every few hours, though GitHub can delay scheduled runs. It also checks when someone opens this page or presses Refresh, at most once every 10 minutes. This is a record, not continuous monitoring.</p>
           <p className="text-xs text-brand-muted">The list includes every asset in the xStocks market on Kamino, including stablecoins and cbBTC, not only stocks. Being listed is not a recommendation or advice of any kind.</p>
         </div>
       </div>

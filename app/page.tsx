@@ -23,7 +23,8 @@ import {
   Code2,
   LineChart,
   Home,
-  Eye
+  Eye,
+  Library
 } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
@@ -36,6 +37,7 @@ import { AlertsView } from '@/components/views/AlertsView';
 import { TaxExportView } from '@/components/views/TaxExportView';
 import { ComparatorView } from '@/components/views/ComparatorView';
 import { TrustRegistryView } from '@/components/views/TrustRegistryView';
+import { AssetDirectoryView } from '@/components/views/AssetDirectoryView';
 import { DeveloperApiView } from '@/components/views/DeveloperApiView';
 import { PriceParityView } from '@/components/views/PriceParityView';
 import { LandingView } from '@/components/views/LandingView';
@@ -47,7 +49,7 @@ const WalletMultiButtonDynamic = dynamic(
   { ssr: false }
 );
 
-type TabId = 'home' | 'holdings' | 'trust-score' | 'reserve' | 'collateral-risk' | 'price-parity' | 'market-watch' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry' | 'developer';
+type TabId = 'home' | 'holdings' | 'trust-score' | 'reserve' | 'collateral-risk' | 'price-parity' | 'market-watch' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry' | 'directory' | 'developer';
 
 interface NavItem {
   id: TabId;
@@ -58,6 +60,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { id: 'home', label: 'Home', icon: Home },
   { id: 'registry', label: 'Trust Registry', icon: BookOpen },
+  { id: 'directory', label: 'Asset Directory', icon: Library },
   { id: 'holdings', label: 'Holdings & Verification', icon: WalletCards },
   { id: 'trust-score', label: 'Trust Score & Leaderboard', icon: Trophy },
   { id: 'reserve', label: 'Reserve Attestation', icon: Landmark },
@@ -158,6 +161,8 @@ export default function AppShell() {
         return <MarketWatchView />;
       case 'registry':
         return <TrustRegistryView />;
+      case 'directory':
+        return <AssetDirectoryView />;
       case 'ask':
         return <AskNotaryView />;
       case 'alerts':

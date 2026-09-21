@@ -1,0 +1,126 @@
+"use client";
+
+import React, { useState } from "react";
+import { buildAssetDirectory } from "@/lib/asset-directory";
+import { PlainNote } from '@/components/PlainNote';
+
+type FilterType = 'all' | 'xStocks' | 'Ondo' | 'kamino';
+
+const FILTERS: FilterType[] = ['all', 'xStocks', 'Ondo', 'kamino'];
+
+export const AssetDirectoryView = () => {
+  const [entries] = useState(() => buildAssetDirectory());
+  const [filter, setFilter] = useState<FilterType>('all');
+
+  const filteredEntries = entries.filter(e => {
+    if (filter === 'all') return true;
+    if (filter === 'xStocks') return e.issuer === 'xStocks';
+    if (filter === 'Ondo') return e.issuer === 'Ondo';
+    if (filter === 'kamino') return e.inKaminoMarket;
+    return true;
+  });
+
+  const sortedEntries = [...filteredEntries].sort((a, b) => {
+    const tickerCmp = a.underlyingTicker.localeCompare(b.underlyingTicker);
+    if (tickerCmp !== 0) return tickerCmp;
+    return a.symbol.localeCompare(b.symbol);
+  });
+
+  return (
+    <div className="flex flex-col items-center justify-start w-full">
+      <div className="w-full max-w-6xl px-4 mt-6 flex flex-col gap-6">
+        <PlainNote text="This lists the tokenized stocks Notary knows about: who issues each one, which real stock it tracks, whether the Kamino lending market accepts it, and whether Notary checks its reserves. It is not a list of every tokenized stock on Solana, and it is not a recommendation." />
+
+        <h2 className="text-sm font-bold text-brand-text uppercase tracking-widest">Asset Directory</h2>
+
+        <div className="flex flex-wrap gap-2">
+          {FILTERS.map((f) => {
+            const label = f === 'kamino' ? 'On Kamino' : f === 'all' ? 'All' : f;
+            const active = filter === f;
+            return (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-3 py-1 border border-brand-accent font-mono text-xs uppercase tracking-wider transition-colors cursor-pointer ${
+                  active 
+                    ? "bg-brand-accent text-brand-bg" 
+                    : "text-brand-accent hover:bg-brand-accent hover:text-brand-bg"
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="text-brand-muted text-sm">
+          Showing {sortedEntries.length} of {entries.length} assets.
+        </div>
+
+        {sortedEntries.length === 0 ? (
+          <div className="border border-brand-border bg-brand-card p-4">
+            <p className="text-brand-muted">No assets match this filter.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto border border-brand-border bg-brand-bg">
+            <table className="w-full text-left text-sm min-w-[800px]">
+              <thead className="bg-brand-bg border-b border-brand-border">
+                <tr>
+                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Asset</th>
+                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Issuer</th>
+                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Real stock</th>
+                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Kamino market</th>
+                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Trust Registry</th>
+                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Mint</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-brand-border">
+                {sortedEntries.map(e => (
+                  <tr key={e.mintAddress} className="hover:bg-brand-card transition-colors">
+                    <td className="p-3">
+                      <div className="text-brand-text font-bold">{e.symbol}</div>
+                      <div className="text-brand-muted text-[10px]">{e.name}</div>
+                    </td>
+                    <td className="p-3 text-brand-text">{e.issuer}</td>
+                    <td className="p-3 text-brand-text font-mono">{e.underlyingTicker}</td>
+                    <td className="p-3">
+                      {e.inKaminoMarket ? (
+                        <span className="inline-flex px-1 py-0.5 text-[9px] border border-brand-accent text-brand-accent uppercase tracking-widest">
+                          Accepted
+                        </span>
+                      ) : (
+                        <span className="text-brand-muted">Not in this market</span>
+                      )}
+                    </td>
+                    <td className="p-3">
+                      {e.inTrustRegistry ? (
+                        <span className="text-brand-text">Included</span>
+                      ) : (
+                        <span className="text-brand-muted">Not checked yet</span>
+                      )}
+                    </td>
+                    <td className="p-3">
+                      <a 
+                        href={`https://explorer.solana.com/address/${e.mintAddress}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-brand-muted text-[10px] font-mono hover:text-brand-accent"
+                      >
+                        {e.mintAddress.substring(0, 4)}...{e.mintAddress.substring(e.mintAddress.length - 4)}
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <div className="border border-brand-border bg-brand-bg p-4 mb-12">
+          <p className="text-xs text-brand-muted mb-2">The Kamino column comes from the lending market reserve list Notary verified on Sep 20. The Market Watch tab shows the live list and records changes.</p>
+          <p className="text-xs text-brand-muted">Included in the Trust Registry means Notary tries to check the reserves behind the token. For some tokens no verifiable reserve data is available, and the Trust Registry then shows Insufficient Data. Not checked yet means Notary has no reserve check for that token. None of this is a recommendation or advice of any kind.</p>
+        </div>
+      </div>
+    </div>
+  );
+};
