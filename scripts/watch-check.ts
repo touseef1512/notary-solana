@@ -48,6 +48,22 @@ async function main() {
   } else {
     console.log('DRY RUN: nothing was written');
   }
+
+  if (result.status !== 'ok' || result.reason !== null) {
+    console.error('CHECK FAILED: ' + (result.reason === null ? 'unavailable' : result.reason));
+    process.exitCode = 1;
+    return;
+  }
+
+  if (writeMode && result.checkedNow) {
+    const verify = await getMarketWatch({ dryRun: true });
+    if (verify.status === 'ok' && verify.checkedNow === false && verify.lastCheckedTs === result.lastCheckedTs) {
+      console.log('VERIFIED: the saved state was read back from Redis');
+    } else {
+      console.error('SAVE NOT VERIFIED: the state could not be read back from Redis');
+      process.exitCode = 1;
+    }
+  }
 }
 
 main().catch((e) => {

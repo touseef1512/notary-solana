@@ -1,0 +1,39 @@
+name: Market watch
+
+on:
+  schedule:
+    - cron: "23 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: market-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Check secrets are present
+        env:
+          SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+        run: |
+          node -e "const u=process.env.SOLANA_RPC_URL||'';const k=process.env.KV_REST_API_URL||'';const t=process.env.KV_REST_API_TOKEN||'';if(!u.startsWith('https://')){console.error('SOLANA_RPC_URL secret missing or not an https URL');process.exit(1)}if(!k.startsWith('https://')){console.error('KV_REST_API_URL secret missing or not an https URL');process.exit(1)}if(t.length===0){console.error('KV_REST_API_TOKEN secret missing');process.exit(1)}console.log('secrets look present')"
+      - name: Record Kamino market list
+        env:
+          SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+        run: npx tsx scripts/watch-check.ts --write

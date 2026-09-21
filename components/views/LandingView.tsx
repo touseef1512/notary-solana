@@ -87,7 +87,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 p-4 border border-brand-border bg-brand-bg justify-between items-start md:items-center">
-          <div className="flex flex-col gap-2 w-full md:w-1/2 md:border-r border-brand-border md:pr-4">
+          <div className="flex flex-col gap-2 w-full md:w-1/3 md:border-r border-brand-border md:pr-4">
             <p className="font-mono text-xs text-brand-muted">Curious how far tokens trade from the real stock?</p>
             <button 
               onClick={() => onNavigate('price-parity')}
@@ -96,7 +96,16 @@ export const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
               Open Price Parity
             </button>
           </div>
-          <div className="flex flex-col gap-2 w-full md:w-1/2 md:pl-4">
+          <div className="flex flex-col gap-2 w-full md:w-1/3 md:border-r border-brand-border md:px-4">
+            <p className="font-mono text-xs text-brand-muted">Curious which assets the Kamino lending market accepts?</p>
+            <button 
+              onClick={() => onNavigate('market-watch')}
+              className="w-full md:w-auto px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer text-center"
+            >
+              Open Market Watch
+            </button>
+          </div>
+          <div className="flex flex-col gap-2 w-full md:w-1/3 md:pl-4">
             <p className="font-mono text-xs text-brand-muted">Building something? Read the public API.</p>
             <button 
               onClick={() => onNavigate('developer')}
