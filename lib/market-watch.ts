@@ -10,6 +10,7 @@ import {
   findNewMints,
   mergeWatchState,
   isWatchState,
+  WatchEntry,
 } from './market-watch-core';
 
 const KLEND_PROGRAM_ID = new PublicKey('KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD');
@@ -256,4 +257,10 @@ export async function getMarketWatch(options?: { dryRun?: boolean }): Promise<Ma
     lastCheckedTs: merged.lastCheckedTs,
     entries: merged.entries
   };
+}
+
+export async function getStoredMarketWatch(): Promise<WatchEntry[]> {
+  const stateResult = await readState();
+  if (!stateResult.ok || stateResult.state === null) return [];
+  return stateResult.state.entries;
 }

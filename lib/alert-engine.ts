@@ -2,7 +2,7 @@ import { AlertResult, getAllUpcomingAlerts } from './alerts';
 import { getKaminoRiskAction } from '@/app/actions';
 
 export interface NotaryAlert {
-  kind: 'dividend-event' | 'liquidation-risk' | 'reserve-drop';
+  kind: 'dividend-event' | 'liquidation-risk' | 'reserve-drop' | 'market-watch';
   title: string;
   severity: 'info' | 'warning' | 'critical';
   daysUntil: number | null;
@@ -117,7 +117,17 @@ export async function getAllNotaryAlerts(walletAddress?: string): Promise<Notary
   const liquidationAlerts = await getLiquidationRiskAlerts(walletAddress);
   const reserveDropAlerts = await getReserveDropAlerts();
   
-  const merged = [...dividendAlerts, ...liquidationAlerts, ...reserveDropAlerts];
+  let marketWatchAlerts: NotaryAlert[] = [];
+  try {
+    const { getStoredMarketWatch } = await import('@/lib/market-watch');
+    const { buildMarketWatchAlerts } = await import('@/lib/market-watch-alerts');
+    const stored = await getStoredMarketWatch();
+    marketWatchAlerts = buildMarketWatchAlerts(stored, Math.floor(Date.now() / 1000));
+  } catch {
+    marketWatchAlerts = [];
+  }
+  
+  const merged = [...dividendAlerts, ...liquidationAlerts, ...reserveDropAlerts, ...marketWatchAlerts];
   
   // Sort by daysUntil ascending, nulls last
   merged.sort((a, b) => {
