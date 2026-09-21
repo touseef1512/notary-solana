@@ -8,6 +8,7 @@ import type { AssetSnapshot } from '@/lib/history-types';
 import type { ProofObligationInput } from '@/lib/portfolio-proof';
 import type { DigestHolding, DigestObligation } from '@/lib/wallet-digest';
 import type { TradeCostResult } from '@/lib/trade-cost';
+import type { MarketWatchResult } from '@/lib/market-watch-core';
 
 export async function getTokenizedStockHoldings(walletAddress: string): Promise<TokenHolding[]> {
   return await fetchHoldings(walletAddress);
@@ -544,5 +545,15 @@ export async function getTradeCostAction(mintAddress: string, usdAmount: number)
   } catch (error) {
     console.error("Error in getTradeCostAction:", error);
     throw new Error("Failed to check trade cost");
+  }
+}
+
+export async function getMarketWatchAction(): Promise<MarketWatchResult> {
+  try {
+    const { getMarketWatch } = await import('@/lib/market-watch');
+    return await getMarketWatch();
+  } catch {
+    console.error('Error getting market watch');
+    return { status: 'unavailable', reason: 'Market watch is unavailable right now. Try again in a moment.', checkedNow: false, baselineTs: null, lastCheckedTs: null, entries: [] };
   }
 }
