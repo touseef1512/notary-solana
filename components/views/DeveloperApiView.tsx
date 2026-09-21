@@ -15,6 +15,14 @@ export const DeveloperApiView = () => {
   const [attestationStatus, setAttestationStatus] = useState<number | null>(null);
   const [attestationData, setAttestationData] = useState<unknown | null>(null);
 
+  const [directoryLoading, setDirectoryLoading] = useState(false);
+  const [directoryStatus, setDirectoryStatus] = useState<number | null>(null);
+  const [directoryData, setDirectoryData] = useState<unknown | null>(null);
+
+  const [marketWatchLoading, setMarketWatchLoading] = useState(false);
+  const [marketWatchStatus, setMarketWatchStatus] = useState<number | null>(null);
+  const [marketWatchData, setMarketWatchData] = useState<unknown | null>(null);
+
   const [schemaFields, setSchemaFields] = useState<string[]>([]);
   const [units, setUnits] = useState<string | null>(null);
   const [guideFailed, setGuideFailed] = useState(false);
@@ -87,6 +95,40 @@ export const DeveloperApiView = () => {
       setAttestationData({ error: err instanceof Error ? err.message : "Network error" });
     } finally {
       setAttestationLoading(false);
+    }
+  };
+
+  const handleTryDirectory = async () => {
+    setDirectoryLoading(true);
+    setDirectoryStatus(null);
+    setDirectoryData(null);
+    try {
+      const res = await fetch("/api/v1/directory");
+      setDirectoryStatus(res.status);
+      const data = await res.json() as unknown;
+      setDirectoryData(data);
+    } catch (err: unknown) {
+      setDirectoryStatus(500);
+      setDirectoryData({ error: err instanceof Error ? err.message : "Network error" });
+    } finally {
+      setDirectoryLoading(false);
+    }
+  };
+
+  const handleTryMarketWatch = async () => {
+    setMarketWatchLoading(true);
+    setMarketWatchStatus(null);
+    setMarketWatchData(null);
+    try {
+      const res = await fetch("/api/v1/market-watch");
+      setMarketWatchStatus(res.status);
+      const data = await res.json() as unknown;
+      setMarketWatchData(data);
+    } catch (err: unknown) {
+      setMarketWatchStatus(500);
+      setMarketWatchData({ error: err instanceof Error ? err.message : "Network error" });
+    } finally {
+      setMarketWatchLoading(false);
     }
   };
 
@@ -171,6 +213,72 @@ export const DeveloperApiView = () => {
               </pre>
             )}
           </div>
+
+          <div className="flex flex-col gap-2 border border-brand-border p-4 bg-brand-card">
+            <h3 className="text-xs font-bold text-brand-text uppercase tracking-widest">GET /api/v1/directory</h3>
+            <p className="text-xs text-brand-muted">Returns the static list of 13 tokenized stocks Notary knows about.</p>
+            {origin && (
+              <pre className="text-xs text-brand-accent bg-brand-bg p-2 mt-2 overflow-x-auto border border-brand-border">
+                curl {origin}/api/v1/directory
+              </pre>
+            )}
+            
+            <div className="mt-4">
+              <button 
+                onClick={handleTryDirectory}
+                disabled={directoryLoading}
+                className="px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-brand-accent font-mono text-xs uppercase tracking-wider transition-colors cursor-pointer w-24"
+              >
+                {directoryLoading ? "FETCHING..." : "Try it"}
+              </button>
+            </div>
+            
+            {directoryStatus !== null && (
+              <div className="mt-2">
+                <span className={`text-[10px] uppercase tracking-widest font-mono px-1.5 py-0.5 border ${directoryStatus === 200 ? 'border-positive text-positive' : 'border-negative text-negative'}`}>
+                  HTTP {directoryStatus}
+                </span>
+              </div>
+            )}
+            {directoryData !== null && (
+              <pre className="mt-2 text-xs font-mono text-brand-text bg-brand-bg p-4 border border-brand-border overflow-x-auto max-h-64 overflow-y-auto">
+                {String(JSON.stringify(directoryData, null, 2))}
+              </pre>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2 border border-brand-border p-4 bg-brand-card">
+            <h3 className="text-xs font-bold text-brand-text uppercase tracking-widest">GET /api/v1/market-watch</h3>
+            <p className="text-xs text-brand-muted">Returns the recorded list of Kamino xStocks market listings with first-seen times.</p>
+            {origin && (
+              <pre className="text-xs text-brand-accent bg-brand-bg p-2 mt-2 overflow-x-auto border border-brand-border">
+                curl {origin}/api/v1/market-watch
+              </pre>
+            )}
+            
+            <div className="mt-4">
+              <button 
+                onClick={handleTryMarketWatch}
+                disabled={marketWatchLoading}
+                className="px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-brand-accent font-mono text-xs uppercase tracking-wider transition-colors cursor-pointer w-24"
+              >
+                {marketWatchLoading ? "FETCHING..." : "Try it"}
+              </button>
+            </div>
+            
+            {marketWatchStatus !== null && (
+              <div className="mt-2">
+                <span className={`text-[10px] uppercase tracking-widest font-mono px-1.5 py-0.5 border ${marketWatchStatus === 200 ? 'border-positive text-positive' : 'border-negative text-negative'}`}>
+                  HTTP {marketWatchStatus}
+                </span>
+              </div>
+            )}
+            {marketWatchData !== null && (
+              <pre className="mt-2 text-xs font-mono text-brand-text bg-brand-bg p-4 border border-brand-border overflow-x-auto max-h-64 overflow-y-auto">
+                {String(JSON.stringify(marketWatchData, null, 2))}
+              </pre>
+            )}
+          </div>
         </div>
 
         <div className="border border-brand-border bg-brand-bg p-4 flex flex-col gap-4">
@@ -200,7 +308,7 @@ export const DeveloperApiView = () => {
         <div className="border border-brand-border bg-brand-bg p-4 flex flex-col gap-2">
           <h2 className="text-sm font-bold text-brand-accent uppercase tracking-widest">Caveats</h2>
           <p className="font-mono text-sm text-brand-text">
-            Devnet only. Values are point-in-time snapshots; check computedAtUnixTs. Large integers are returned as strings. Gap-stress figures use a static last-observed weekend gap, not a prediction. Attestations exist only for obligations that have been published. Requests are rate limited per client.
+            Devnet only. Values are point-in-time snapshots; check computedAtUnixTs. Large integers are returned as strings. Gap-stress figures use a static last-observed weekend gap, not a prediction. Attestations exist only for obligations that have been published. Requests are rate limited per client. The directory Kamino column is a fixed list verified on Sep 20, and Market Watch dates start when Notary began recording on Sep 21.
           </p>
         </div>
 

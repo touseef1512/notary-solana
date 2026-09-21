@@ -264,3 +264,9 @@ export async function getStoredMarketWatch(): Promise<WatchEntry[]> {
   if (!stateResult.ok || stateResult.state === null) return [];
   return stateResult.state.entries;
 }
+
+export async function getStoredWatchState(): Promise<WatchState | null> {
+  const stateResult = await readState();
+  if (!stateResult.ok || stateResult.state === null) return null;
+  return stateResult.state;
+}
