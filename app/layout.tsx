@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fira_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Public_Sans, Fraunces, IBM_Plex_Mono } from "next/font/google";
 import '@solana/wallet-adapter-react-ui/styles.css';
 import '@dialectlabs/blinks/index.css';
 import "./globals.css";
@@ -8,10 +8,15 @@ import { ActiveAddressProvider } from "@/components/ActiveAddressProvider";
 
 export const maxDuration = 60;
 
-const firaSans = Fira_Sans({ 
+const publicSans = Public_Sans({ 
   subsets: ["latin"], 
   weight: ["400", "500", "600", "700"],
-  variable: "--font-fira-sans" 
+  variable: "--font-public-sans" 
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces"
 });
 
 const ibmPlexMono = IBM_Plex_Mono({ 
@@ -32,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${firaSans.variable} ${ibmPlexMono.variable} font-sans min-h-screen bg-brand-bg text-brand-text`}>
+      <body className={`${publicSans.variable} ${fraunces.variable} ${ibmPlexMono.variable} font-sans min-h-screen bg-brand-bg text-brand-text`}>
         <SolanaWalletProvider>
           <ActiveAddressProvider>
             {children}

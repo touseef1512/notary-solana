@@ -52,7 +52,7 @@ export const ComparatorView = () => {
                     onClick={() => setEventType('dividend')}
                     className={`flex-1 font-mono text-sm uppercase tracking-widest transition-colors ${
                       eventType === 'dividend' 
-                        ? 'bg-brand-accent text-[#050505] font-bold' 
+                        ? 'bg-brand-accent text-brand-card font-bold' 
                         : 'text-brand-muted hover:text-brand-text'
                     }`}
                   >
@@ -63,7 +63,7 @@ export const ComparatorView = () => {
                     onClick={() => setEventType('split')}
                     className={`flex-1 font-mono text-sm uppercase tracking-widest transition-colors ${
                       eventType === 'split' 
-                        ? 'bg-brand-accent text-[#050505] font-bold border-l border-brand-border' 
+                        ? 'bg-brand-accent text-brand-card font-bold border-l border-brand-border' 
                         : 'text-brand-muted hover:text-brand-text border-l border-brand-border'
                     }`}
                   >
@@ -107,9 +107,9 @@ export const ComparatorView = () => {
             </div>
 
             {/* Solana Card */}
-            <div className="border border-brand-accent bg-brand-bg flex flex-col h-full shadow-[0_0_15px_rgba(255,159,28,0.1)]">
+            <div className="border border-brand-accent bg-brand-bg flex flex-col h-full">
               <div className="bg-brand-accent p-3">
-                <h3 className="text-xs font-mono uppercase tracking-widest text-[#050505] font-bold text-center">Solana (T+0)</h3>
+                <h3 className="text-xs font-mono uppercase tracking-widest text-brand-card font-bold text-center">Solana (T+0)</h3>
               </div>
               <div className="p-6 flex flex-col items-center justify-center flex-1">
                 <Scale className="w-8 h-8 text-brand-accent mb-4" />

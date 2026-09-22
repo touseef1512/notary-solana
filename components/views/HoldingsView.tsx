@@ -58,7 +58,7 @@ const HoldingRow = ({
         );
       case 'error':
         return (
-          <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-[#FF9F1C] border border-[#FF9F1C] uppercase" title={verification.error}>
+          <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-brand-warning border border-brand-warning uppercase" title={verification.error}>
             ERROR
           </span>
         );
@@ -98,7 +98,7 @@ const HoldingRow = ({
         </td>
       </tr>
       {isExpanded && verification?.narration && (
-        <tr className="border-b border-brand-border bg-[#050505]">
+        <tr className="border-b border-brand-border bg-brand-bg">
           <td colSpan={7} className="p-4">
             <div className="border border-brand-border bg-brand-bg p-4 flex flex-col gap-2">
               <span className="text-[10px] text-brand-accent uppercase tracking-widest font-bold">ANALYSIS_NARRATIVE</span>

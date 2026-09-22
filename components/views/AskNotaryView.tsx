@@ -83,7 +83,7 @@ export const AskNotaryView = () => {
                   id="asset-select"
                   value={selectedAsset}
                   onChange={(e) => setSelectedAsset(e.target.value)}
-                  className="bg-[#050505] border border-brand-border text-brand-text py-1.5 pl-3 pr-8 font-mono text-sm focus:outline-none focus:border-brand-accent transition-colors appearance-none min-w-[140px] cursor-pointer"
+                  className="bg-brand-bg border border-brand-border text-brand-text py-1.5 pl-3 pr-8 font-mono text-sm focus:outline-none focus:border-brand-accent transition-colors appearance-none min-w-[140px] cursor-pointer"
                 >
                   <option value="all">ALL ASSETS</option>
                   {KNOWN_ASSETS.map((asset) => (
@@ -100,7 +100,7 @@ export const AskNotaryView = () => {
         </div>
 
         {/* Chat History */}
-        <div className="flex-1 min-h-0 overflow-y-auto border border-brand-border bg-[#050505] p-4 flex flex-col space-y-4">
+        <div className="flex-1 min-h-0 overflow-y-auto border border-brand-border bg-brand-bg p-4 flex flex-col space-y-4">
           {messages.map((msg, idx) => (
             <div 
               key={idx} 
@@ -140,13 +140,13 @@ export const AskNotaryView = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="e.g. What is the trust score for AAPLx?"
-            className="flex-1 bg-[#050505] border border-brand-border text-brand-text px-4 py-3 font-mono text-sm focus:outline-none focus:border-brand-accent transition-colors placeholder:text-brand-muted/50"
+            className="flex-1 bg-brand-bg border border-brand-border text-brand-text px-4 py-3 font-mono text-sm focus:outline-none focus:border-brand-accent transition-colors placeholder:text-brand-muted/50"
             disabled={loading}
           />
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="bg-brand-accent text-[#050505] px-6 py-3 font-bold font-mono text-sm uppercase tracking-widest hover:bg-opacity-90 transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-brand-accent"
+            className="bg-brand-accent text-brand-card px-6 py-3 font-bold font-mono text-sm uppercase tracking-widest hover:bg-opacity-90 transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-brand-accent"
           >
             <Send className="w-4 h-4" />
             Execute

@@ -181,11 +181,11 @@ export const TaxExportView = () => {
             <button
               type="submit"
               disabled={loading}
-              className="mt-4 bg-brand-accent text-[#050505] px-6 py-4 font-bold font-mono text-sm uppercase tracking-widest hover:bg-opacity-90 transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-brand-accent w-full"
+              className="mt-4 bg-brand-accent text-brand-card px-6 py-4 font-bold font-mono text-sm uppercase tracking-widest hover:bg-opacity-90 transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-brand-accent w-full"
             >
               {loading ? (
                 <>
-                  <div className="w-1.5 h-3 bg-[#050505] animate-pulse" /> Generating CSV...
+                  <div className="w-1.5 h-3 bg-brand-card animate-pulse" /> Generating CSV...
                 </>
               ) : (
                 <>

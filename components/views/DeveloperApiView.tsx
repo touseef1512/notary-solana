@@ -150,7 +150,7 @@ export const DeveloperApiView = () => {
             <h3 className="text-xs font-bold text-brand-text uppercase tracking-widest">GET /api/v1/registry</h3>
             <p className="text-xs font-mono text-brand-muted">Returns the current SAS configuration and schema layout.</p>
             {origin && (
-              <pre className="text-xs text-brand-accent bg-[#050505] p-2 mt-2 overflow-x-auto border border-brand-border">
+              <pre className="text-xs text-brand-accent bg-brand-bg p-2 mt-2 overflow-x-auto border border-brand-border">
                 curl {origin}/api/v1/registry
               </pre>
             )}
@@ -169,7 +169,7 @@ export const DeveloperApiView = () => {
               <div className="mt-2 text-negative text-xs font-mono">{registryError}</div>
             )}
             {registryData !== null && (
-              <pre className="mt-2 text-xs font-mono text-brand-text bg-[#050505] p-4 border border-brand-border overflow-x-auto max-h-64 overflow-y-auto">
+              <pre className="mt-2 text-xs font-mono text-brand-text bg-brand-bg p-4 border border-brand-border overflow-x-auto max-h-64 overflow-y-auto">
                 {String(JSON.stringify(registryData, null, 2))}
               </pre>
             )}
@@ -179,7 +179,7 @@ export const DeveloperApiView = () => {
             <h3 className="text-xs font-bold text-brand-text uppercase tracking-widest">GET /api/v1/attestation/&#123;obligation&#125;</h3>
             <p className="text-xs font-mono text-brand-muted">Returns a decoded point-in-time risk attestation for a specific Kamino obligation.</p>
             {origin && (
-              <pre className="text-xs text-brand-accent bg-[#050505] p-2 mt-2 overflow-x-auto border border-brand-border">
+              <pre className="text-xs text-brand-accent bg-brand-bg p-2 mt-2 overflow-x-auto border border-brand-border">
                 curl {origin}/api/v1/attestation/7BACsXdze3FporEnXEbuSHStPPQ58tpZuWb7jgsUYmV
               </pre>
             )}
@@ -189,7 +189,7 @@ export const DeveloperApiView = () => {
                 type="text" 
                 value={attestationInput}
                 onChange={(e) => setAttestationInput(e.target.value)}
-                className="bg-[#050505] border border-brand-border text-brand-text px-3 py-1 font-mono text-xs flex-1 focus:border-brand-accent focus:outline-none"
+                className="bg-brand-bg border border-brand-border text-brand-text px-3 py-1 font-mono text-xs flex-1 focus:border-brand-accent focus:outline-none"
               />
               <button 
                 onClick={handleTryAttestation}
@@ -208,7 +208,7 @@ export const DeveloperApiView = () => {
               </div>
             )}
             {attestationData !== null && (
-              <pre className="mt-2 text-xs font-mono text-brand-text bg-[#050505] p-4 border border-brand-border overflow-x-auto max-h-64 overflow-y-auto">
+              <pre className="mt-2 text-xs font-mono text-brand-text bg-brand-bg p-4 border border-brand-border overflow-x-auto max-h-64 overflow-y-auto">
                 {String(JSON.stringify(attestationData, null, 2))}
               </pre>
             )}
@@ -314,7 +314,7 @@ export const DeveloperApiView = () => {
 
         <div className="border border-brand-border bg-brand-bg p-4 flex flex-col gap-2 mb-12">
           <p className="font-mono text-sm text-brand-muted">
-            See <code className="text-brand-text bg-[#050505] px-1 py-0.5 border border-brand-border">scripts/consumer-demo.ts</code> for an example consumer that reads the chain directly using only sas-lib.
+            See <code className="text-brand-text bg-brand-bg px-1 py-0.5 border border-brand-border">scripts/consumer-demo.ts</code> for an example consumer that reads the chain directly using only sas-lib.
           </p>
         </div>
 

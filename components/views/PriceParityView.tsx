@@ -82,7 +82,7 @@ export const PriceParityView = () => {
         {!error && (
           <div className="overflow-x-auto border border-brand-border bg-brand-bg">
             <table className="w-full text-left font-mono text-sm">
-              <thead className="bg-[#0A0A0A] border-b border-brand-border">
+              <thead className="bg-brand-card border-b border-brand-border">
                 <tr>
                   <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Symbol</th>
                   <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Issuer</th>
@@ -125,7 +125,7 @@ export const PriceParityView = () => {
                     const isThinLiquidity = row.liquidity !== null && row.liquidity < 100000;
 
                     return (
-                      <tr key={row.mint} className="hover:bg-[#1A1A1A] transition-colors">
+                      <tr key={row.mint} className="hover:bg-brand-border/40 transition-colors">
                         <td className="p-3 text-brand-text font-bold">
                           {row.symbol}
                           {row.inKaminoMarket && (

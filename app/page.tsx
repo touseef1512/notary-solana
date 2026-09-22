@@ -314,7 +314,7 @@ export default function AppShell() {
                   placeholder="Enter Solana Address to View"
                   value={viewInput}
                   onChange={(e) => setViewInput(e.target.value)}
-                  className="bg-[#050505] border border-brand-border text-brand-text px-3 py-1 font-mono text-xs w-64 focus:border-brand-accent focus:outline-none placeholder:text-brand-muted/50"
+                  className="bg-brand-bg border border-brand-border text-brand-text px-3 py-1 font-mono text-xs w-64 focus:border-brand-accent focus:outline-none placeholder:text-brand-muted/50"
                 />
                 <button
                   onClick={() => {
@@ -325,7 +325,7 @@ export default function AppShell() {
                       alert("Please enter a valid base58 Solana address");
                     }
                   }}
-                  className="bg-brand-card border border-brand-border hover:bg-[#1a1a1a] px-3 py-1 text-xs font-mono text-brand-muted hover:text-brand-text transition-colors uppercase cursor-pointer"
+                  className="bg-brand-card border border-brand-border hover:bg-brand-border/40 px-3 py-1 text-xs font-mono text-brand-muted hover:text-brand-text transition-colors uppercase cursor-pointer"
                 >
                   View
                 </button>
@@ -363,8 +363,8 @@ export default function AppShell() {
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-[#141414] border border-brand-border shadow-[0_4px_20px_rgba(0,0,0,0.5)] z-50 flex flex-col">
-                  <div className="p-3 border-b border-brand-border bg-[#0A0A0A]">
+                <div className="absolute right-0 mt-2 w-80 bg-brand-card border border-brand-border z-50 flex flex-col">
+                  <div className="p-3 border-b border-brand-border bg-brand-card">
                     <h3 className="text-xs font-mono uppercase tracking-widest text-brand-text">Upcoming Alerts (90 Days)</h3>
                   </div>
                   
@@ -377,7 +377,7 @@ export default function AppShell() {
                       alerts.map((alert) => {
                         const isCritical = alert.severity === 'critical';
                         return (
-                          <div key={alert.obligationPubkey ?? alert.assetSymbol} className={`flex justify-between items-center p-3 border-b ${isCritical ? 'border-negative bg-negative/5' : 'border-brand-border hover:bg-[#1A1A1A]'} transition-colors`}>
+                          <div key={alert.obligationPubkey ?? alert.assetSymbol} className={`flex justify-between items-center p-3 border-b ${isCritical ? 'border-negative bg-negative/5' : 'border-brand-border hover:bg-brand-border/40'} transition-colors`}>
                             <div className="flex flex-col">
                               <span className={`text-sm font-bold uppercase ${isCritical ? 'text-negative' : 'text-brand-accent'}`}>{alert.title}</span>
                               <span className="text-[10px] text-brand-muted font-mono uppercase tracking-wider max-w-[200px] truncate" title={alert.note}>{alert.note}</span>
@@ -396,7 +396,7 @@ export default function AppShell() {
                   </div>
                   
                   <button
-                    className="p-3 text-[11px] font-mono uppercase tracking-widest text-brand-accent hover:bg-[#1A1A1A] transition-colors cursor-pointer w-full text-center focus:outline-none"
+                    className="p-3 text-[11px] font-mono uppercase tracking-widest text-brand-accent hover:bg-brand-border/40 transition-colors cursor-pointer w-full text-center focus:outline-none"
                     onClick={() => {
                       setIsDropdownOpen(false);
                       setActiveTab('alerts');
