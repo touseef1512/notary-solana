@@ -1,0 +1,36 @@
+name: Telegram Daily Briefing
+
+on:
+  schedule:
+    # Run once daily at 07:00 UTC (fixed UTC time, not per-subscriber local time)
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: telegram-daily-briefing
+  cancel-in-progress: false
+
+jobs:
+  broadcast:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Send daily briefings
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+          SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
+          TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
+          NOTARY_KEYPAIR: ${{ secrets.NOTARY_KEYPAIR }}
+        run: npx tsx scripts/send-daily-briefings.ts
