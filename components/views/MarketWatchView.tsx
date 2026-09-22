@@ -41,13 +41,13 @@ export const MarketWatchView = () => {
         <PlainNote text="This lists every asset the Kamino xStocks lending market currently accepts, and the date Notary first saw each one. If an asset is added or removed, it shows up here. It only tells you what is listed. It does not say whether an asset is a good idea." />
 
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-brand-text uppercase tracking-widest">Market Watch</h2>
+          <h2 className="text-sm font-bold text-brand-text">Market watch</h2>
           <button 
             onClick={load} 
             disabled={loading}
-            className="px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-brand-accent font-mono text-xs uppercase tracking-wider transition-colors cursor-pointer"
+            className="px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-brand-accent font-mono text-xs transition-colors cursor-pointer"
           >
-            {loading ? "REFRESHING..." : "Refresh"}
+            {loading ? "Refreshing..." : "Refresh"}
           </button>
         </div>
 
@@ -74,15 +74,15 @@ export const MarketWatchView = () => {
               <div className="flex flex-wrap gap-6">
                 <div>
                   <div className="text-brand-text font-mono text-lg">{result.entries.filter(e => e.removedTs === null).length}</div>
-                  <div className="text-brand-muted text-xs uppercase">Currently listed</div>
+                  <div className="text-brand-muted text-xs">Currently listed</div>
                 </div>
                 <div>
                   <div className="text-brand-text font-mono text-lg">{result.entries.filter(e => e.addedAfterBaseline).length}</div>
-                  <div className="text-brand-muted text-xs uppercase">New since watching began</div>
+                  <div className="text-brand-muted text-xs">New since watching began</div>
                 </div>
                 <div>
                   <div className="text-brand-text font-mono text-lg">{result.entries.filter(e => e.removedTs !== null).length}</div>
-                  <div className="text-brand-muted text-xs uppercase">Removed</div>
+                  <div className="text-brand-muted text-xs">Removed</div>
                 </div>
               </div>
               {(result.baselineTs !== null || result.lastCheckedTs !== null) && (
@@ -103,9 +103,9 @@ export const MarketWatchView = () => {
                 <table className="w-full text-left text-sm">
                   <thead className="bg-brand-bg border-b border-brand-border">
                     <tr>
-                      <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Asset</th>
-                      <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">First seen by Notary</th>
-                      <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Status</th>
+                      <th className="p-3 text-[10px] text-brand-muted font-normal">Asset</th>
+                      <th className="p-3 text-[10px] text-brand-muted font-normal">First seen by Notary</th>
+                      <th className="p-3 text-[10px] text-brand-muted font-normal">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-brand-border">
@@ -147,7 +147,7 @@ export const MarketWatchView = () => {
                             <div className="text-negative">Removed {formatDate(e.removedTs)}</div>
                           ) : e.addedAfterBaseline ? (
                             <div className="flex items-center gap-2">
-                              <span className="inline-flex px-1 py-0.5 text-[9px] border border-brand-accent text-brand-accent uppercase tracking-widest">New</span>
+                              <span className="inline-flex px-1 py-0.5 text-[9px] border border-brand-accent text-brand-accent">New</span>
                               <span className="text-brand-text">Listed</span>
                             </div>
                           ) : (
