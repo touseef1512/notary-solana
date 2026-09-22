@@ -31,7 +31,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
                 </p>
               </div>
               <button 
-                onClick={() => onNavigate('registry')}
+                onClick={() => onNavigate('trust')}
                 className="w-full px-3 py-2 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg font-mono text-xs uppercase tracking-wider transition-colors cursor-pointer text-center"
               >
                 Open Trust Registry
@@ -46,7 +46,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
                 </p>
               </div>
               <button 
-                onClick={() => onNavigate('holdings')}
+                onClick={() => onNavigate('portfolio')}
                 className="w-full px-3 py-2 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg font-mono text-xs uppercase tracking-wider transition-colors cursor-pointer text-center"
               >
                 Open Holdings
@@ -61,7 +61,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
                 </p>
               </div>
               <button 
-                onClick={() => onNavigate('collateral-risk')}
+                onClick={() => onNavigate('loans')}
                 className="w-full px-3 py-2 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg font-mono text-xs uppercase tracking-wider transition-colors cursor-pointer text-center"
               >
                 Open Collateral Risk
@@ -76,7 +76,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
                 </p>
               </div>
               <button 
-                onClick={() => onNavigate('tax')}
+                onClick={() => onNavigate('portfolio')}
                 className="w-full px-3 py-2 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg font-mono text-xs uppercase tracking-wider transition-colors cursor-pointer text-center"
               >
                 Open Tax Export
@@ -90,7 +90,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
           <div className="flex flex-col gap-2 w-full md:w-1/3 md:border-r border-brand-border md:pr-4">
             <p className="font-mono text-xs text-brand-muted">Curious how far tokens trade from the real stock?</p>
             <button 
-              onClick={() => onNavigate('price-parity')}
+              onClick={() => onNavigate('markets')}
               className="w-full md:w-auto px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer text-center"
             >
               Open Price Parity
@@ -99,7 +99,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onNavigate }) => {
           <div className="flex flex-col gap-2 w-full md:w-1/3 md:border-r border-brand-border md:px-4">
             <p className="font-mono text-xs text-brand-muted">Curious which assets the Kamino lending market accepts?</p>
             <button 
-              onClick={() => onNavigate('market-watch')}
+              onClick={() => onNavigate('markets')}
               className="w-full md:w-auto px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer text-center"
             >
               Open Market Watch

@@ -42,6 +42,7 @@ import { DeveloperApiView } from '@/components/views/DeveloperApiView';
 import { PriceParityView } from '@/components/views/PriceParityView';
 import { LandingView } from '@/components/views/LandingView';
 import { MarketWatchView } from '@/components/views/MarketWatchView';
+import { WhatIfSimulator } from '@/components/views/WhatIfSimulator';
 
 // The WalletMultiButton uses client-side APIs and can cause hydration errors if not loaded dynamically
 const WalletMultiButtonDynamic = dynamic(
@@ -49,7 +50,7 @@ const WalletMultiButtonDynamic = dynamic(
   { ssr: false }
 );
 
-type TabId = 'home' | 'holdings' | 'trust-score' | 'reserve' | 'collateral-risk' | 'price-parity' | 'market-watch' | 'ask' | 'alerts' | 'tax' | 'comparator' | 'registry' | 'directory' | 'developer';
+type TabId = 'today' | 'portfolio' | 'loans' | 'markets' | 'trust' | 'developer' | 'ask' | 'alerts';
 
 interface NavItem {
   id: TabId;
@@ -58,24 +59,29 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'home', label: 'Home', icon: Home },
-  { id: 'registry', label: 'Trust Registry', icon: BookOpen },
-  { id: 'directory', label: 'Asset Directory', icon: Library },
-  { id: 'holdings', label: 'Holdings & Verification', icon: WalletCards },
-  { id: 'trust-score', label: 'Trust Score & Leaderboard', icon: Trophy },
-  { id: 'reserve', label: 'Reserve Attestation', icon: Landmark },
-  { id: 'collateral-risk', label: 'Collateral Risk', icon: ShieldAlert },
-  { id: 'price-parity', label: 'Price Parity', icon: LineChart },
-  { id: 'market-watch', label: 'Market Watch', icon: Eye },
-  { id: 'ask', label: 'Ask Notary', icon: MessageSquare },
-  { id: 'alerts', label: 'Alerts', icon: Bell },
-  { id: 'tax', label: 'Tax Export', icon: FileDown },
-  { id: 'comparator', label: 'Comparator', icon: Scale },
-  { id: 'developer', label: 'Developers', icon: Code2 },
+  { id: 'today', label: 'Today', icon: Home },
+  { id: 'portfolio', label: 'Portfolio', icon: WalletCards },
+  { id: 'loans', label: 'Loans', icon: ShieldAlert },
+  { id: 'markets', label: 'Markets', icon: LineChart },
+  { id: 'trust', label: 'Trust', icon: ShieldCheck },
+  { id: 'developer', label: 'Developers', icon: Code2 }
 ];
 
+const SUB_NAV_ITEMS: Record<string, { id: string; label: string; icon: React.FC<{ className?: string }> }[]> = {
+  portfolio: [{ id: 'holdings', label: 'Holdings', icon: WalletCards }, { id: 'tax', label: 'Tax Export', icon: FileDown }],
+  loans: [{ id: 'collateral-risk', label: 'Collateral Risk', icon: ShieldAlert }, { id: 'what-if', label: 'What-If Simulator', icon: Scale }],
+  markets: [{ id: 'price-parity', label: 'Price Parity', icon: LineChart }, { id: 'market-watch', label: 'Market Watch', icon: Eye }, { id: 'comparator', label: 'Comparator', icon: Scale }],
+  trust: [{ id: 'registry', label: 'Trust Registry', icon: BookOpen }, { id: 'trust-score', label: 'Trust Score', icon: Trophy }, { id: 'reserve', label: 'Reserve Attestation', icon: Landmark }, { id: 'directory', label: 'Asset Directory', icon: Library }]
+};
+
+const TAB_LABELS: Record<TabId, string> = {
+  today: 'Today', portfolio: 'Portfolio', loans: 'Loans', markets: 'Markets',
+  trust: 'Trust', developer: 'Developers', ask: 'Ask Notary', alerts: 'Alerts'
+};
+
 export default function AppShell() {
-  const [activeTab, setActiveTab] = useState<TabId>('home');
+  const [activeTab, setActiveTab] = useState<TabId>('today');
+  const [subTab, setSubTab] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -138,41 +144,37 @@ export default function AppShell() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'home':
+      case 'today':
         return (
           <LandingView 
             onNavigate={(id) => { 
               const match = NAV_ITEMS.find((n) => n.id === id); 
-              if (match) setActiveTab(match.id); 
+              if (match) {
+                setActiveTab(match.id);
+                setSubTab(SUB_NAV_ITEMS[match.id] ? SUB_NAV_ITEMS[match.id][0].id : '');
+              }
             }} 
           />
         );
-      case 'holdings':
-        return <HoldingsView />;
-      case 'trust-score':
-        return <TrustScoreView />;
-      case 'reserve':
-        return <ReserveAttestationView />;
-      case 'collateral-risk':
-        return <CollateralRiskView />;
-      case 'price-parity':
+      case 'portfolio':
+        return subTab === 'tax' ? <TaxExportView /> : <HoldingsView />;
+      case 'loans':
+        return subTab === 'what-if' ? <WhatIfSimulator /> : <CollateralRiskView />;
+      case 'markets':
+        if (subTab === 'market-watch') return <MarketWatchView />;
+        if (subTab === 'comparator') return <ComparatorView />;
         return <PriceParityView />;
-      case 'market-watch':
-        return <MarketWatchView />;
-      case 'registry':
+      case 'trust':
+        if (subTab === 'trust-score') return <TrustScoreView />;
+        if (subTab === 'reserve') return <ReserveAttestationView />;
+        if (subTab === 'directory') return <AssetDirectoryView />;
         return <TrustRegistryView />;
-      case 'directory':
-        return <AssetDirectoryView />;
+      case 'developer':
+        return <DeveloperApiView />;
       case 'ask':
         return <AskNotaryView />;
       case 'alerts':
         return <AlertsView />;
-      case 'tax':
-        return <TaxExportView />;
-      case 'comparator':
-        return <ComparatorView />;
-      case 'developer':
-        return <DeveloperApiView />;
       default:
         return <HoldingsView />;
     }
@@ -223,6 +225,7 @@ export default function AppShell() {
                 <button
                   onClick={() => {
                     setActiveTab(item.id);
+                    setSubTab(SUB_NAV_ITEMS[item.id] ? SUB_NAV_ITEMS[item.id][0].id : '');
                     setMobileMenuOpen(false);
                   }}
                   className={`
@@ -299,7 +302,7 @@ export default function AppShell() {
             </button>
             
             <h2 className="text-sm uppercase tracking-widest font-semibold text-brand-text hidden sm:block">
-              {NAV_ITEMS.find(i => i.id === activeTab)?.label}
+              {TAB_LABELS[activeTab]}
             </h2>
           </div>
           
@@ -333,6 +336,17 @@ export default function AppShell() {
               <div className="w-2 h-2 rounded-full bg-brand-accent animate-pulse" />
               <span className="font-mono text-xs text-brand-accent uppercase">NETWORK: DEVNET</span>
             </div>
+
+            <button
+              className="text-brand-muted hover:text-brand-text focus:outline-none cursor-pointer p-1"
+              onClick={() => {
+                setActiveTab('ask');
+                setSubTab('');
+              }}
+              aria-label="Ask Notary"
+            >
+              <MessageSquare className="w-5 h-5" />
+            </button>
 
             <div className="relative" ref={dropdownRef}>
               <button 
@@ -386,6 +400,7 @@ export default function AppShell() {
                     onClick={() => {
                       setIsDropdownOpen(false);
                       setActiveTab('alerts');
+                      setSubTab('');
                     }}
                   >
                     View all in Alerts
@@ -401,6 +416,27 @@ export default function AppShell() {
         {/* Scrollable Content */}
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <div className="max-w-6xl mx-auto w-full">
+            {SUB_NAV_ITEMS[activeTab] && (
+              <div className="flex flex-wrap gap-2 mb-6 pb-4 border-b border-brand-border">
+                {SUB_NAV_ITEMS[activeTab].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setSubTab(item.id)}
+                    className={`
+                      flex items-center gap-2 px-3 py-1.5 text-xs font-mono uppercase tracking-wider
+                      transition-colors cursor-pointer border
+                      ${subTab === item.id 
+                        ? 'border-brand-accent bg-brand-accent/10 text-brand-accent' 
+                        : 'border-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg/30'
+                      }
+                    `}
+                  >
+                    <item.icon className="w-3 h-3" />
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            )}
             {renderContent()}
           </div>
         </main>
