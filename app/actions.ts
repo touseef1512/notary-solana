@@ -1,6 +1,6 @@
 "use server";
 
-import { GAP_PERCENTAGES } from '@/lib/gap-percentages';
+import { getAllMeasuredWeekendGaps } from '@/lib/weekend-gap';
 import { getTokenizedStockHoldings as fetchHoldings } from "@/lib/solana";
 import { TokenHolding } from "@/lib/solana";
 import type { TokenHolding as AskNotaryTokenHolding } from "@/lib/ask-notary";
@@ -241,7 +241,8 @@ export async function getKaminoRiskAction(walletAddress: string) {
   try {
     const obligations = await getKaminoPositions(walletAddress);
     
-    const gapPercentages = GAP_PERCENTAGES;
+    const gapData = await getAllMeasuredWeekendGaps();
+    const gapPercentages = Object.fromEntries(Object.entries(gapData).map(([k, v]) => [k, v.percent]));
 
     return await Promise.all(obligations.map(async (obligation) => {
       let currentHealth: number | "Insufficient Data" = "Insufficient Data";
@@ -279,6 +280,7 @@ export async function getKaminoRiskAction(walletAddress: string) {
         worstAssetSymbol,
         worstDrawdownValue,
         gapStressedHealth,
+        worstAssetGapDate: worstAssetSymbol && gapData[worstAssetSymbol] ? gapData[worstAssetSymbol].asOfDate : null,
         attestationStatus,
         profile: buildLendingRiskProfile({
           obligationPubkey: obligation.obligationPubkey,
@@ -328,7 +330,8 @@ export async function publishAttestationAction(obligationPubkey: string, walletA
       }
     }
 
-    const gapPercentages = GAP_PERCENTAGES;
+    const gapData = await getAllMeasuredWeekendGaps();
+    const gapPercentages = Object.fromEntries(Object.entries(gapData).map(([k, v]) => [k, v.percent]));
     const gapStressedHealth = computeGapStressedHealthFactor(obligation, gapPercentages);
 
     if (worstAssetSymbol === null || worstDrawdownValue === null || typeof gapStressedHealth !== 'number') {
@@ -351,7 +354,8 @@ export async function simulateLoanAction(input: { depositSymbol: string, deposit
 }
 
 export async function getGapSymbolsAction() {
-  return Object.keys(GAP_PERCENTAGES);
+  const gapData = await getAllMeasuredWeekendGaps();
+  return Object.keys(gapData);
 }
 
 export async function getPriceParityAction() {

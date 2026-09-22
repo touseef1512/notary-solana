@@ -1,1 +1,0 @@
-export const GAP_PERCENTAGES: Record<string, number> = { 'CRCLx': -4.71, 'METAx': 3.67, 'TSLAx': -2.39, 'NVDAx': -2.64, 'HOODx': -1.89, 'QQQx': -1.17, 'MSTRx': -1.01, 'SPYx': -0.36, 'AAPLx': 0.03, 'GOOGLx': 2.16 };

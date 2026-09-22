@@ -1,6 +1,6 @@
 import { getStockPrice } from './market-data';
 import { getParityAssets, KAMINO_COLLATERAL_SYMBOLS } from './parity-assets';
-import { GAP_PERCENTAGES } from './gap-percentages';
+import { getMeasuredWeekendGap } from './weekend-gap';
 
 // best-effort per server instance
 const jupiterCache = new Map<string, { data: JupiterPriceResult | null; expiresAt: number }>();
@@ -115,6 +115,7 @@ export interface PriceParityResult {
   reason?: string;
   inKaminoMarket: boolean;
   modelGapPercent: number | null;
+  modelGapDate?: string | null;
 }
 
 export async function buildPriceParity(): Promise<PriceParityResult[]> {
@@ -142,6 +143,10 @@ export async function buildPriceParity(): Promise<PriceParityResult[]> {
   });
 
   const priceResponses = await Promise.all(pricePromises);
+
+  const gapPromises = assets.map(a => getMeasuredWeekendGap(a.symbol));
+  const gapResponses = await Promise.all(gapPromises);
+
   const pricesByTicker: Record<string, { price: number; date: string } | null> = {};
   for (let i = 0; i < priceResponses.length; i++) {
     const res = priceResponses[i];
@@ -204,11 +209,11 @@ export async function buildPriceParity(): Promise<PriceParityResult[]> {
 
     const inKaminoMarket = KAMINO_COLLATERAL_SYMBOLS.includes(asset.symbol);
     let modelGapPercent: number | null = null;
-    if (Object.prototype.hasOwnProperty.call(GAP_PERCENTAGES, asset.symbol)) {
-      const g = GAP_PERCENTAGES[asset.symbol];
-      if (Number.isFinite(g)) {
-        modelGapPercent = g;
-      }
+    let modelGapDate: string | null = null;
+    const gapData = gapResponses[i];
+    if (gapData !== "Insufficient Data") {
+      modelGapPercent = gapData.percent;
+      modelGapDate = gapData.asOfDate;
     }
 
     results.push({
@@ -226,7 +231,8 @@ export async function buildPriceParity(): Promise<PriceParityResult[]> {
       status,
       reason,
       inKaminoMarket,
-      modelGapPercent
+      modelGapPercent,
+      modelGapDate
     });
   }
 

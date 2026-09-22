@@ -1,6 +1,6 @@
 import { KaminoObligationData } from './kamino';
 import { computeSurvivableDrawdown, computeGapStressedHealthFactor } from './risk-math';
-import { GAP_PERCENTAGES } from './gap-percentages';
+import { getMeasuredWeekendGap } from './weekend-gap';
 
 export interface WhatIfInput {
   depositSymbol: string;
@@ -14,10 +14,11 @@ export interface WhatIfOutput {
   survivableDrawdown: number | "Insufficient Data";
   gapStressedHealth: number | "Insufficient Data";
   gapPercentageUsed: number;
+  gapDateUsed: string | null;
   status: "already-liquidatable" | "gap-liquidation" | "thin" | "ok" | "no-borrow" | "Insufficient Data";
 }
 
-export function simulateHypotheticalLoan(input: WhatIfInput): WhatIfOutput {
+export async function simulateHypotheticalLoan(input: WhatIfInput): Promise<WhatIfOutput> {
   if (
     !Number.isFinite(input.depositUsd) || 
     !Number.isFinite(input.borrowUsd) || 
@@ -31,12 +32,16 @@ export function simulateHypotheticalLoan(input: WhatIfInput): WhatIfOutput {
       currentHealth: "Insufficient Data",
       survivableDrawdown: "Insufficient Data",
       gapStressedHealth: "Insufficient Data",
-      gapPercentageUsed: GAP_PERCENTAGES[input.depositSymbol] || 0,
+      gapPercentageUsed: 0,
+      gapDateUsed: null,
       status: "Insufficient Data"
     };
   }
 
-  const gapUsed = GAP_PERCENTAGES[input.depositSymbol] || 0;
+  const gapData = await getMeasuredWeekendGap(input.depositSymbol);
+  const gapUsed = gapData === "Insufficient Data" ? 0 : gapData.percent;
+  const gapDateUsed = gapData === "Insufficient Data" ? null : gapData.asOfDate;
+  const gapPercentages = { [input.depositSymbol]: gapUsed };
 
   if (input.borrowUsd === 0) {
     return {
@@ -44,6 +49,7 @@ export function simulateHypotheticalLoan(input: WhatIfInput): WhatIfOutput {
       survivableDrawdown: "Insufficient Data",
       gapStressedHealth: "Insufficient Data",
       gapPercentageUsed: gapUsed,
+      gapDateUsed: gapDateUsed,
       status: "no-borrow"
     };
   }
@@ -67,7 +73,7 @@ export function simulateHypotheticalLoan(input: WhatIfInput): WhatIfOutput {
   const drawdowns = computeSurvivableDrawdown(obligation);
   const survivableDrawdown = drawdowns[input.depositSymbol] ?? "Insufficient Data";
   
-  const gapStressedHealth = computeGapStressedHealthFactor(obligation, GAP_PERCENTAGES);
+  const gapStressedHealth = computeGapStressedHealthFactor(obligation, gapPercentages);
 
   let status: WhatIfOutput["status"] = "ok";
   if (currentHealth < 1) {
@@ -87,6 +93,7 @@ export function simulateHypotheticalLoan(input: WhatIfInput): WhatIfOutput {
     survivableDrawdown,
     gapStressedHealth,
     gapPercentageUsed: gapUsed,
+    gapDateUsed: gapDateUsed,
     status
   };
 }

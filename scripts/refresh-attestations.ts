@@ -17,7 +17,7 @@ loadEnv();
 import { getKaminoPositions } from '../lib/kamino';
 import { computeSurvivableDrawdown, computeGapStressedHealthFactor } from '../lib/risk-math';
 import { getAttestationStatus, refreshRiskAttestation } from '../lib/sas-attestation';
-import { GAP_PERCENTAGES } from '../lib/gap-percentages';
+import { getAllMeasuredWeekendGaps } from '../lib/weekend-gap';
 
 const PAIRS = [
   { wallet: 'Fa7LNzj3SCV364hya9dx9evL29pC1awx24iHeCEwX6vU', obligation: '7BACsXdze3FporEnXEbuSHStPPQ58tpZuWb7jgsUYmV' },
@@ -27,6 +27,9 @@ const PAIRS = [
 async function run() {
   const isSend = process.argv.includes('--send');
   let hasError = false;
+
+  const gapData = await getAllMeasuredWeekendGaps();
+  const gapPercentages = Object.fromEntries(Object.entries(gapData).map(([k, v]) => [k, v.percent]));
 
   for (let i = 0; i < PAIRS.length; i++) {
     const pair = PAIRS[i];
@@ -58,7 +61,7 @@ async function run() {
         }
       }
 
-      const gapStressedHealth = computeGapStressedHealthFactor(obligation, GAP_PERCENTAGES);
+      const gapStressedHealth = computeGapStressedHealthFactor(obligation, gapPercentages);
 
       if (worstAssetSymbol === null || worstDrawdownValue === null || typeof gapStressedHealth !== 'number' || !Number.isFinite(gapStressedHealth)) {
         console.log("  Skip: missing worst asset drawdown or gap-stressed health");

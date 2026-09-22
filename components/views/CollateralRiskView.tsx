@@ -17,6 +17,7 @@ type KaminoRiskData = {
   worstAssetSymbol: string | null;
   worstDrawdownValue: number | null;
   gapStressedHealth: number | "Insufficient Data";
+  worstAssetGapDate: string | null;
   attestationStatus: { exists: boolean; attestationPda: string; decoded?: unknown } | null;
 };
 
@@ -143,6 +144,11 @@ const ObligationCard = ({ obligation, activeAddress }: { obligation: KaminoRiskD
               </span>
             )}
           </div>
+          {obligation.worstAssetGapDate && (
+            <span className="text-[10px] text-brand-muted mt-1 font-mono">
+              (from worst drop: {obligation.worstAssetGapDate})
+            </span>
+          )}
         </div>
       </div>
     </div>
