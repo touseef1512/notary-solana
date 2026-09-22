@@ -1,5 +1,5 @@
 import { AlertResult, getAllUpcomingAlerts } from './alerts';
-import { getKaminoRiskAction } from '@/app/actions';
+import { getKaminoRiskData } from '@/lib/kamino-risk';
 
 export interface NotaryAlert {
   kind: 'dividend-event' | 'liquidation-risk' | 'reserve-drop' | 'market-watch';
@@ -44,7 +44,7 @@ export async function getLiquidationRiskAlerts(walletAddress: string | undefined
     return [];
   }
 
-  const obligations = await getKaminoRiskAction(walletAddress);
+  const obligations = await getKaminoRiskData(walletAddress);
   const alerts: NotaryAlert[] = [];
 
   for (const obligation of obligations) {
