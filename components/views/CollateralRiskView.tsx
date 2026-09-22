@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useActiveAddress } from "@/components/ActiveAddressProvider";
 import { getKaminoRiskAction, publishAttestationAction } from "@/app/actions";
-import { WhatIfSimulator } from './WhatIfSimulator';
 import { PlainNote } from '@/components/PlainNote';
 
 // Define the type we expect from getKaminoRiskAction
@@ -52,20 +51,20 @@ const ObligationCard = ({ obligation, activeAddress }: { obligation: KaminoRiskD
       {/* Header */}
       <div className="flex justify-between items-center border-b border-brand-border pb-2">
         <div className="flex flex-col">
-          <span className="text-[10px] text-brand-muted uppercase tracking-widest">OBLIGATION_PUBKEY</span>
+          <span className="text-sm font-sans text-brand-muted">Obligation</span>
           <span className="font-mono text-sm text-brand-text">{truncateAddress(obligation.obligationPubkey)}</span>
         </div>
         <div className="flex items-center gap-2">
           {attestation?.exists ? (
             <div className="flex items-center gap-3">
-              <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-positive border border-positive uppercase">
-                VERIFIED ON-CHAIN
+              <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-positive border border-positive">
+                Verified on-chain
               </span>
               <a 
                 href={`https://explorer.solana.com/address/${attestation.attestationPda}?cluster=devnet`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-accent hover:text-white text-[10px] font-mono uppercase underline tracking-wider"
+                className="text-brand-accent hover:text-white text-[10px] font-mono underline"
               >
                 View on-chain proof ↗
               </a>
@@ -79,9 +78,9 @@ const ObligationCard = ({ obligation, activeAddress }: { obligation: KaminoRiskD
                 onClick={handlePublish}
                 disabled={isPublishDisabled}
                 title={isPublishDisabled ? (publishing ? "" : "Cannot publish: insufficient risk data") : ""}
-                className="px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-brand-accent disabled:cursor-not-allowed font-mono text-xs uppercase tracking-wider transition-colors"
+                className="px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-brand-accent disabled:cursor-not-allowed font-mono text-xs transition-colors"
               >
-                {publishing ? "PUBLISHING..." : "Publish On-Chain"}
+                {publishing ? "Publishing..." : "Publish on-chain"}
               </button>
             </div>
           )}
@@ -89,28 +88,31 @@ const ObligationCard = ({ obligation, activeAddress }: { obligation: KaminoRiskD
       </div>
 
       {/* Grid of details */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="flex flex-col">
-          <span className="text-[10px] text-brand-muted uppercase tracking-widest mb-1">DEPOSITED_VALUE</span>
-          <span className="font-mono text-sm text-brand-text">
+      <div className="flex flex-col">
+        <div className="flex justify-between items-center py-2 border-b border-brand-border">
+          <span className="font-sans text-brand-muted text-sm">Deposited value</span>
+          <span className="font-mono text-brand-text text-sm">
             ${obligation.depositedValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] text-brand-muted uppercase tracking-widest mb-1">BORROWED_VALUE</span>
-          <span className="font-mono text-sm text-brand-text">
+        
+        <div className="flex justify-between items-center py-2 border-b border-brand-border">
+          <span className="font-sans text-brand-muted text-sm">Borrowed value</span>
+          <span className="font-mono text-brand-text text-sm">
             ${obligation.borrowedValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] text-brand-muted uppercase tracking-widest mb-1">LIQUIDATION_THRESHOLD</span>
-          <span className="font-mono text-sm text-brand-text">
+        
+        <div className="flex justify-between items-center py-2 border-b border-brand-border">
+          <span className="font-sans text-brand-muted text-sm">Liquidation threshold</span>
+          <span className="font-mono text-brand-text text-sm">
             {(obligation.liquidationLtvThreshold * 100).toFixed(2)}%
           </span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] text-brand-muted uppercase tracking-widest mb-1">CURRENT_HEALTH</span>
-          <span className="font-mono text-sm text-brand-text">
+        
+        <div className="flex justify-between items-center py-2 border-b border-brand-border">
+          <span className="font-sans text-brand-muted text-sm">Current health</span>
+          <span className="font-mono text-brand-text text-sm">
             {obligation.currentHealth === "Insufficient Data" ? (
               <span className="text-brand-muted">N/A</span>
             ) : (
@@ -118,9 +120,10 @@ const ObligationCard = ({ obligation, activeAddress }: { obligation: KaminoRiskD
             )}
           </span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] text-brand-muted uppercase tracking-widest mb-1">WORST_ASSET_DRAWDOWN</span>
-          <span className="font-mono text-sm text-brand-text">
+        
+        <div className="flex justify-between items-center py-2 border-b border-brand-border">
+          <span className="font-sans text-brand-muted text-sm">Worst asset drawdown</span>
+          <span className="font-mono text-brand-text text-sm">
             {obligation.worstAssetSymbol === null || obligation.worstDrawdownValue === null ? (
               <span className="text-brand-muted">Insufficient Data</span>
             ) : (
@@ -128,10 +131,11 @@ const ObligationCard = ({ obligation, activeAddress }: { obligation: KaminoRiskD
             )}
           </span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] text-brand-muted uppercase tracking-widest mb-1">GAP_STRESSED_HEALTH</span>
+        
+        <div className="flex justify-between items-center py-2">
+          <span className="font-sans text-brand-muted text-sm">Gap-stressed health</span>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-sm text-brand-text">
+            <span className="font-mono text-brand-text text-sm">
               {obligation.gapStressedHealth === "Insufficient Data" ? (
                 <span className="text-brand-muted">N/A</span>
               ) : (
@@ -139,16 +143,16 @@ const ObligationCard = ({ obligation, activeAddress }: { obligation: KaminoRiskD
               )}
             </span>
             {typeof obligation.gapStressedHealth === 'number' && obligation.gapStressedHealth < 1 && (
-              <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-negative border border-negative uppercase">
-                WARNING
+              <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-negative border border-negative">
+                Warning
+              </span>
+            )}
+            {obligation.worstAssetGapDate && (
+              <span className="text-[10px] text-brand-muted font-mono ml-2">
+                (from worst drop: {obligation.worstAssetGapDate})
               </span>
             )}
           </div>
-          {obligation.worstAssetGapDate && (
-            <span className="text-[10px] text-brand-muted mt-1 font-mono">
-              (from worst drop: {obligation.worstAssetGapDate})
-            </span>
-          )}
         </div>
       </div>
     </div>
@@ -189,10 +193,10 @@ export const CollateralRiskView = () => {
         <div className="h-8 w-32 bg-brand-border rounded-sm"></div>
         <div className="h-8 w-24 bg-brand-border rounded-sm"></div>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="flex flex-col">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="flex flex-col gap-2">
-            <div className="h-3 w-20 bg-brand-border rounded-sm"></div>
+          <div key={i} className="flex justify-between items-center py-2 border-b border-brand-border last:border-b-0">
+            <div className="h-4 w-32 bg-brand-border rounded-sm"></div>
             <div className="h-4 w-16 bg-brand-border rounded-sm"></div>
           </div>
         ))}
@@ -206,24 +210,24 @@ export const CollateralRiskView = () => {
         <PlainNote text="This shows how close a Kamino loan backed by tokenized stocks is to liquidation, where the collateral can be sold. Health factor above 1 means the loan is not currently liquidatable, and below 1 means it can be liquidated. Gap-stressed health factor re-checks it after the weekend price gap last observed, because tokens trade around the clock while stocks do not. An attestation is a public on-chain record of this check, published on Solana devnet." />
         {!activeAddress ? (
           <div className="flex items-center justify-center h-48 border border-brand-border bg-brand-card">
-            <p className="text-brand-muted font-mono text-sm uppercase tracking-widest">Connect wallet or enter address to view terminal</p>
+            <p className="text-brand-muted font-mono text-sm">Connect wallet or enter address to view terminal</p>
           </div>
         ) : (
           <div className="flex flex-col space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-brand-text uppercase tracking-widest">Kamino Lending Risk</h2>
+              <h2 className="text-sm font-bold text-brand-text">Kamino lending risk</h2>
               <span className="text-xs font-mono text-brand-muted">
-                {loading ? 'UPDATING...' : `${obligations.length} OBLIGATIONS`}
+                {loading ? 'Updating...' : `${obligations.length} obligations`}
               </span>
             </div>
 
             {error ? (
               <div className="flex items-center justify-center h-32 border border-negative bg-brand-card">
-                <p className="text-negative font-mono text-sm uppercase">{error}</p>
+                <p className="text-negative font-mono text-sm">{error}</p>
               </div>
             ) : obligations.length === 0 && !loading ? (
               <div className="flex flex-col items-center justify-center h-48 border border-brand-border bg-brand-card px-4">
-                <p className="text-brand-muted font-mono text-sm uppercase tracking-widest mb-2 text-center">No Kamino lending positions found for this address</p>
+                <p className="text-brand-muted font-mono text-sm mb-2 text-center">No Kamino lending positions found for this address</p>
               </div>
             ) : (
               <div className="flex flex-col gap-4">
@@ -245,7 +249,6 @@ export const CollateralRiskView = () => {
             )}
           </div>
         )}
-        <WhatIfSimulator />
       </div>
     </div>
   );
