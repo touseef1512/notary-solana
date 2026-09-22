@@ -48,14 +48,14 @@ export const TrustScoreView = () => {
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-6xl px-4 mt-2 mb-6">
         <PlainNote text="The score shows how often past dividend adjustments for each issuer matched independently sourced market data in Notary checks. It is a comparison aid, not a recommendation." />
-        <h2 className="text-xl font-bold text-brand-text uppercase tracking-widest mb-2">Issuer Leaderboard</h2>
+        <h2 className="text-xl font-bold text-brand-text mb-2">Issuer leaderboard</h2>
         <p className="text-brand-muted text-sm mb-6 max-w-3xl">
           On-chain trust scores represent the percentage of historical corporate actions (like dividends) that have been mathematically verified against independently sourced market data.
         </p>
 
         {error ? (
           <div className="flex items-center justify-center h-32 border border-negative bg-brand-card">
-            <p className="text-negative font-mono text-sm uppercase">{error}</p>
+            <p className="text-negative font-mono text-sm">{error}</p>
           </div>
         ) : (
           <div className="flex flex-col space-y-12">
@@ -64,10 +64,10 @@ export const TrustScoreView = () => {
             <div className="w-full overflow-x-auto border border-brand-border bg-brand-bg">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-brand-border text-xs text-brand-muted uppercase tracking-wider bg-brand-card">
+                  <tr className="border-b border-brand-border text-xs text-brand-muted bg-brand-card">
                     <th className="py-2.5 px-3 font-medium">Issuer</th>
-                    <th className="py-2.5 px-3 font-medium text-right">Average Trust Score</th>
-                    <th className="py-2.5 px-3 font-medium text-center">Assets Verified</th>
+                    <th className="py-2.5 px-3 font-medium text-right">Average trust score</th>
+                    <th className="py-2.5 px-3 font-medium text-center">Assets verified</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
@@ -78,10 +78,10 @@ export const TrustScoreView = () => {
                     </>
                   ) : data?.leaderboard.map((row) => (
                     <tr key={row.issuer} className="border-b border-brand-border hover:bg-brand-card transition-colors">
-                      <td className="py-2.5 px-3 font-bold text-brand-text uppercase tracking-widest">{row.issuer}</td>
+                      <td className="py-2.5 px-3 font-bold text-brand-text">{row.issuer}</td>
                       <td className="py-2.5 px-3 text-right">
                         {row.averageTrustScore === null ? (
-                          <span className="text-brand-muted font-mono uppercase text-xs">Insufficient Data</span>
+                          <span className="text-brand-muted text-xs">Insufficient data</span>
                         ) : (
                           <span className="text-brand-accent font-mono text-lg">{row.averageTrustScore.toFixed(0)}%</span>
                         )}
@@ -97,16 +97,16 @@ export const TrustScoreView = () => {
 
             {/* Asset Detail Table */}
             <div>
-              <h2 className="text-sm font-bold text-brand-text uppercase tracking-widest mb-4">Detailed Asset Verification</h2>
+              <h2 className="text-sm font-bold text-brand-text mb-4">Detailed asset verification</h2>
               <div className="w-full overflow-x-auto border border-brand-border bg-brand-bg">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-brand-border text-xs text-brand-muted uppercase tracking-wider bg-brand-card">
+                    <tr className="border-b border-brand-border text-xs text-brand-muted bg-brand-card">
                       <th className="py-2.5 px-3 font-medium">Symbol</th>
                       <th className="py-2.5 px-3 font-medium">Name</th>
-                      <th className="py-2.5 px-3 font-medium text-right">Trust Score</th>
-                      <th className="py-2.5 px-3 font-medium">Confidence Level</th>
-                      <th className="py-2.5 px-3 font-medium text-center">Event Breakdown</th>
+                      <th className="py-2.5 px-3 font-medium text-right">Trust score</th>
+                      <th className="py-2.5 px-3 font-medium">Confidence level</th>
+                      <th className="py-2.5 px-3 font-medium text-center">Event breakdown</th>
                     </tr>
                   </thead>
                   <tbody className="text-sm">
@@ -131,7 +131,7 @@ export const TrustScoreView = () => {
                           <td className="py-2.5 px-3 text-brand-muted truncate max-w-[180px]">{score.asset.name}</td>
                           <td className="py-2.5 px-3 text-right">
                             {score.trustScore === null ? (
-                              <span className="text-brand-muted font-mono uppercase text-xs">Insufficient Data</span>
+                              <span className="text-brand-muted text-xs">Insufficient data</span>
                             ) : (
                               <span className="text-brand-accent font-mono text-base">{score.trustScore.toFixed(0)}%</span>
                             )}
@@ -143,15 +143,15 @@ export const TrustScoreView = () => {
                             <div className="flex items-center justify-center gap-1.5 flex-wrap">
                               {totalVerified > 0 && (
                                 <div className="flex items-center gap-2">
-                                  <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-positive border border-positive uppercase" title="Verified Events">
-                                    {totalVerified} VERIFIED
+                                  <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-positive border border-positive" title="Verified Events">
+                                    {totalVerified} verified
                                   </span>
                                   {score.asset.notarizationSignature && (
                                     <a 
                                       href={`https://explorer.solana.com/tx/${score.asset.notarizationSignature}?cluster=devnet`}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="text-brand-accent hover:text-white text-[10px] font-mono uppercase underline tracking-wider"
+                                      className="text-brand-accent hover:text-white text-[10px] font-mono underline"
                                     >
                                       View on-chain proof ↗
                                     </a>
@@ -159,18 +159,18 @@ export const TrustScoreView = () => {
                                 </div>
                               )}
                               {unexplained > 0 && (
-                                <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-negative border border-negative uppercase" title="Unexplained Anomalies">
-                                  {unexplained} ANOMALY
+                                <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-negative border border-negative" title="Unexplained Anomalies">
+                                  {unexplained} anomaly
                                 </span>
                               )}
                               {unverifiable > 0 && (
-                                <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-brand-muted border border-brand-muted uppercase" title="Unverifiable due to missing data or indexer limitations">
-                                  {unverifiable} UNVERIFIABLE
+                                <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-brand-muted border border-brand-muted" title="Unverifiable due to missing data or indexer limitations">
+                                  {unverifiable} unverifiable
                                 </span>
                               )}
                               {score.breakdown.length === 0 && (
-                                <span className="inline-flex px-1.5 py-0.5 text-[10px] font-mono text-brand-muted border border-brand-muted uppercase">
-                                  NO EVENTS
+                                <span className="inline-flex px-1.5 py-0.5 text-[10px] text-brand-muted border border-brand-muted">
+                                  No events
                                 </span>
                               )}
                             </div>
