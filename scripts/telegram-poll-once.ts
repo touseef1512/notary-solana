@@ -60,6 +60,68 @@ async function run(): Promise<void> {
         } else {
           reply = "Not subscribed \u2014 send /start";
         }
+      } else if (text.toLowerCase().startsWith("/cost ")) {
+        const match = text.match(/^\/cost\s+(\S+)\s+([\d.]+)$/i);
+        if (!match) {
+          reply = "Usage: /cost SYMBOL AMOUNT \u2014 e.g. /cost AAPLx 500";
+        } else {
+          try {
+            const symbol = match[1];
+            const amount = parseFloat(match[2]);
+            const { KNOWN_ASSETS } = await import('../lib/known-assets');
+            const asset = KNOWN_ASSETS.find(a => a.symbol.toLowerCase() === symbol.toLowerCase());
+            
+            if (!asset) {
+              reply = "The cost check isn't available for that symbol right now.";
+            } else {
+              const { getTradeCost, ALLOWED_USD_SIZES } = await import('../lib/trade-cost');
+              if (!ALLOWED_USD_SIZES.includes(amount)) {
+                reply = `Supported sizes: ${ALLOWED_USD_SIZES.map(s => '$' + s.toLocaleString()).join(', ')}. Try /cost ${asset.symbol} ${ALLOWED_USD_SIZES[0]}.`;
+              } else {
+                const result = await getTradeCost(asset.mintAddress, amount);
+                if (result.status === "ok") {
+                  const impactStr = result.impactPercent !== null && result.impactPercent < 0.01 ? "under 0.01" : result.impactPercent?.toFixed(2);
+                  const venuesStr = result.venues.length > 0 ? `would go through ${result.venues.join(', ')}` : "would go through the available pools";
+                  reply = `Buying $${result.usdAmount.toLocaleString()} of ${asset.symbol} ${venuesStr}. Estimated price impact: ${impactStr}%.`;
+                } else {
+                  reply = "The cost check isn't available for that symbol right now.";
+                }
+              }
+            }
+          } catch {
+            reply = "The cost check isn't available for that symbol right now.";
+          }
+        }
+      } else if (!text.startsWith("/")) {
+        try {
+          const sub = await getSubscription(chatId);
+          let holdings: { mintAddress: string; shares: number }[] = [];
+          let loanRisk: Awaited<ReturnType<typeof import('../lib/kamino-risk').getKaminoRiskData>> | undefined = undefined;
+          if (sub && sub.walletAddress) {
+            try {
+              const { getTokenizedStockHoldings } = await import('../lib/solana');
+              const rawHoldings = await getTokenizedStockHoldings(sub.walletAddress);
+              holdings = rawHoldings.map(h => ({
+                mintAddress: h.mintAddress,
+                shares: h.balance
+              }));
+            } catch {
+              // ignore fetch failure
+            }
+            try {
+              const { getKaminoRiskData } = await import('../lib/kamino-risk');
+              loanRisk = await getKaminoRiskData(sub.walletAddress);
+            } catch {
+              // ignore fetch failure — askNotary will fall back gracefully
+            }
+          }
+          
+          const { askNotary } = await import('../lib/ask-notary');
+          const response = await askNotary(text, { holdings, loanRisk });
+          reply = response.answer;
+        } catch {
+          reply = "Sorry, I couldn't process that question right now. Try /status, /wallet <address>, or /cost SYMBOL AMOUNT.";
+        }
       } else {
         reply = "Sorry, I didn't understand that. Try /status or /stop.";
       }

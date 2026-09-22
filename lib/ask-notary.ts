@@ -1,6 +1,8 @@
 import groq from './llm';
 import { KnownAsset, KNOWN_ASSETS } from './known-assets';
 import { computeTrustScore, getIssuerLeaderboard, TrustScoreResult } from './trust-score';
+import type { getKaminoRiskData } from './kamino-risk';
+type LoanRisk = Awaited<ReturnType<typeof getKaminoRiskData>>;
 import { getReserveAttestation } from './attestation';
 import { computeTrueTotalReturn } from './total-return';
 import { getStockPrice } from './market-data';
@@ -41,7 +43,7 @@ export interface TokenHolding {
 
 export async function askNotary(
   question: string,
-  context: { holdings?: TokenHolding[]; asset?: KnownAsset }
+  context: { holdings?: TokenHolding[]; asset?: KnownAsset; loanRisk?: LoanRisk }
 ) {
   const gatheredData: Record<string, unknown> = {};
   const q = question.toLowerCase();
@@ -104,6 +106,26 @@ export async function askNotary(
       if (context.asset) {
         const attestation = await getReserveAttestation(context.asset);
         gatheredData.reserveAttestation = attestation;
+      }
+    }
+
+    // 5. Loan / Margin / Kamino Risk
+    if (q.includes('loan') || q.includes('margin') || q.includes('liquidat') || q.includes('collateral') || q.includes('health factor') || q.includes('borrow')) {
+      if (context.loanRisk) {
+        if (context.loanRisk.length === 0) {
+          gatheredData.loanRisk = "No active Kamino loan positions found for this wallet.";
+        } else {
+          gatheredData.loanRisk = context.loanRisk.map(o => ({
+            depositedValueUsd: o.depositedValue,
+            borrowedValueUsd: o.borrowedValue,
+            currentHealthFactor: o.currentHealth,
+            gapStressedHealthFactor: o.gapStressedHealth,
+            worstAssetSymbol: o.worstAssetSymbol,
+            worstDrawdownValue: o.worstDrawdownValue,
+          }));
+        }
+      } else {
+        gatheredData.loanRisk = "Loan/risk data was not available for this request.";
       }
     }
 

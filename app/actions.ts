@@ -210,6 +210,8 @@ export async function askNotaryAction(question: string, walletAddress?: string, 
   const { KNOWN_ASSETS_MAP } = await import('@/lib/known-assets');
   
   let holdings: AskNotaryTokenHolding[] = [];
+  let loanRisk: Awaited<ReturnType<typeof getKaminoRiskAction>> | undefined = undefined;
+
   if (walletAddress) {
     try {
       const rawHoldings = await fetchHoldings(walletAddress);
@@ -220,12 +222,17 @@ export async function askNotaryAction(question: string, walletAddress?: string, 
     } catch (e) {
       console.warn("Could not fetch holdings for askNotary", e);
     }
+    try {
+      loanRisk = await getKaminoRiskAction(walletAddress);
+    } catch (e) {
+      console.warn("Could not fetch Kamino risk for askNotary", e);
+    }
   }
 
   const asset = assetMintAddress ? KNOWN_ASSETS_MAP[assetMintAddress] : undefined;
 
   try {
-    return await askNotary(question, { holdings, asset });
+    return await askNotary(question, { holdings, asset, loanRisk });
   } catch (error) {
     console.error(`Error in askNotaryAction:`, error);
     throw new Error('Failed to communicate with Notary');
