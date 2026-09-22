@@ -31,7 +31,7 @@ export const AssetDirectoryView = () => {
       <div className="w-full max-w-6xl px-4 mt-6 flex flex-col gap-6">
         <PlainNote text="This lists the tokenized stocks Notary knows about: who issues each one, which real stock it tracks, whether the Kamino lending market accepts it, and whether Notary checks its reserves. It is not a list of every tokenized stock on Solana, and it is not a recommendation." />
 
-        <h2 className="text-sm font-bold text-brand-text uppercase tracking-widest">Asset Directory</h2>
+        <h2 className="text-sm font-bold text-brand-text">Asset directory</h2>
 
         <div className="flex flex-wrap gap-2">
           {FILTERS.map((f) => {
@@ -41,7 +41,7 @@ export const AssetDirectoryView = () => {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`px-3 py-1 border border-brand-accent font-mono text-xs uppercase tracking-wider transition-colors cursor-pointer ${
+                className={`px-3 py-1 border border-brand-accent text-xs transition-colors cursor-pointer ${
                   active 
                     ? "bg-brand-accent text-brand-bg" 
                     : "text-brand-accent hover:bg-brand-accent hover:text-brand-bg"
@@ -66,12 +66,12 @@ export const AssetDirectoryView = () => {
             <table className="w-full text-left text-sm min-w-[800px]">
               <thead className="bg-brand-bg border-b border-brand-border">
                 <tr>
-                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Asset</th>
-                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Issuer</th>
-                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Real stock</th>
-                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Kamino market</th>
-                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Trust Registry</th>
-                  <th className="p-3 text-[10px] text-brand-muted uppercase tracking-widest font-normal">Mint</th>
+                  <th className="p-3 text-[10px] text-brand-muted font-normal">Asset</th>
+                  <th className="p-3 text-[10px] text-brand-muted font-normal">Issuer</th>
+                  <th className="p-3 text-[10px] text-brand-muted font-normal">Real stock</th>
+                  <th className="p-3 text-[10px] text-brand-muted font-normal">Kamino market</th>
+                  <th className="p-3 text-[10px] text-brand-muted font-normal">Trust registry</th>
+                  <th className="p-3 text-[10px] text-brand-muted font-normal">Mint</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-border">
@@ -85,7 +85,7 @@ export const AssetDirectoryView = () => {
                     <td className="p-3 text-brand-text font-mono">{e.underlyingTicker}</td>
                     <td className="p-3">
                       {e.inKaminoMarket ? (
-                        <span className="inline-flex px-1 py-0.5 text-[9px] border border-brand-accent text-brand-accent uppercase tracking-widest">
+                        <span className="inline-flex px-1 py-0.5 text-[9px] border border-brand-accent text-brand-accent">
                           Accepted
                         </span>
                       ) : (
