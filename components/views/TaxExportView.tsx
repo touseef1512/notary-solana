@@ -4,11 +4,17 @@ import React, { useState, useEffect } from 'react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { generateTaxCsvAction, getTokenizedStockHoldings } from '@/app/actions';
 import { KNOWN_ASSETS } from '@/lib/known-assets';
-import { Download, FileText, ChevronDown } from 'lucide-react';
+import { Plus, FileText, ChevronDown, Download, Trash2 } from 'lucide-react';
 import type { TokenHolding } from '@/lib/solana';
 import { PlainNote } from '@/components/PlainNote';
+import type { TaxEntryInput } from '@/lib/statement';
 
-export const TaxExportView = () => {
+interface TaxExportViewProps {
+  entries: TaxEntryInput[];
+  onEntriesChange: (entries: TaxEntryInput[]) => void;
+}
+
+export const TaxExportView: React.FC<TaxExportViewProps> = ({ entries, onEntriesChange }) => {
   const { activeAddress } = useActiveAddress();
   const pubKeyString = activeAddress;
 
@@ -46,22 +52,37 @@ export const TaxExportView = () => {
     }
   }, [selectedAsset, holdings]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleAddEntry = (e: React.FormEvent) => {
     e.preventDefault();
     if (!purchaseDate || !purchasePrice || !shares) {
       setError("Please fill out all fields.");
       return;
     }
+    setError(null);
+    onEntriesChange([
+      ...entries,
+      {
+        assetMintAddress: selectedAsset,
+        purchaseDate,
+        purchasePrice: parseFloat(purchasePrice),
+        shares: parseFloat(shares)
+      }
+    ]);
+    setPurchaseDate('');
+    setPurchasePrice('');
+    // Leave shares to re-auto-fill via the existing effect
+  };
 
+  const handleDownloadCsv = async (entry: TaxEntryInput) => {
     setLoading(true);
     setError(null);
 
     try {
       const csvString = await generateTaxCsvAction(
-        selectedAsset,
-        purchaseDate,
-        parseFloat(purchasePrice),
-        parseFloat(shares)
+        entry.assetMintAddress,
+        entry.purchaseDate,
+        entry.purchasePrice,
+        entry.shares
       );
 
       // Trigger download
@@ -70,7 +91,7 @@ export const TaxExportView = () => {
       const link = document.createElement('a');
       link.href = url;
       
-      const assetObj = KNOWN_ASSETS.find(a => a.mintAddress === selectedAsset);
+      const assetObj = KNOWN_ASSETS.find(a => a.mintAddress === entry.assetMintAddress);
       const symbol = assetObj ? assetObj.symbol : "tax";
       link.setAttribute('download', `${symbol}_tax_export.csv`);
       
@@ -98,9 +119,8 @@ export const TaxExportView = () => {
           Generate a CSV of dividend events for the selected token, with an estimated withholding rate for each event and a rough unrealized gain estimate from your entered figures. Rows Notary could not verify independently are labeled. It does not include trades or realized capital gains.
         </p>
 
-        <div className="border border-brand-border bg-brand-bg p-6 max-w-2xl">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-            
+        <div className="border border-brand-border bg-brand-bg p-6 max-w-2xl mb-8">
+          <form onSubmit={handleAddEntry} className="flex flex-col gap-6">
             {/* Asset Selector */}
             <div className="flex flex-col gap-2">
               <label htmlFor="tax-asset" className="text-xs font-mono uppercase tracking-widest text-brand-muted">Target Asset</label>
@@ -183,18 +203,55 @@ export const TaxExportView = () => {
               disabled={loading}
               className="mt-4 bg-brand-accent text-brand-card px-6 py-4 font-bold font-mono text-sm uppercase tracking-widest hover:bg-opacity-90 transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-brand-accent w-full"
             >
-              {loading ? (
-                <>
-                  <div className="w-1.5 h-3 bg-brand-card animate-pulse" /> Generating CSV...
-                </>
-              ) : (
-                <>
-                  <Download className="w-4 h-4" />
-                  Generate Tax Export
-                </>
-              )}
+              <Plus className="w-4 h-4" />
+              Add Entry
             </button>
           </form>
+        </div>
+
+        <div className="flex flex-col gap-4 max-w-2xl">
+          <h3 className="text-sm font-bold text-brand-text uppercase tracking-widest">Added Tax Entries</h3>
+          {entries.length === 0 ? (
+            <p className="font-mono text-sm text-brand-muted">No entries added yet.</p>
+          ) : (
+            <div className="flex flex-col border border-brand-border bg-brand-bg">
+              {entries.map((entry, idx) => {
+                const assetObj = KNOWN_ASSETS.find(a => a.mintAddress === entry.assetMintAddress);
+                const symbol = assetObj ? assetObj.symbol : "Unknown";
+                return (
+                  <div key={idx} className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 ${idx < entries.length - 1 ? 'border-b border-brand-border' : ''}`}>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                      <div className="flex flex-col">
+                        <span className="font-bold text-brand-text uppercase tracking-widest">{symbol}</span>
+                        <span className="font-mono text-xs text-brand-muted">{entry.purchaseDate}</span>
+                      </div>
+                      <div className="flex flex-col font-mono text-sm">
+                        <span className="text-brand-text">{entry.shares} shares @ ${entry.purchasePrice}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 mt-4 sm:mt-0">
+                      <button
+                        onClick={() => handleDownloadCsv(entry)}
+                        disabled={loading}
+                        className="flex items-center gap-1 bg-brand-card border border-brand-border px-3 py-1.5 font-mono text-xs uppercase text-brand-text hover:bg-brand-border/40 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <Download className="w-3 h-3" />
+                        CSV
+                      </button>
+                      <button
+                        onClick={() => onEntriesChange(entries.filter((_, i) => i !== idx))}
+                        disabled={loading}
+                        className="flex items-center gap-1 bg-brand-card border border-brand-border px-3 py-1.5 font-mono text-xs uppercase text-brand-critical hover:bg-brand-border/40 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>

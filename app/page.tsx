@@ -34,13 +34,13 @@ import { ReserveAttestationView } from '@/components/views/ReserveAttestationVie
 import { CollateralRiskView } from '@/components/views/CollateralRiskView';
 import { AskNotaryView } from '@/components/views/AskNotaryView';
 import { AlertsView } from '@/components/views/AlertsView';
-import { TaxExportView } from '@/components/views/TaxExportView';
 import { ComparatorView } from '@/components/views/ComparatorView';
 import { TrustRegistryView } from '@/components/views/TrustRegistryView';
 import { AssetDirectoryView } from '@/components/views/AssetDirectoryView';
 import { DeveloperApiView } from '@/components/views/DeveloperApiView';
 import { PriceParityView } from '@/components/views/PriceParityView';
 import { TodayView } from '@/components/views/TodayView';
+import { PortfolioView } from '@/components/views/PortfolioView';
 import { MarketWatchView } from '@/components/views/MarketWatchView';
 import { WhatIfSimulator } from '@/components/views/WhatIfSimulator';
 
@@ -158,7 +158,7 @@ export default function AppShell() {
           />
         );
       case 'portfolio':
-        return subTab === 'tax' ? <TaxExportView /> : <HoldingsView />;
+        return <PortfolioView subTab={subTab} />;
       case 'loans':
         return subTab === 'what-if' ? <WhatIfSimulator /> : <CollateralRiskView />;
       case 'markets':
