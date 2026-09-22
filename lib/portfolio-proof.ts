@@ -53,8 +53,8 @@ export interface ProofInput {
   obligations: ProofObligationInput[];
 }
 
-export function buildPortfolioProof(input: ProofInput, generatedAt: Date): { filename: string; content: string; sha256: string } {
-  const statement = {
+export function buildPortfolioProofObject(input: ProofInput, generatedAt: Date): object {
+  return {
     statementVersion: 1,
     generatedAt: generatedAt.toISOString(),
     subject: {
@@ -114,6 +114,10 @@ export function buildPortfolioProof(input: ProofInput, generatedAt: Date): { fil
       "Not investment, legal or tax advice."
     ]
   };
+}
+
+export function buildPortfolioProof(input: ProofInput, generatedAt: Date): { filename: string; content: string; sha256: string } {
+  const statement = buildPortfolioProofObject(input, generatedAt);
 
   const content = JSON.stringify(statement, null, 2) + "\n";
   const sha256 = createHash("sha256").update(content, "utf8").digest("hex");

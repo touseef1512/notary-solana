@@ -9,6 +9,7 @@ import type { ProofObligationInput } from '@/lib/portfolio-proof';
 import type { DigestHolding, DigestObligation } from '@/lib/wallet-digest';
 import type { TradeCostResult } from '@/lib/trade-cost';
 import type { MarketWatchResult } from '@/lib/market-watch-core';
+import type { TaxEntryInput } from '@/lib/statement';
 
 export async function getTokenizedStockHoldings(walletAddress: string): Promise<TokenHolding[]> {
   return await fetchHoldings(walletAddress);
@@ -309,80 +310,98 @@ export async function getPriceParityAction() {
   }
 }
 
+async function gatherPortfolioProofInput(walletAddress: string) {
+  const { PublicKey } = await import('@solana/web3.js');
+  try {
+    new PublicKey(walletAddress);
+  } catch {
+    throw new Error("Invalid wallet address");
+  }
+  
+  let enrichedHoldings: TokenHoldingWithPrice[];
+  try {
+    enrichedHoldings = await getHoldingsWithPrices(walletAddress);
+  } catch (e) {
+    console.error(e);
+    throw new Error("Failed to build portfolio proof");
+  }
+
+  const { numberOrNull } = await import('@/lib/portfolio-proof');
+  const { groupExposure } = await import('@/lib/exposure');
+
+  const holdings = enrichedHoldings.map(h => ({
+    symbol: h.symbol,
+    name: h.name,
+    issuer: h.issuer,
+    mintAddress: h.mintAddress,
+    underlyingTicker: h.underlyingTicker,
+    balance: h.balance,
+    price: h.currentPrice,
+    value: h.totalValue
+  }));
+
+  const exposureGroups = groupExposure(enrichedHoldings.map(h => ({
+    symbol: h.symbol,
+    issuer: h.issuer,
+    underlyingTicker: h.underlyingTicker,
+    balance: h.balance,
+    totalValue: h.totalValue
+  })));
+  const exposure = exposureGroups.map(group => ({
+    ticker: group.ticker,
+    heldVia: group.legs.map(l => l.symbol),
+    issuerCount: group.issuerCount,
+    combinedBalance: group.combinedBalance,
+    combinedValue: group.combinedValue
+  }));
+
+  let kaminoStatus: "ok" | "unavailable" = "ok";
+  let obligations: ProofObligationInput[] = [];
+
+  try {
+    const risk = await getKaminoRiskAction(walletAddress);
+    obligations = risk.map((o): ProofObligationInput => ({
+      obligationPubkey: o.obligationPubkey,
+      depositedValueUsd: numberOrNull(o.depositedValue),
+      borrowedValueUsd: numberOrNull(o.borrowedValue),
+      currentHealthFactor: numberOrNull(o.currentHealth),
+      gapStressedHealthFactor: numberOrNull(o.gapStressedHealth),
+      worstAssetSymbol: typeof o.worstAssetSymbol === 'string' ? o.worstAssetSymbol : null,
+      attestation: {
+        exists: o.attestationStatus ? o.attestationStatus.exists : null,
+        attestationPda: typeof o.attestationStatus?.attestationPda === 'string' ? o.attestationStatus.attestationPda : null,
+        computedAtUnixTs: o.attestationStatus?.decoded ? numberOrNull(o.attestationStatus.decoded.computedAtUnixTs) : null,
+        gapStressedHealthFactorBps: o.attestationStatus?.decoded ? numberOrNull(o.attestationStatus.decoded.gapStressedHealthFactorBps) : null
+      }
+    }));
+  } catch {
+    kaminoStatus = "unavailable";
+  }
+
+  return { walletAddress, holdings, exposure, kaminoStatus, obligations };
+}
+
 export async function generatePortfolioProofAction(walletAddress: string): Promise<{ filename: string; content: string; sha256: string }> {
   try {
-    const { PublicKey } = await import('@solana/web3.js');
-    try {
-      new PublicKey(walletAddress);
-    } catch {
-      throw new Error("Invalid wallet address");
-    }
-    
-    let enrichedHoldings: TokenHoldingWithPrice[];
-    try {
-      enrichedHoldings = await getHoldingsWithPrices(walletAddress);
-    } catch (e) {
-      console.error(e);
-      throw new Error("Failed to build portfolio proof");
-    }
-
-    const { numberOrNull, buildPortfolioProof } = await import('@/lib/portfolio-proof');
-    const { groupExposure } = await import('@/lib/exposure');
-
-    const holdings = enrichedHoldings.map(h => ({
-      symbol: h.symbol,
-      name: h.name,
-      issuer: h.issuer,
-      mintAddress: h.mintAddress,
-      underlyingTicker: h.underlyingTicker,
-      balance: h.balance,
-      price: h.currentPrice,
-      value: h.totalValue
-    }));
-
-    const exposureGroups = groupExposure(enrichedHoldings.map(h => ({
-      symbol: h.symbol,
-      issuer: h.issuer,
-      underlyingTicker: h.underlyingTicker,
-      balance: h.balance,
-      totalValue: h.totalValue
-    })));
-    const exposure = exposureGroups.map(group => ({
-      ticker: group.ticker,
-      heldVia: group.legs.map(l => l.symbol),
-      issuerCount: group.issuerCount,
-      combinedBalance: group.combinedBalance,
-      combinedValue: group.combinedValue
-    }));
-
-    let kaminoStatus: "ok" | "unavailable" = "ok";
-    let obligations: ProofObligationInput[] = [];
-
-    try {
-      const risk = await getKaminoRiskAction(walletAddress);
-      obligations = risk.map((o): ProofObligationInput => ({
-        obligationPubkey: o.obligationPubkey,
-        depositedValueUsd: numberOrNull(o.depositedValue),
-        borrowedValueUsd: numberOrNull(o.borrowedValue),
-        currentHealthFactor: numberOrNull(o.currentHealth),
-        gapStressedHealthFactor: numberOrNull(o.gapStressedHealth),
-        worstAssetSymbol: typeof o.worstAssetSymbol === 'string' ? o.worstAssetSymbol : null,
-        attestation: {
-          exists: o.attestationStatus ? o.attestationStatus.exists : null,
-          attestationPda: typeof o.attestationStatus?.attestationPda === 'string' ? o.attestationStatus.attestationPda : null,
-          computedAtUnixTs: o.attestationStatus?.decoded ? numberOrNull(o.attestationStatus.decoded.computedAtUnixTs) : null,
-          gapStressedHealthFactorBps: o.attestationStatus?.decoded ? numberOrNull(o.attestationStatus.decoded.gapStressedHealthFactorBps) : null
-        }
-      }));
-    } catch {
-      kaminoStatus = "unavailable";
-    }
-
-    return buildPortfolioProof({ walletAddress, holdings, exposure, kaminoStatus, obligations }, new Date());
+    const input = await gatherPortfolioProofInput(walletAddress);
+    const { buildPortfolioProof } = await import('@/lib/portfolio-proof');
+    return buildPortfolioProof(input, new Date());
   } catch (e) {
     console.error(e);
     if (e instanceof Error && e.message === "Invalid wallet address") throw e;
     throw new Error("Failed to build portfolio proof");
+  }
+}
+
+export async function generateUnifiedStatementAction(walletAddress: string, taxEntries?: TaxEntryInput[]): Promise<{ filename: string; content: string; sha256: string }> {
+  try {
+    const input = await gatherPortfolioProofInput(walletAddress);
+    const { buildUnifiedStatement } = await import('@/lib/statement');
+    return await buildUnifiedStatement({ ...input, taxEntries }, new Date());
+  } catch (e) {
+    console.error(e);
+    if (e instanceof Error && e.message === "Invalid wallet address") throw e;
+    throw new Error("Failed to build unified statement");
   }
 }
 
