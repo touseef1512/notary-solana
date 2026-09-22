@@ -40,7 +40,7 @@ import { TrustRegistryView } from '@/components/views/TrustRegistryView';
 import { AssetDirectoryView } from '@/components/views/AssetDirectoryView';
 import { DeveloperApiView } from '@/components/views/DeveloperApiView';
 import { PriceParityView } from '@/components/views/PriceParityView';
-import { LandingView } from '@/components/views/LandingView';
+import { TodayView } from '@/components/views/TodayView';
 import { MarketWatchView } from '@/components/views/MarketWatchView';
 import { WhatIfSimulator } from '@/components/views/WhatIfSimulator';
 
@@ -146,7 +146,8 @@ export default function AppShell() {
     switch (activeTab) {
       case 'today':
         return (
-          <LandingView 
+          <TodayView 
+            alerts={alerts}
             onNavigate={(id) => { 
               const match = NAV_ITEMS.find((n) => n.id === id); 
               if (match) {
