@@ -36,6 +36,16 @@ export async function subscribeChat(chatId: string, walletAddress?: string): Pro
   await withTimeout(redisClient.sadd(`notary:tg:sub:index`, chatId));
 }
 
+export async function updateWalletAddress(chatId: string, walletAddress: string): Promise<void> {
+  if (!redisClient) throw new Error('Redis not configured: KV_REST_API_URL/KV_REST_API_TOKEN missing');
+  const sub = await getSubscription(chatId);
+  if (!sub) {
+    throw new Error('Not subscribed');
+  }
+  sub.walletAddress = walletAddress;
+  await withTimeout(redisClient.set(`notary:tg:sub:${chatId}`, JSON.stringify(sub)));
+}
+
 export async function unsubscribeChat(chatId: string): Promise<void> {
   if (!redisClient) throw new Error('Redis not configured: KV_REST_API_URL/KV_REST_API_TOKEN missing');
   await withTimeout(redisClient.del(`notary:tg:sub:${chatId}`));

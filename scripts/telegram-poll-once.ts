@@ -16,7 +16,7 @@ loadEnv();
 
 async function run(): Promise<void> {
   const { getTelegramUpdates, sendTelegramMessage } = await import('../lib/telegram');
-  const { subscribeChat, unsubscribeChat, getSubscription } = await import('../lib/telegram-subscribers');
+  const { subscribeChat, unsubscribeChat, getSubscription, updateWalletAddress } = await import('../lib/telegram-subscribers');
 
   const updates = await getTelegramUpdates();
   let maxUpdateId = 0;
@@ -37,6 +37,18 @@ async function run(): Promise<void> {
       if (text === "/start") {
         await subscribeChat(chatId);
         reply = "Subscribed. You'll get a daily briefing and risk alerts here. Send /status to check, /stop to unsubscribe.";
+      } else if (text.startsWith("/wallet ")) {
+        const address = text.substring(8).trim();
+        try {
+          await updateWalletAddress(chatId, address);
+          reply = `Wallet linked: ${address}. Your daily briefing will now include your Kamino loan status.`;
+        } catch (err) {
+          if (err instanceof Error && err.message === 'Not subscribed') {
+            reply = "Send /start first to subscribe, then link your wallet.";
+          } else {
+            reply = "An error occurred while linking your wallet.";
+          }
+        }
       } else if (text === "/stop") {
         await unsubscribeChat(chatId);
         reply = "Unsubscribed \u2014 you won't get any more messages. Send /start to resubscribe.";
