@@ -37,3 +37,11 @@ jobs:
           KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
           KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
         run: npx tsx scripts/watch-check.ts --write
+      - name: Check event alerts
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+          TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
+        run: npx tsx scripts/check-event-alerts.ts
