@@ -25,7 +25,8 @@ import {
   LineChart,
   Home,
   Eye,
-  Library
+  Library,
+  ArrowLeftRight
 } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
@@ -44,6 +45,7 @@ import { TodayView } from '@/components/views/TodayView';
 import { PortfolioView } from '@/components/views/PortfolioView';
 import { MarketWatchView } from '@/components/views/MarketWatchView';
 import { WhatIfSimulator } from '@/components/views/WhatIfSimulator';
+import { TradeView } from '@/components/views/TradeView';
 
 // The WalletMultiButton uses client-side APIs and can cause hydration errors if not loaded dynamically
 const WalletMultiButtonDynamic = dynamic(
@@ -71,7 +73,7 @@ const NAV_ITEMS: NavItem[] = [
 const SUB_NAV_ITEMS: Record<string, { id: string; label: string; icon: React.FC<{ className?: string }> }[]> = {
   portfolio: [{ id: 'holdings', label: 'Holdings', icon: WalletCards }, { id: 'tax', label: 'Tax Export', icon: FileDown }],
   loans: [{ id: 'collateral-risk', label: 'Collateral Risk', icon: ShieldAlert }, { id: 'what-if', label: 'What-If Simulator', icon: Scale }],
-  markets: [{ id: 'price-parity', label: 'Price Parity', icon: LineChart }, { id: 'market-watch', label: 'Market Watch', icon: Eye }, { id: 'comparator', label: 'Comparator', icon: Scale }],
+  markets: [{ id: 'price-parity', label: 'Price Parity', icon: LineChart }, { id: 'market-watch', label: 'Market Watch', icon: Eye }, { id: 'comparator', label: 'Comparator', icon: Scale }, { id: 'trade', label: 'Trade', icon: ArrowLeftRight }],
   trust: [{ id: 'registry', label: 'Trust Registry', icon: BookOpen }, { id: 'trust-score', label: 'Trust Score', icon: Trophy }, { id: 'reserve', label: 'Reserve Attestation', icon: Landmark }, { id: 'directory', label: 'Asset Directory', icon: Library }]
 };
 
@@ -163,6 +165,7 @@ export default function AppShell() {
       case 'loans':
         return subTab === 'what-if' ? <WhatIfSimulator /> : <CollateralRiskView />;
       case 'markets':
+        if (subTab === 'trade') return <TradeView />;
         if (subTab === 'market-watch') return <MarketWatchView />;
         if (subTab === 'comparator') return <ComparatorView />;
         return <PriceParityView />;
