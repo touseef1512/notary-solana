@@ -3,9 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { getParityAssets } from "@/lib/parity-assets";
 import { getMarketStatus, formatDuration } from "@/lib/market-hours";
-import { getTradeCostAction, getNotaryAlertsAction } from "@/app/actions";
+import { getTradeCostAction, getDividendProjectionAction } from "@/app/actions";
 import { getNextCpi } from "@/lib/event-calendar";
-import { KNOWN_ASSETS } from "@/lib/known-assets";
 
 interface BeforeYouTradeProps {
   symbol: string;
@@ -91,24 +90,48 @@ export const BeforeYouTrade: React.FC<BeforeYouTradeProps> = ({
   useEffect(() => {
     const checkDividend = async () => {
       try {
-        const knownAsset = KNOWN_ASSETS.find((a) => a.mintAddress === mint);
-        if (!knownAsset) {
+        const res = await getDividendProjectionAction(mint);
+
+        if (res.state === "unavailable") {
+          setDividendStatus("Dividend data is unavailable right now.");
+          return;
+        }
+        
+        if (res.state === "unknown-token") {
           setDividendStatus("No dividend projection tracked for this token.");
           return;
         }
 
-        const alerts = await getNotaryAlertsAction();
-        const divAlert = alerts.find(
-          (a) => a.assetSymbol === knownAsset.symbol && a.title.startsWith("Upcoming Dividend")
-        );
+        const typeStr = res.isFund ? "distribution" : "dividend";
 
-        if (divAlert && typeof divAlert.daysUntil === "number") {
-          setDividendStatus(`Projected in ${divAlert.daysUntil} days. Projected from past payouts, not a confirmed declaration. Expect a brief trading pause of about 20 minutes around the date.`);
-        } else if (divAlert) {
-          setDividendStatus("A dividend is projected, but the date is not available. It is projected from past payouts, not a confirmed declaration.");
-        } else {
-          setDividendStatus("No dividend projection tracked for this token.");
+        if (res.state === "none") {
+          setDividendStatus(`No ${typeStr} payments found in the data source Notary uses.`);
+          return;
         }
+
+        if (res.state === "insufficient") {
+          setDividendStatus("Not enough payout history to project a date.");
+          return;
+        }
+
+        let dateStr = "";
+        if (res.date) {
+          const d = new Date(res.date + "T00:00:00Z");
+          dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+        }
+
+        let msg = "";
+        if (res.state === "projected") {
+          msg = `Projected in ${res.daysUntil} days (around ${dateStr}). Projected from past payouts, not a confirmed declaration.`;
+        } else if (res.state === "confirmed") {
+          msg = `Confirmed: ex-${typeStr} date ${dateStr} (in ${res.daysUntil} days).`;
+        }
+
+        if (res.pauseVerified) {
+          msg += " Expect a brief trading pause of about 20 minutes around the date.";
+        }
+
+        setDividendStatus(msg);
       } catch {
         setDividendStatus("Dividend data is unavailable right now.");
       }

@@ -189,6 +189,56 @@ export async function getNotaryAlertsAction(walletAddress?: string) {
   }
 }
 
+export async function getDividendProjectionAction(mintAddress: string): Promise<{ state: "projected" | "confirmed" | "none" | "insufficient" | "unavailable" | "unknown-token"; daysUntil: number | null; date: string | null; isFund: boolean; pauseVerified: boolean }> {
+  try {
+    const { getParityAssets } = await import('@/lib/parity-assets');
+    const { KNOWN_ASSETS } = await import('@/lib/known-assets');
+    
+    const assets = getParityAssets();
+    const asset = assets.find((a) => a.mintAddress === mintAddress);
+    
+    if (!asset) {
+      return { state: "unknown-token", daysUntil: null, date: null, isFund: false, pauseVerified: false };
+    }
+    
+    const isFund = asset.underlyingTicker === "SPY" || asset.underlyingTicker === "QQQ";
+    const pauseVerified = KNOWN_ASSETS.some((k) => k.mintAddress === mintAddress);
+    
+    const { getDividendHistory } = await import('@/lib/market-data');
+    
+    let history;
+    try {
+      history = await getDividendHistory(asset.underlyingTicker);
+    } catch {
+      return { state: "unavailable", daysUntil: null, date: null, isFund, pauseVerified };
+    }
+    
+    if (history.length === 0) {
+      return { state: "none", daysUntil: null, date: null, isFund, pauseVerified };
+    }
+    
+    const { getUpcomingAlerts } = await import('@/lib/alerts');
+    const alertResult = await getUpcomingAlerts(asset as unknown as import('@/lib/known-assets').KnownAsset);
+    
+    let state: "projected" | "confirmed" | "insufficient" = "insufficient";
+    if (alertResult.confidenceLevel === "confirmed") {
+      state = "confirmed";
+    } else if (alertResult.confidenceLevel === "estimated") {
+      state = "projected";
+    }
+    
+    return {
+      state,
+      daysUntil: alertResult.daysUntil,
+      date: alertResult.nextEventDate,
+      isFund,
+      pauseVerified
+    };
+  } catch {
+    return { state: "unavailable", daysUntil: null, date: null, isFund: false, pauseVerified: false };
+  }
+}
+
 export async function generateTaxCsvAction(assetMintAddress: string, purchaseDate: string, purchasePrice: number, shares: number) {
   const { generateTaxCsv } = await import('@/lib/tax-export');
   const { KNOWN_ASSETS_MAP } = await import('@/lib/known-assets');
