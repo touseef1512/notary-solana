@@ -5,6 +5,7 @@ import { getPriceParityAction, getTradeCostAction } from "@/app/actions";
 import { ALLOWED_USD_SIZES } from "@/lib/trade-cost";
 import { getParityAssets } from "@/lib/parity-assets";
 import { TradePanelModal } from "@/components/TradePanelModal";
+import { TokenAddressCheck } from "@/components/TokenAddressCheck";
 import type { TradeCostResult } from "@/lib/trade-cost";
 
 interface PriceParityResult {
@@ -155,6 +156,13 @@ export const TradeView = () => {
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-bold text-brand-text">Trade</h2>
         </div>
+
+        <TokenAddressCheck
+          onSelectMint={(mint) => {
+            const t = tickerMap.get(mint);
+            if (t) setSelectedTicker(t);
+          }}
+        />
 
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex flex-col gap-2">
