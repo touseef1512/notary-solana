@@ -35,8 +35,7 @@ export const TradeView = () => {
   const [selectedTicker, setSelectedTicker] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<number>(1000);
   const [costCache, setCostCache] = useState<Record<string, CostCacheEntry>>({});
-  
-  const [tradeModalStock, setTradeModalStock] = useState<{ symbol: string, mint: string } | null>(null);
+  const [tradeModalStock, setTradeModalStock] = useState<{ symbol: string, mint: string, context?: { sizeUsd: number; issuer: string; gapPercent: number | null; liquidity: number | null; closeDate: string | null } } | null>(null);
 
   const tickerMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -262,7 +261,7 @@ export const TradeView = () => {
                             </td>
                             <td className="p-3 text-right">
                               <button
-                                onClick={() => setTradeModalStock({ symbol: row.symbol, mint: row.mint })}
+                                onClick={() => setTradeModalStock({ symbol: row.symbol, mint: row.mint, context: { sizeUsd: selectedSize, issuer: row.issuer, gapPercent: row.gapPercent, liquidity: row.liquidity, closeDate: row.closeDate } })}
                                 className="px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg transition-colors cursor-pointer text-xs"
                               >
                                 Trade
@@ -339,7 +338,7 @@ export const TradeView = () => {
                             </td>
                             <td className="p-3 text-right">
                               <button
-                                onClick={() => setTradeModalStock({ symbol: row.symbol, mint: row.mint })}
+                                onClick={() => setTradeModalStock({ symbol: row.symbol, mint: row.mint, context: { sizeUsd: selectedSize, issuer: row.issuer, gapPercent: row.gapPercent, liquidity: row.liquidity, closeDate: row.closeDate } })}
                                 className="px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg transition-colors cursor-pointer text-xs"
                               >
                                 Trade
@@ -380,6 +379,7 @@ export const TradeView = () => {
           onClose={() => setTradeModalStock(null)}
           symbol={tradeModalStock.symbol}
           stockMint={tradeModalStock.mint}
+          context={tradeModalStock.context}
         />
       )}
     </div>

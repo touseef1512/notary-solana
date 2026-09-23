@@ -1,12 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
+import { BeforeYouTrade } from "@/components/BeforeYouTrade";
 
 interface TradePanelModalProps {
   isOpen: boolean;
   onClose: () => void;
   symbol: string;
   stockMint: string;
+  context?: {
+    sizeUsd: number;
+    issuer: string;
+    gapPercent: number | null;
+    liquidity: number | null;
+    closeDate: string | null;
+  };
 }
 
 export const TradePanelModal: React.FC<TradePanelModalProps> = ({
@@ -14,6 +22,7 @@ export const TradePanelModal: React.FC<TradePanelModalProps> = ({
   onClose,
   symbol,
   stockMint,
+  context,
 }) => {
   const [isBuying, setIsBuying] = useState(true);
 
@@ -68,15 +77,25 @@ export const TradePanelModal: React.FC<TradePanelModalProps> = ({
           </div>
         </div>
 
-        <div className="flex-grow overflow-y-auto min-h-0 flex items-center justify-center p-6">
-          <a
-            href={`https://jup.ag/swap?sell=${inputMint}&buy=${outputMint}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full text-center py-3 bg-brand-accent text-brand-bg font-bold transition-opacity hover:opacity-90"
-          >
-            Continue to Jupiter
-          </a>
+        <div className="flex-grow overflow-y-auto min-h-0 flex flex-col p-6">
+          {context && (
+            <BeforeYouTrade
+              symbol={symbol}
+              mint={stockMint}
+              {...context}
+            />
+          )}
+          
+          <div className="flex items-center justify-center mt-2 mb-2">
+            <a
+              href={`https://jup.ag/swap?sell=${inputMint}&buy=${outputMint}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full text-center py-3 bg-brand-accent text-brand-bg font-bold transition-opacity hover:opacity-90"
+            >
+              Continue to Jupiter
+            </a>
+          </div>
         </div>
       </div>
     </div>
