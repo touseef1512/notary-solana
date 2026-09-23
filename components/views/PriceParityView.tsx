@@ -5,6 +5,7 @@ import { getPriceParityAction } from "@/app/actions";
 import { getMarketStatus, formatDuration } from "@/lib/market-hours";
 import { PlainNote } from '@/components/PlainNote';
 import { TradeCostCheck } from '@/components/TradeCostCheck';
+import { TradePanelModal } from '@/components/TradePanelModal';
 
 interface PriceParityResult {
   symbol: string;
@@ -28,6 +29,8 @@ export const PriceParityView = () => {
   const [data, setData] = useState<PriceParityResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const [tradeModalStock, setTradeModalStock] = useState<{ symbol: string, mint: string } | null>(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -92,6 +95,7 @@ export const PriceParityView = () => {
                   <th className="p-3 text-[10px] text-brand-muted font-normal text-right">Risk model gap %</th>
                   <th className="p-3 text-[10px] text-brand-muted font-normal text-right">Liquidity</th>
                   <th className="p-3 text-[10px] text-brand-muted font-normal">Source note</th>
+                  <th className="p-3 text-[10px] text-brand-muted font-normal"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-border">
@@ -103,7 +107,7 @@ export const PriceParityView = () => {
                   </tr>
                 ) : data.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="p-8 text-center text-brand-muted">
+                    <td colSpan={9} className="p-8 text-center text-brand-muted">
                       No parity data available.
                     </td>
                   </tr>
@@ -199,6 +203,14 @@ export const PriceParityView = () => {
                             <td className="p-3 text-[10px] text-brand-muted">
                               {row.hasScaledUi ? "Scaled (Multiplier)" : "Raw"}
                             </td>
+                            <td className="p-3 text-right">
+                              <button
+                                onClick={() => setTradeModalStock({ symbol: row.symbol, mint: row.mint })}
+                                className="px-3 py-1 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-bg transition-colors cursor-pointer text-xs"
+                              >
+                                Trade
+                              </button>
+                            </td>
                           </>
                         )}
                       </tr>
@@ -224,6 +236,15 @@ export const PriceParityView = () => {
         </div>
 
       </div>
+
+      {tradeModalStock && (
+        <TradePanelModal
+          isOpen={true}
+          onClose={() => setTradeModalStock(null)}
+          symbol={tradeModalStock.symbol}
+          stockMint={tradeModalStock.mint}
+        />
+      )}
     </div>
   );
 };
