@@ -521,3 +521,67 @@ export async function getMarketWatchAction(): Promise<MarketWatchResult> {
     return { status: 'unavailable', reason: 'Market watch is unavailable right now. Try again in a moment.', checkedNow: false, baselineTs: null, lastCheckedTs: null, entries: [] };
   }
 }
+
+export async function getCpiDayMovesAction() {
+  const { getPastCpi, getNextCpi } = await import('@/lib/event-calendar');
+  const { getDailyBars } = await import('@/lib/market-data');
+  const { getParityAssets } = await import('@/lib/parity-assets');
+
+  const now = new Date();
+  const past = getPastCpi(now, 5);
+  const next = getNextCpi(now);
+  
+  if (past.length === 0) {
+    return { next, rows: [] };
+  }
+
+  const assets = getParityAssets();
+  const tickers = Array.from(new Set(assets.map(a => a.underlyingTicker)));
+
+  // startDate = 10 days before earliest past date
+  const earliestDate = new Date(past[0] + 'T00:00:00Z');
+  earliestDate.setUTCDate(earliestDate.getUTCDate() - 10);
+  const startDateStr = earliestDate.toISOString().split('T')[0];
+  const endDateStr = past[past.length - 1];
+
+  type Move = { date: string; movePercent: number };
+  type Row = { ticker: string; moves: Move[]; avgAbsMove: number | null; minMove?: number; maxMove?: number; error?: boolean };
+  
+  const rows: Row[] = [];
+
+  for (let i = 0; i < tickers.length; i += 3) {
+    const batch = tickers.slice(i, i + 3);
+    const batchPromises = batch.map(async (ticker) => {
+      try {
+        const bars = await getDailyBars(ticker, startDateStr, endDateStr);
+        const moves: Move[] = [];
+        let minMove: number | undefined;
+        let maxMove: number | undefined;
+        let absSum = 0;
+
+        for (const date of past) {
+          const idx = bars.findIndex(b => b.date === date);
+          if (idx > 0) {
+            const curr = bars[idx];
+            const prev = bars[idx - 1];
+            const movePercent = (curr.adjClose / prev.adjClose - 1) * 100;
+            moves.push({ date, movePercent });
+            absSum += Math.abs(movePercent);
+            if (minMove === undefined || movePercent < minMove) minMove = movePercent;
+            if (maxMove === undefined || movePercent > maxMove) maxMove = movePercent;
+          }
+        }
+
+        
+        const avgAbsMove = moves.length >= 2 ? absSum / moves.length : null;
+        rows.push({ ticker, moves, avgAbsMove, minMove, maxMove });
+      } catch {
+        rows.push({ ticker, moves: [], avgAbsMove: null, error: true });
+      }
+    });
+    
+    await Promise.all(batchPromises);
+  }
+
+  return { next, rows };
+}

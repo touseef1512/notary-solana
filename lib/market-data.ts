@@ -140,6 +140,31 @@ export async function getStockPrice(ticker: string, date?: string): Promise<{ pr
   return result;
 }
 
+export async function getDailyBars(ticker: string, startDate: string, endDate: string): Promise<{ date: string; adjClose: number }[]> {
+  const apiKey = process.env.TIINGO_API_KEY;
+  if (!apiKey) {
+    throw new Error('TIINGO_API_KEY is not configured in .env.local');
+  }
+
+  const url = `https://api.tiingo.com/tiingo/daily/${ticker.toLowerCase()}/prices?token=${apiKey}&startDate=${startDate}&endDate=${endDate}`;
+  const response = await fetch(url, { next: { revalidate: 86400 } });
+  
+  if (!response.ok) {
+    throw new Error(`Tiingo API error: ${response.status} ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  if (!Array.isArray(data)) return [];
+
+  return data
+    .filter(d => typeof d.adjClose === 'number')
+    .map(d => ({
+      date: d.date.substring(0, 10),
+      adjClose: d.adjClose
+    }));
+}
+
+
 export async function getMarketData(symbol: string) {
   const dividends = await getDividendHistory(symbol);
   

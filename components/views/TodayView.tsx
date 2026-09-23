@@ -3,6 +3,7 @@
 import React from "react";
 import type { NotaryAlert } from "@/lib/alert-engine";
 import { ChevronRight } from "lucide-react";
+import { CpiDayMoves } from "@/components/CpiDayMoves";
 
 interface TodayViewProps {
   alerts: NotaryAlert[];
@@ -66,6 +67,8 @@ export const TodayView: React.FC<TodayViewProps> = ({ alerts, onNavigate }) => {
             })}
           </div>
         )}
+
+        <CpiDayMoves />
 
         {/* Quick Links */}
         <div className="flex flex-col sm:flex-row gap-6 mt-4 justify-center items-center">
