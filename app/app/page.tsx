@@ -358,10 +358,6 @@ export default function AppShell() {
               </div>
             )}
 
-            <div className="hidden md:flex items-center gap-2 px-2 py-1 border border-brand-border bg-brand-card">
-              <div className="w-2 h-2 rounded-full bg-brand-accent animate-pulse" />
-              <span className="font-mono text-xs text-brand-accent uppercase">NETWORK: DEVNET</span>
-            </div>
 
             <div className="relative" ref={dropdownRef}>
               <button 

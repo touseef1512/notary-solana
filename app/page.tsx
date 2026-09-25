@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getParityAssets } from '@/lib/parity-assets';
 import { getAssetTrustRiskProfilesAction, getReserveAttestationsAction } from '@/app/actions';
+import { ShieldCheck, TrendingUp, Link as LinkIcon } from 'lucide-react';
 
 export default async function LandingPage() {
   const assetsTracked = getParityAssets().length.toString();
@@ -29,26 +30,43 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-text flex flex-col font-sans">
+    <div className="min-h-screen bg-brand-bg text-brand-text flex flex-col font-sans overflow-x-hidden">
       {/* STICKY TOP NAV */}
-      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-3 border-b border-brand-border bg-brand-bg">
-        <div className="flex items-center gap-2 text-brand-text">
-          <svg width="24" height="24" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-brand-accent">
-            <circle cx="250" cy="250" r="230" stroke="currentColor" strokeWidth="20" strokeDasharray="120 120"/>
-            <circle cx="250" cy="250" r="190" stroke="currentColor" strokeWidth="10"/>
-          </svg>
-          <span className="font-serif text-lg font-bold">Notary</span>
+      <nav className="sticky top-0 z-50 border-b border-brand-border bg-brand-bg">
+        <div className="flex items-center justify-between px-4 md:px-6 py-3">
+          <div className="flex items-center gap-2 text-brand-text">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand-accent">
+              <path d="M12 22l-3.1-1-3.1 1-1-3.1-3.1-1 1-3.1-1-3.1 3.1-1 1-3.1 3.1 1 3.1-1 1 3.1 3.1 1-1 3.1 1 3.1-3.1 1-1 3.1z" fill="currentColor" fillOpacity="0.1"/>
+              <circle cx="12" cy="12" r="4" stroke="currentColor"/>
+            </svg>
+            <span className="font-serif text-lg font-bold">Notary</span>
+          </div>
+          <div className="hidden md:flex items-center gap-6">
+            <a href="#how-it-works" className="text-sm text-brand-muted hover:text-brand-text">How it works</a>
+            <a href="#features" className="text-sm text-brand-muted hover:text-brand-text">Features</a>
+            <a href="#developers" className="text-sm text-brand-muted hover:text-brand-text">Developers</a>
+            <Link href="/app" className="px-4 py-1.5 bg-brand-accent text-brand-card font-sans font-semibold text-sm transition-opacity hover:opacity-90">
+              Open the app
+            </Link>
+          </div>
+          <div className="flex md:hidden items-center gap-3">
+            <Link href="/app" className="px-3 py-1.5 bg-brand-accent text-brand-card font-sans font-semibold text-xs transition-opacity hover:opacity-90">
+              Open app
+            </Link>
+            <label htmlFor="mobile-nav-toggle" className="cursor-pointer p-1 text-brand-text">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </label>
+          </div>
         </div>
-        <div className="flex items-center gap-6">
-          <a href="#how-it-works" className="text-sm text-brand-muted hover:text-brand-text hidden md:block">How it works</a>
-          <a href="#features" className="text-sm text-brand-muted hover:text-brand-text hidden md:block">Features</a>
-          <a href="#developers" className="text-sm text-brand-muted hover:text-brand-text hidden md:block">Developers</a>
-          <Link 
-            href="/app" 
-            className="px-4 py-1.5 bg-brand-accent text-brand-card font-sans font-semibold text-sm transition-opacity hover:opacity-90"
-          >
-            Open the app
-          </Link>
+        <input type="checkbox" id="mobile-nav-toggle" className="peer hidden" />
+        <div className="hidden peer-checked:flex md:hidden flex-col border-t border-brand-border bg-brand-bg px-4 py-2">
+          <a href="#how-it-works" className="py-2 text-sm text-brand-muted hover:text-brand-text">How it works</a>
+          <a href="#features" className="py-2 text-sm text-brand-muted hover:text-brand-text">Features</a>
+          <a href="#developers" className="py-2 text-sm text-brand-muted hover:text-brand-text">Developers</a>
         </div>
       </nav>
 
@@ -56,20 +74,58 @@ export default async function LandingPage() {
       <section className="flex-1 flex flex-col justify-center items-start px-6 md:px-12 lg:px-24 py-20 relative overflow-hidden">
         
         {/* Animated seal motif */}
-        <div className="absolute right-[-10%] top-[10%] md:right-10 md:top-1/2 md:-translate-y-1/2 opacity-20 pointer-events-none motion-safe:animate-[spin_40s_linear_infinite] motion-reduce:animate-none text-brand-accent">
-          <svg width="500" height="500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="250" cy="250" r="230" stroke="currentColor" strokeWidth="2" strokeDasharray="12 12"/>
-            <circle cx="250" cy="250" r="190" stroke="currentColor" strokeWidth="1"/>
-            <circle cx="250" cy="250" r="150" stroke="currentColor" strokeWidth="6" strokeDasharray="40 20"/>
-            <circle cx="250" cy="250" r="100" stroke="currentColor" strokeWidth="1" strokeDasharray="5 5"/>
-          </svg>
+        {/* Live-looking card motif */}
+        <div className="hidden md:flex absolute right-[5%] lg:right-10 top-1/2 -translate-y-1/2 flex-col w-72">
+          <div className="absolute top-0 right-0 transform -translate-y-4 -translate-x-4 -rotate-3 bg-brand-card border border-brand-border p-5 w-64 opacity-70 shadow-xl z-0">
+            <div className="flex items-center gap-3 mb-4">
+              <img src="/logos/MSFT.png" width={32} height={32} className="rounded-full bg-white object-cover" alt="MSFT" />
+              <div>
+                <div className="font-bold text-brand-text font-serif">MSFTx</div>
+                <div className="text-xs text-brand-muted font-sans">Microsoft</div>
+              </div>
+            </div>
+            <div className="border-t border-brand-border my-2"></div>
+            <div className="flex justify-between items-center py-1">
+              <span className="text-xs text-brand-muted font-sans">Trust score</span>
+              <span className="text-xs font-mono text-positive">100%</span>
+            </div>
+            <div className="flex justify-between items-center py-1">
+              <span className="text-xs text-brand-muted font-sans">Verified events</span>
+              <span className="text-xs font-mono text-brand-text">3</span>
+            </div>
+          </div>
+          <div className="relative bg-brand-card border border-brand-border p-6 w-72 transform rotate-2 shadow-xl z-10">
+            <div className="absolute -top-3 -right-3 bg-brand-accent text-brand-card rounded-full px-2 py-0.5 text-[9px] uppercase font-bold tracking-widest shadow-md">
+              Notice sent
+            </div>
+            <div className="flex items-center gap-3 mb-4">
+              <img src="/logos/AAPL.png" width={40} height={40} className="rounded-full bg-white object-cover" alt="AAPL" />
+              <div>
+                <div className="font-bold text-brand-text font-serif">AAPLx</div>
+                <div className="text-xs text-brand-muted font-sans">Apple Inc.</div>
+              </div>
+            </div>
+            <div className="border-t border-brand-border my-3"></div>
+            <div className="flex justify-between items-center py-1">
+              <span className="text-sm text-brand-muted font-sans">Gap-stressed health</span>
+              <span className="text-sm font-mono text-positive">1.42</span>
+            </div>
+            <div className="border-t border-brand-border my-3"></div>
+            <div className="flex items-center gap-2 mt-2">
+              <div className="w-2 h-2 rounded-full bg-brand-accent animate-pulse" />
+              <span className="font-mono text-[10px] text-brand-muted uppercase">Verified on Solana Devnet</span>
+            </div>
+          </div>
         </div>
 
         <div className="max-w-3xl relative z-10">
-          <h1 className="font-serif text-5xl md:text-7xl font-bold mb-6 text-brand-text leading-tight">
-            Your tokenized-stock loan can go underwater while the market is closed. Notary tells you first.
+          <div className="font-mono text-xs uppercase tracking-widest text-brand-accent mb-4">
+            Brokerage-grade safety for tokenized stocks
+          </div>
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl font-bold mb-6 text-brand-text leading-tight">
+            Your tokenized-stock position can go wrong while the market is closed. Notary tells you first.
           </h1>
-          <p className="font-sans text-xl md:text-2xl text-brand-muted mb-10 max-w-2xl">
+          <p className="font-sans text-lg sm:text-xl md:text-2xl text-brand-muted mb-10 max-w-2xl">
             Real-time notices, margin-call warnings, unified statements, and pre-trade checks for tokenized-stock holders on Solana — delivered before you would have found out yourself, through the app or Telegram.
           </p>
           <Link 
@@ -85,10 +141,14 @@ export default async function LandingPage() {
       <section className="border-y border-brand-border bg-brand-card">
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row">
           <div className="flex-1 py-8 md:border-r border-brand-border md:pr-6 border-b md:border-b-0">
+            <ShieldCheck className="w-5 h-5 text-brand-accent mb-3" />
+            <div className="w-8 h-1 bg-brand-accent mb-4" />
             <div className="font-mono text-4xl text-brand-text mb-2">{assetsTracked}</div>
             <div className="font-sans text-sm text-brand-muted">Assets tracked</div>
           </div>
           <div className="flex-1 py-8 md:border-r border-brand-border md:px-6 border-b md:border-b-0">
+            <TrendingUp className="w-5 h-5 text-brand-accent mb-3" />
+            <div className="w-8 h-1 bg-brand-accent mb-4" />
             <div className={`text-4xl text-brand-text mb-2 ${averageTrustScore === "Insufficient data" ? "font-sans text-lg" : "font-mono"}`}>
               {averageTrustScore}
             </div>
@@ -100,6 +160,8 @@ export default async function LandingPage() {
             )}
           </div>
           <div className="flex-1 py-8 md:pl-6">
+            <LinkIcon className="w-5 h-5 text-brand-accent mb-3" />
+            <div className="w-8 h-1 bg-brand-accent mb-4" />
             <div className={`text-4xl text-brand-text mb-2 ${reserveChecks === "Insufficient data" ? "font-sans text-lg" : "font-mono"}`}>
               {reserveChecks}
             </div>
