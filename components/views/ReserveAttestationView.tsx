@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { getReserveAttestationsAction } from '@/app/actions';
 import type { AttestationResult } from '@/lib/attestation';
 import { PlainNote } from '@/components/PlainNote';
+import { TickerLogo } from '@/components/TickerLogo';
 
 export const ReserveAttestationView = () => {
   const [attestations, setAttestations] = useState<AttestationResult[] | null>(null);
@@ -88,13 +89,24 @@ export const ReserveAttestationView = () => {
                   
                   return (
                     <tr key={item.asset.symbol} className="border-b border-brand-border hover:bg-brand-card transition-colors">
-                      <td className="py-2.5 px-3 font-bold text-brand-text">{item.asset.symbol}</td>
+                      <td className="py-2.5 px-3">
+                        <div className="flex items-center gap-2">
+                          <TickerLogo symbol={item.asset.symbol} size={20} />
+                          <span className="font-bold text-brand-text">{item.asset.symbol}</span>
+                        </div>
+                      </td>
                       <td className="py-2.5 px-3 text-brand-text text-xs">{item.classification}</td>
                       <td className="py-2.5 px-3 text-right">
                         {!hasData || item.backingRatio === null ? (
                           <span className="text-brand-muted font-mono text-[10px]">Insufficient data</span>
                         ) : (
-                          <span className="text-brand-accent font-mono text-base">{(item.backingRatio * 100).toFixed(2)}%</span>
+                          <div className="flex flex-col items-end">
+                            <span className="text-brand-accent font-mono text-base">{(item.backingRatio * 100).toFixed(2)}%</span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <div className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
+                              <span className="font-mono text-[9px] text-brand-muted uppercase whitespace-nowrap">Verified on Solana Devnet (demo)</span>
+                            </div>
+                          </div>
                         )}
                       </td>
                       <td className="py-2.5 px-3 text-right">

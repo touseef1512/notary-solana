@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { buildAssetDirectory } from "@/lib/asset-directory";
 import { PlainNote } from '@/components/PlainNote';
+import { TickerLogo } from '@/components/TickerLogo';
 
 type FilterType = 'all' | 'xStocks' | 'Ondo' | 'kamino';
 
@@ -88,7 +89,10 @@ export const AssetDirectoryView = () => {
                 {sortedEntries.map(e => (
                   <tr key={e.mintAddress} className="hover:bg-brand-card transition-colors">
                     <td className="p-3">
-                      <div className="text-brand-text font-bold">{e.symbol}</div>
+                      <div className="flex items-center gap-2">
+                        <TickerLogo symbol={e.symbol} size={20} />
+                        <div className="text-brand-text font-bold">{e.symbol}</div>
+                      </div>
                       <div className="text-brand-muted text-[10px]">{e.name}</div>
                     </td>
                     <td className="p-3 text-brand-text">{e.issuer}</td>
@@ -104,7 +108,13 @@ export const AssetDirectoryView = () => {
                     </td>
                     <td className="p-3">
                       {e.inTrustRegistry ? (
-                        <span className="text-brand-text">Included</span>
+                        <div className="flex flex-col items-start">
+                          <span className="text-brand-text">Included</span>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
+                            <span className="font-mono text-[9px] text-brand-muted uppercase whitespace-nowrap">Verified on Solana Devnet (demo)</span>
+                          </div>
+                        </div>
                       ) : (
                         <span className="text-brand-muted">Not checked yet</span>
                       )}

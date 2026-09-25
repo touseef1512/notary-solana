@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { getMarketWatchAction } from "@/app/actions";
 import { PlainNote } from '@/components/PlainNote';
+import { TickerLogo } from '@/components/TickerLogo';
 import type { MarketWatchResult } from '@/lib/market-watch-core';
 
 function formatDate(ts: number): string {
@@ -126,7 +127,10 @@ export const MarketWatchView = () => {
                     }).map((e) => (
                       <tr key={e.mint} className="hover:bg-brand-card transition-colors">
                         <td className="p-3">
+                        <div className="flex items-center gap-2">
+                          <TickerLogo symbol={e.symbol} size={20} />
                           <div className="text-brand-text font-bold">{e.symbol}</div>
+                        </div>
                           <a 
                             href={`https://explorer.solana.com/address/${e.mint}`}
                             target="_blank"

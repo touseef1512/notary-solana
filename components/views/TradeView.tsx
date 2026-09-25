@@ -6,6 +6,7 @@ import { ALLOWED_USD_SIZES } from "@/lib/trade-cost";
 import { getParityAssets } from "@/lib/parity-assets";
 import { TradePanelModal } from "@/components/TradePanelModal";
 import { TokenAddressCheck } from "@/components/TokenAddressCheck";
+import { TickerLogo } from '@/components/TickerLogo';
 import type { TradeCostResult } from "@/lib/trade-cost";
 
 interface PriceParityResult {
@@ -254,12 +255,15 @@ export const TradeView = () => {
                       <tr key={row.mint} className="hover:bg-brand-border/40 transition-colors">
                         <td className="p-3 text-brand-text font-bold">{row.issuer}</td>
                         <td className="p-3 text-brand-text">
-                          {row.symbol}
-                          {row.inKaminoMarket && (
-                            <span className="inline-flex px-1 py-0.5 text-[9px] ml-2 border border-brand-accent text-brand-accent">
-                              Kamino
-                            </span>
-                          )}
+                          <div className="flex items-center gap-2">
+                            <TickerLogo symbol={row.symbol} size={20} />
+                            <span>{row.symbol}</span>
+                            {row.inKaminoMarket && (
+                              <span className="inline-flex px-1 py-0.5 text-[9px] border border-brand-accent text-brand-accent">
+                                Kamino
+                              </span>
+                            )}
+                          </div>
                         </td>
                         
                         {!isOk ? (

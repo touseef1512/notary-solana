@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { getTrustLeaderboardAction } from '@/app/actions';
 import type { TrustScoreResult } from '@/lib/trust-score';
 import { PlainNote } from '@/components/PlainNote';
+import { TickerLogo } from '@/components/TickerLogo';
 
 type LeaderboardData = {
   leaderboard: { issuer: string, averageTrustScore: number | null, assetsCount: number, totalAssetsForIssuer: number }[],
@@ -136,7 +137,12 @@ export const TrustScoreView = () => {
 
                       return (
                         <tr key={score.asset.symbol} className="border-b border-brand-border hover:bg-brand-card transition-colors">
-                          <td className="py-2.5 px-3 font-bold text-brand-text">{score.asset.symbol}</td>
+                          <td className="py-2.5 px-3">
+                            <div className="flex items-center gap-2">
+                              <TickerLogo symbol={score.asset.symbol} size={20} />
+                              <span className="font-bold text-brand-text">{score.asset.symbol}</span>
+                            </div>
+                          </td>
                           <td className="py-2.5 px-3 text-brand-muted truncate max-w-[180px]">{score.asset.name}</td>
                           <td className="py-2.5 px-3 text-right">
                             {score.trustScore === null ? (

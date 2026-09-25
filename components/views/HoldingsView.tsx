@@ -6,6 +6,7 @@ import { verifyAllHoldings, VerificationStatusResult, getHoldingsWithPrices, Tok
 import { PlainNote } from '@/components/PlainNote';
 import { PortfolioProof } from '@/components/PortfolioProof';
 import { groupExposure } from '@/lib/exposure';
+import { TickerLogo } from '@/components/TickerLogo';
 
 const HoldingRow = ({
   holding, 
@@ -77,7 +78,12 @@ const HoldingRow = ({
         className="border-b border-brand-border hover:bg-brand-card transition-colors cursor-pointer"
         onClick={handleRowClick}
       >
-        <td className="py-2.5 px-3 font-bold text-brand-text">{holding.symbol}</td>
+        <td className="py-2.5 px-3">
+          <div className="flex items-center gap-2">
+            <TickerLogo symbol={holding.symbol} size={20} />
+            <span className="font-bold text-brand-text">{holding.symbol}</span>
+          </div>
+        </td>
         <td className="py-2.5 px-3 text-brand-muted truncate max-w-[180px]">{holding.name}</td>
         <td className="py-2.5 px-3 text-brand-muted text-xs uppercase tracking-wider">{holding.issuer}</td>
         <td className="py-2.5 px-3 font-mono text-brand-text text-right">

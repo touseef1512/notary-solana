@@ -5,6 +5,7 @@ import { getPriceParityAction } from "@/app/actions";
 import { getMarketStatus, formatDuration } from "@/lib/market-hours";
 import { PlainNote } from '@/components/PlainNote';
 import { TradeCostCheck } from '@/components/TradeCostCheck';
+import { TickerLogo } from '@/components/TickerLogo';
 
 interface PriceParityResult {
   symbol: string;
@@ -127,12 +128,15 @@ export const PriceParityView = () => {
                     return (
                       <tr key={row.mint} className="hover:bg-brand-border/40 transition-colors">
                         <td className="p-3 text-brand-text font-bold">
-                          {row.symbol}
-                          {row.inKaminoMarket && (
-                            <span className="inline-flex px-1 py-0.5 text-[9px] ml-2 border border-brand-accent text-brand-accent">
-                              Kamino
-                            </span>
-                          )}
+                          <div className="flex items-center gap-2">
+                            <TickerLogo symbol={row.symbol} size={20} />
+                            <span>{row.symbol}</span>
+                            {row.inKaminoMarket && (
+                              <span className="inline-flex px-1 py-0.5 text-[9px] border border-brand-accent text-brand-accent">
+                                Kamino
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="p-3 text-brand-text">{row.issuer}</td>
                         

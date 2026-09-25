@@ -8,6 +8,7 @@ import { AssetSnapshot, summarizeHistory } from '@/lib/history-types';
 import { PlainNote } from '@/components/PlainNote';
 import { BookOpen, Loader2 } from 'lucide-react';
 import { EndorseButton } from '@/components/EndorseButton';
+import { TickerLogo } from '@/components/TickerLogo';
 
 export const TrustRegistryView = () => {
   const [profiles, setProfiles] = useState<Record<string, TrustRiskProfile>>({});
@@ -70,6 +71,7 @@ export const TrustRegistryView = () => {
               <li><strong>Verified count</strong>: the number of historical corporate actions verified against independent data.</li>
               <li><strong>Unavailable (on-chain proof)</strong>: no cryptographic proof is on the Solana ledger.</li>
               <li><strong>Not checked yet</strong>: Notary has no reserve check for that token.</li>
+              <li><strong>History checks</strong>: each check is a point in time Notary compared the asset&apos;s on-chain data against outside sources. The count shows how many times this has happened since monitoring began.</li>
             </ul>
           </div>
         } />
@@ -121,7 +123,20 @@ export const TrustRegistryView = () => {
 
                   return (
                     <tr key={asset.mintAddress} className="hover:bg-brand-card/50 transition-colors">
-                      <td className="py-3 px-4 font-bold text-brand-text">{asset.symbol}</td>
+                      <td className="py-3 px-4">
+                        <div className="flex flex-col items-start">
+                          <div className="flex items-center gap-2">
+                            <TickerLogo symbol={asset.symbol} size={20} />
+                            <span className="font-bold text-brand-text">{asset.symbol}</span>
+                          </div>
+                          {(profileData?.trustScore !== null && profileData?.trustScore !== undefined) || asset.notarizationSignature ? (
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <div className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
+                              <span className="font-mono text-[9px] text-brand-muted uppercase whitespace-nowrap">Verified on Solana Devnet (demo)</span>
+                            </div>
+                          ) : null}
+                        </div>
+                      </td>
                       <td className="py-3 px-4 text-brand-muted">{asset.name}</td>
                       <td className="py-3 px-4">
                         <span className="inline-flex px-1.5 py-0.5 text-[10px] border border-brand-border bg-brand-card text-brand-text">
