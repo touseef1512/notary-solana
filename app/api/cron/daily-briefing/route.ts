@@ -26,7 +26,7 @@ export async function GET(request: Request) {
       } else {
         failCount++;
       }
-    } catch (e) {
+    } catch {
       failCount++;
     }
   }
