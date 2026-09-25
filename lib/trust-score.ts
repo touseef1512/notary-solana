@@ -1,4 +1,5 @@
-import { KnownAsset, KNOWN_ASSETS } from './known-assets';
+import { KnownAsset } from './known-assets';
+import { getParityAssets } from './parity-assets';
 import { getDividendHistory, getStockPrice, delay } from './market-data';
 import { getHistoricalMultiplierChange, getScaledUiAmountConfig, ScaledUiAmountConfig } from './solana';
 import { classifyDiscrepancy, getDiscrepancyBucket } from './verification';
@@ -42,19 +43,32 @@ export async function computeTrustScore(asset: KnownAsset): Promise<TrustScoreRe
   // Cap historical lookback to events from 2024 onwards, as requested
   const recentDividends = dividends.filter(d => new Date(d.ex_dividend_date).getTime() >= new Date('2024-01-01').getTime());
 
+  let matchedLiveIndex = -1;
+  let liveDiffDays = -1;
+  if (liveConfig && liveConfig.multiplier !== liveConfig.newMultiplier) {
+    const effectiveDate = new Date(liveConfig.newMultiplierEffectiveTimestamp * 1000);
+    let closestDiff = Infinity;
+    for (let j = 0; j < recentDividends.length; j++) {
+      const exDivDate = new Date(recentDividends[j].ex_dividend_date);
+      const diffDays = Math.abs(effectiveDate.getTime() - exDivDate.getTime()) / (1000 * 60 * 60 * 24);
+      if (diffDays <= 7 && diffDays < closestDiff) {
+        closestDiff = diffDays;
+        matchedLiveIndex = j;
+        liveDiffDays = diffDays;
+      }
+    }
+  }
+
   for (let i = 0; i < recentDividends.length; i++) {
     const div = recentDividends[i];
     let independentlyVerified = false;
     let actualPct = 0;
     let timingMatch = false;
 
-    if (i === 0 && liveConfig && liveConfig.multiplier !== liveConfig.newMultiplier) {
-      // For the most recent event, we can independently verify it using the live config
+    if (i === matchedLiveIndex && liveConfig) {
+      // For the most recently matched event, we can independently verify it using the live config
       actualPct = (liveConfig.newMultiplier / liveConfig.multiplier) - 1;
-      const exDivDate = new Date(div.ex_dividend_date);
-      const effectiveDate = new Date(liveConfig.newMultiplierEffectiveTimestamp * 1000);
-      const diffDays = Math.abs(effectiveDate.getTime() - exDivDate.getTime()) / (1000 * 60 * 60 * 24);
-      timingMatch = diffDays <= 2;
+      timingMatch = liveDiffDays <= 2;
       independentlyVerified = true;
     } else {
       // Try historical verification
@@ -153,7 +167,7 @@ export async function getIssuerLeaderboard(): Promise<{
   }
 
   const scores: TrustScoreResult[] = [];
-  for (const asset of KNOWN_ASSETS) {
+  for (const asset of getParityAssets()) {
     console.log(`Computing trust score for ${asset.symbol}...`);
     const score = await computeTrustScore(asset);
     scores.push(score);

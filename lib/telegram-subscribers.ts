@@ -73,3 +73,8 @@ export async function getAllSubscribers(): Promise<TelegramSubscriber[]> {
   }
   return subs;
 }
+
+export async function isWalletLinked(walletAddress: string): Promise<boolean> {
+  const subs = await getAllSubscribers();
+  return subs.some(sub => sub.walletAddress === walletAddress);
+}

@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { KNOWN_ASSETS } from '@/lib/known-assets';
+import { getParityAssets } from '@/lib/parity-assets';
 import { getAssetTrustRiskProfilesAction, getReserveAttestationsAction } from '@/app/actions';
 
 export default async function LandingPage() {
-  const assetsTracked = KNOWN_ASSETS.length.toString();
+  const assetsTracked = getParityAssets().length.toString();
   
   let averageTrustScore = "Insufficient data";
   let validScoresCount = 0;

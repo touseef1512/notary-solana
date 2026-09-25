@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { askNotaryAction } from '@/app/actions';
 import { Send, Terminal, ChevronDown, Bot } from 'lucide-react';
-import { KNOWN_ASSETS } from '@/lib/known-assets';
+import { getParityAssets } from '@/lib/parity-assets';
 import { WalletDigest } from '@/components/WalletDigest';
 
 type Message = {
@@ -57,7 +57,7 @@ export const AskNotaryView = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start w-full h-[calc(100vh-8rem)]">
+    <div className="flex flex-col items-center justify-start w-full h-full">
       {!pubKeyString ? (
         <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
           <Bot className="w-12 h-12 text-brand-muted mb-4 opacity-50" />
@@ -65,7 +65,7 @@ export const AskNotaryView = () => {
           <p className="text-brand-muted/70 font-sans text-sm max-w-sm">Connect your wallet or enter an address to give Notary access to your verifiable portfolio context.</p>
         </div>
       ) : (
-        <div className="w-full max-w-4xl px-4 mt-2 flex flex-col h-full">
+        <div className="w-full max-w-4xl px-4 mt-2 pb-4 flex flex-col h-full min-h-0">
         
         <div className="mb-4 shrink-0">
           <h2 className="text-xl font-bold text-brand-text uppercase tracking-widest mb-2 flex items-center gap-2">
@@ -86,7 +86,7 @@ export const AskNotaryView = () => {
                   className="bg-brand-bg border border-brand-border text-brand-text py-1.5 pl-3 pr-8 font-mono text-sm focus:outline-none focus:border-brand-accent transition-colors appearance-none min-w-[140px] cursor-pointer"
                 >
                   <option value="all">ALL ASSETS</option>
-                  {KNOWN_ASSETS.map((asset) => (
+                  {getParityAssets().map((asset) => (
                     <option key={asset.mintAddress} value={asset.mintAddress}>
                       {asset.symbol}
                     </option>
@@ -96,7 +96,9 @@ export const AskNotaryView = () => {
               </div>
             </div>
           </div>
-          <div className="mt-4"><WalletDigest walletAddress={pubKeyString} /></div>
+          <div className="mt-4 max-h-[150px] overflow-y-auto pr-2">
+            <WalletDigest walletAddress={pubKeyString} />
+          </div>
         </div>
 
         {/* Chat History */}

@@ -55,13 +55,13 @@ export type VerificationStatusResult = {
 };
 
 export async function verifyAssetHolding(mintAddress: string): Promise<VerificationStatusResult> {
-  const { KNOWN_ASSETS_MAP } = await import('@/lib/known-assets');
+  const { getParityAssets } = await import('@/lib/parity-assets');
   const { getDividendHistory, getStockPrice } = await import('@/lib/market-data');
   const { verifyDividendEvent, getDiscrepancyBucket } = await import('@/lib/verification');
   const { narrateVerificationResult } = await import('@/lib/narration');
 
   try {
-    const asset = KNOWN_ASSETS_MAP[mintAddress];
+    const asset = getParityAssets().find((a) => a.mintAddress === mintAddress);
     if (!asset) {
       return { status: 'error', error: 'Asset not found' };
     }
@@ -124,11 +124,11 @@ export async function getTrustLeaderboardAction() {
 }
 
 export async function getReserveAttestationsAction() {
-  const { KNOWN_ASSETS } = await import('@/lib/known-assets');
+  const { getParityAssets } = await import('@/lib/parity-assets');
   const { getReserveAttestation } = await import('@/lib/attestation');
   
   try {
-    const attestations = await Promise.all(KNOWN_ASSETS.map(asset => getReserveAttestation(asset)));
+    const attestations = await Promise.all(getParityAssets().map(asset => getReserveAttestation(asset)));
     return attestations;
   } catch (error) {
     console.error(`Error getting reserve attestations:`, error);
@@ -137,10 +137,10 @@ export async function getReserveAttestationsAction() {
 }
 
 export async function getAssetTrustRiskProfilesAction() {
-  const { KNOWN_ASSETS } = await import('@/lib/known-assets');
+  const { getParityAssets } = await import('@/lib/parity-assets');
   const { buildAssetTrustRiskProfile } = await import('@/lib/trust-risk-profile');
   try {
-    const profiles = await Promise.all(KNOWN_ASSETS.map(asset => buildAssetTrustRiskProfile(asset)));
+    const profiles = await Promise.all(getParityAssets().map(asset => buildAssetTrustRiskProfile(asset)));
     try {
       const { recordAssetSnapshot } = await import('@/lib/history');
       await Promise.all(profiles.map(p => recordAssetSnapshot(p)));
@@ -155,12 +155,13 @@ export async function getAssetTrustRiskProfilesAction() {
 
 export async function getAssetHistoryAction(): Promise<Record<string, AssetSnapshot[]>> {
   try {
-    const { KNOWN_ASSETS } = await import('@/lib/known-assets');
+    const { getParityAssets } = await import('@/lib/parity-assets');
     const { getAssetHistory } = await import('@/lib/history');
     
-    const results = await Promise.all(KNOWN_ASSETS.map(asset => getAssetHistory(asset.symbol, 60)));
+    const assets = getParityAssets();
+    const results = await Promise.all(assets.map(asset => getAssetHistory(asset.symbol, 60)));
     const record: Record<string, AssetSnapshot[]> = {};
-    KNOWN_ASSETS.forEach((asset, index) => {
+    assets.forEach((asset, index) => {
       record[asset.symbol] = results[index];
     });
     return record;
@@ -192,7 +193,6 @@ export async function getNotaryAlertsAction(walletAddress?: string) {
 export async function getDividendProjectionAction(mintAddress: string): Promise<{ state: "projected" | "confirmed" | "none" | "insufficient" | "unavailable" | "unknown-token"; daysUntil: number | null; date: string | null; isFund: boolean; pauseVerified: boolean }> {
   try {
     const { getParityAssets } = await import('@/lib/parity-assets');
-    const { KNOWN_ASSETS } = await import('@/lib/known-assets');
     
     const assets = getParityAssets();
     const asset = assets.find((a) => a.mintAddress === mintAddress);
@@ -202,7 +202,7 @@ export async function getDividendProjectionAction(mintAddress: string): Promise<
     }
     
     const isFund = asset.underlyingTicker === "SPY" || asset.underlyingTicker === "QQQ";
-    const pauseVerified = KNOWN_ASSETS.some((k) => k.mintAddress === mintAddress);
+    const pauseVerified = getParityAssets().some((k) => k.mintAddress === mintAddress);
     
     const { getDividendHistory } = await import('@/lib/market-data');
     
@@ -241,9 +241,9 @@ export async function getDividendProjectionAction(mintAddress: string): Promise<
 
 export async function generateTaxCsvAction(assetMintAddress: string, purchaseDate: string, purchasePrice: number, shares: number) {
   const { generateTaxCsv } = await import('@/lib/tax-export');
-  const { KNOWN_ASSETS_MAP } = await import('@/lib/known-assets');
+  const { getParityAssets } = await import('@/lib/parity-assets');
   
-  const asset = KNOWN_ASSETS_MAP[assetMintAddress];
+  const asset = getParityAssets().find((a) => a.mintAddress === assetMintAddress);
   if (!asset) throw new Error("Asset not found");
   
   const holdings = { purchaseDate, purchasePrice, shares };
@@ -258,7 +258,7 @@ export async function generateTaxCsvAction(assetMintAddress: string, purchaseDat
 
 export async function askNotaryAction(question: string, walletAddress?: string, assetMintAddress?: string | null) {
   const { askNotary } = await import('@/lib/ask-notary');
-  const { KNOWN_ASSETS_MAP } = await import('@/lib/known-assets');
+  const { getParityAssets } = await import('@/lib/parity-assets');
   
   let holdings: AskNotaryTokenHolding[] = [];
   let loanRisk: Awaited<ReturnType<typeof getKaminoRiskAction>> | undefined = undefined;
@@ -280,7 +280,7 @@ export async function askNotaryAction(question: string, walletAddress?: string, 
     }
   }
 
-  const asset = assetMintAddress ? KNOWN_ASSETS_MAP[assetMintAddress] : undefined;
+  const asset = assetMintAddress ? getParityAssets().find(a => a.mintAddress === assetMintAddress) : undefined;
 
   try {
     return await askNotary(question, { holdings, asset, loanRisk });
@@ -634,4 +634,14 @@ export async function getCpiDayMovesAction() {
   }
 
   return { next, rows };
+}
+
+export async function checkTelegramLinkAction(walletAddress: string): Promise<boolean> {
+  const { isWalletLinked } = await import('@/lib/telegram-subscribers');
+  try {
+    return await isWalletLinked(walletAddress);
+  } catch (error) {
+    console.error('Error checking telegram link:', error);
+    return false;
+  }
 }

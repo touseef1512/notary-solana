@@ -29,7 +29,17 @@ export const AssetDirectoryView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-6xl px-4 mt-6 flex flex-col gap-6">
-        <PlainNote text="This lists the tokenized stocks Notary knows about: who issues each one, which real stock it tracks, whether the Kamino lending market accepts it, and whether Notary checks its reserves. It is not a list of every tokenized stock on Solana, and it is not a recommendation." />
+        <PlainNote text={
+          <div className="flex flex-col gap-2">
+            <p>This lists the tokenized stocks Notary knows about: who issues each one, which real stock it tracks, and their status in Kamino and Notary checks. This is not a recommendation or advice of any kind.</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong>Accepted</strong>: the token is on the Kamino lending market reserve list (verified Sep 20).</li>
+              <li><strong>Not in this market</strong>: the token is not currently accepted by Kamino.</li>
+              <li><strong>Included</strong>: Notary checks the reserves behind this token.</li>
+              <li><strong>Not checked yet</strong>: Notary has no reserve check for that token.</li>
+            </ul>
+          </div>
+        } />
 
         <h2 className="text-sm font-bold text-brand-text">Asset directory</h2>
 
@@ -116,10 +126,7 @@ export const AssetDirectoryView = () => {
           </div>
         )}
 
-        <div className="border border-brand-border bg-brand-bg p-4 mb-12">
-          <p className="text-xs text-brand-muted mb-2">The Kamino column comes from the lending market reserve list Notary verified on Sep 20. The Market Watch tab shows the live list and records changes.</p>
-          <p className="text-xs text-brand-muted">Included in the Trust Registry means Notary tries to check the reserves behind the token. For some tokens no verifiable reserve data is available, and the Trust Registry then shows Insufficient Data. Not checked yet means Notary has no reserve check for that token. None of this is a recommendation or advice of any kind.</p>
-        </div>
+
       </div>
     </div>
   );

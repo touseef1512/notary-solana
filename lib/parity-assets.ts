@@ -6,6 +6,7 @@ export interface ParityAsset {
   issuer: string;
   mintAddress: string;
   underlyingTicker: string;
+  notarizationSignature?: string;
 }
 
 export const KAMINO_PARITY_EXTRA: ParityAsset[] = [
@@ -33,7 +34,8 @@ export function getParityAssets(): ParityAsset[] {
           name: a.name,
           issuer: a.issuer,
           mintAddress: a.mintAddress,
-          underlyingTicker: a.underlyingTicker
+          underlyingTicker: a.underlyingTicker,
+          notarizationSignature: a.notarizationSignature
         });
         seenMints.add(a.mintAddress);
       }

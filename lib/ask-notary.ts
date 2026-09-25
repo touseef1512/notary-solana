@@ -244,6 +244,7 @@ Instructions:
         },
       ],
       model: 'qwen/qwen3.8-27b',
+      max_tokens: 400,
     });
 
     return {

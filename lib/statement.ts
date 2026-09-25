@@ -1,6 +1,6 @@
 import { createHash } from 'crypto';
 import { ProofInput, buildPortfolioProofObject } from './portfolio-proof';
-import { KNOWN_ASSETS_MAP } from './known-assets';
+import { getParityAssets } from './parity-assets';
 import { generateTaxCsv } from './tax-export';
 
 export interface TaxEntryInput {
@@ -73,7 +73,7 @@ export async function buildUnifiedStatement(input: StatementInput, generatedAt: 
   if (input.taxEntries && input.taxEntries.length > 0) {
     for (let i = 0; i < input.taxEntries.length; i++) {
       const entry = input.taxEntries[i];
-      const asset = KNOWN_ASSETS_MAP[entry.assetMintAddress];
+      const asset = getParityAssets().find((a) => a.mintAddress === entry.assetMintAddress);
       if (!asset) {
         taxSummary.items.push({ assetSymbol: "Unknown", error: "Insufficient Data" });
         continue;

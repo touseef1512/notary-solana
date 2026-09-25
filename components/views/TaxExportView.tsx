@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useActiveAddress } from '@/components/ActiveAddressProvider';
 import { generateTaxCsvAction, getTokenizedStockHoldings } from '@/app/actions';
-import { KNOWN_ASSETS } from '@/lib/known-assets';
+import { getParityAssets } from '@/lib/parity-assets';
 import { Plus, FileText, ChevronDown, Download, Trash2 } from 'lucide-react';
 import type { TokenHolding } from '@/lib/solana';
 import { PlainNote } from '@/components/PlainNote';
@@ -18,7 +18,7 @@ export const TaxExportView: React.FC<TaxExportViewProps> = ({ entries, onEntries
   const { activeAddress } = useActiveAddress();
   const pubKeyString = activeAddress;
 
-  const [selectedAsset, setSelectedAsset] = useState<string>(KNOWN_ASSETS[0].mintAddress);
+  const [selectedAsset, setSelectedAsset] = useState<string>(getParityAssets()[0].mintAddress);
   const [purchaseDate, setPurchaseDate] = useState<string>('');
   const [purchasePrice, setPurchasePrice] = useState<string>('');
   const [shares, setShares] = useState<string>('');
@@ -91,7 +91,7 @@ export const TaxExportView: React.FC<TaxExportViewProps> = ({ entries, onEntries
       const link = document.createElement('a');
       link.href = url;
       
-      const assetObj = KNOWN_ASSETS.find(a => a.mintAddress === entry.assetMintAddress);
+      const assetObj = getParityAssets().find(a => a.mintAddress === entry.assetMintAddress);
       const symbol = assetObj ? assetObj.symbol : "tax";
       link.setAttribute('download', `${symbol}_tax_export.csv`);
       
@@ -132,7 +132,7 @@ export const TaxExportView: React.FC<TaxExportViewProps> = ({ entries, onEntries
                   className="w-full bg-brand-card border border-brand-border text-brand-text py-3 pl-4 pr-10 font-mono text-sm focus:outline-none focus:border-brand-accent transition-colors appearance-none cursor-pointer"
                   disabled={loading}
                 >
-                  {KNOWN_ASSETS.map((asset) => (
+                  {getParityAssets().map((asset) => (
                     <option key={asset.mintAddress} value={asset.mintAddress}>
                       {asset.symbol} - {asset.name}
                     </option>
@@ -216,7 +216,7 @@ export const TaxExportView: React.FC<TaxExportViewProps> = ({ entries, onEntries
           ) : (
             <div className="flex flex-col border border-brand-border bg-brand-bg">
               {entries.map((entry, idx) => {
-                const assetObj = KNOWN_ASSETS.find(a => a.mintAddress === entry.assetMintAddress);
+                const assetObj = getParityAssets().find(a => a.mintAddress === entry.assetMintAddress);
                 const symbol = assetObj ? assetObj.symbol : "Unknown";
                 return (
                   <div key={idx} className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 ${idx < entries.length - 1 ? 'border-b border-brand-border' : ''}`}>

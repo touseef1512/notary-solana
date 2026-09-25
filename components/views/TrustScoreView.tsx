@@ -47,7 +47,16 @@ export const TrustScoreView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-6xl px-4 mt-2 mb-6">
-        <PlainNote text="The score shows how often past dividend adjustments for each issuer matched independently sourced market data in Notary checks. It is a comparison aid, not a recommendation." />
+        <PlainNote text={
+          <div className="flex flex-col gap-2">
+            <p>The score shows how often past dividend adjustments for each issuer matched independently sourced market data in Notary checks. It is a comparison aid, not a recommendation.</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong>X verified</strong>: how many corporate actions matched independent records.</li>
+              <li><strong>Unverifiable</strong>: lacking enough data or indexer support to confirm.</li>
+              <li><strong>No events</strong>: nothing to verify yet, not a red flag.</li>
+            </ul>
+          </div>
+        } />
         <h2 className="text-xl font-bold text-brand-text mb-2">Issuer leaderboard</h2>
         <p className="text-brand-muted text-sm mb-6 max-w-3xl">
           On-chain trust scores represent the percentage of historical corporate actions (like dividends) that have been mathematically verified against independently sourced market data.

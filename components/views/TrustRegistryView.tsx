@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAssetTrustRiskProfilesAction, getAssetHistoryAction } from '@/app/actions';
 import type { TrustRiskProfile } from '@/lib/trust-risk-profile';
-import { KNOWN_ASSETS } from '@/lib/known-assets';
+import { getParityAssets } from '@/lib/parity-assets';
 import { AssetSnapshot, summarizeHistory } from '@/lib/history-types';
 import { PlainNote } from '@/components/PlainNote';
 import { BookOpen, Loader2 } from 'lucide-react';
@@ -62,7 +62,17 @@ export const TrustRegistryView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full h-[calc(100vh-8rem)]">
       <div className="w-full max-w-6xl px-4 mt-2 mb-6">
-        <PlainNote text="Before buying a tokenized stock, check whether its issuer publishes reserve data and whether Notary could verify it. Insufficient Data means no verifiable reserve data was available. It does not mean the asset is safe or unsafe." />
+        <PlainNote text={
+          <div className="flex flex-col gap-2">
+            <p>Before buying a tokenized stock, check whether its issuer publishes reserve data and whether Notary could verify it. This is not a recommendation.</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong>Insufficient data</strong>: no verifiable reserve data was available.</li>
+              <li><strong>Verified count</strong>: the number of historical corporate actions verified against independent data.</li>
+              <li><strong>Unavailable (on-chain proof)</strong>: no cryptographic proof is on the Solana ledger.</li>
+              <li><strong>Not checked yet</strong>: Notary has no reserve check for that token.</li>
+            </ul>
+          </div>
+        } />
         <div className="flex flex-col mb-4">
           <h2 className="text-xl font-bold text-brand-text mb-2 flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-brand-accent" />
@@ -100,7 +110,7 @@ export const TrustRegistryView = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-border text-sm">
-                {KNOWN_ASSETS.map((asset) => {
+                {getParityAssets().map((asset) => {
                   const profileData = profiles[asset.mintAddress];
                   
                   // Calculate total verified events

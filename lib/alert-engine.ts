@@ -75,10 +75,10 @@ export async function getLiquidationRiskAlerts(walletAddress: string | undefined
 }
 
 export async function getReserveDropAlerts(): Promise<NotaryAlert[]> {
-  const { KNOWN_ASSETS } = await import('@/lib/known-assets');
+  const { getParityAssets } = await import('@/lib/parity-assets');
   const { buildAssetTrustRiskProfile } = await import('@/lib/trust-risk-profile');
 
-  const profiles = await Promise.all(KNOWN_ASSETS.map(asset => buildAssetTrustRiskProfile(asset)));
+  const profiles = await Promise.all(getParityAssets().map(asset => buildAssetTrustRiskProfile(asset)));
   const alerts: NotaryAlert[] = [];
 
   for (const profile of profiles) {

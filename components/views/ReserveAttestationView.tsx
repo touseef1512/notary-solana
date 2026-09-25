@@ -43,7 +43,17 @@ export const ReserveAttestationView = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full">
       <div className="w-full max-w-6xl px-4 mt-2 mb-6">
-        <PlainNote text="This compares the tokens an issuer has in circulation with the reserves it reports. A ratio at or above 1 means reported reserves cover the tokens. The figures come from the issuer, and for xStocks the ratio uses supply across all blockchains, not only Solana." />
+        <PlainNote text={
+          <div className="flex flex-col gap-2">
+            <p>This compares the tokens an issuer has in circulation with the reserves it reports. The figures come from the issuer, and for xStocks the ratio uses supply across all blockchains, not only Solana. This is not a recommendation.</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong>Fully backed</strong>: reported reserves cover the tokens in circulation.</li>
+              <li><strong>Insufficient data</strong>: no verifiable reserve data was available.</li>
+              <li><strong>Buffer</strong>: the percentage of extra reserves held beyond the minimum required.</li>
+              <li><strong>Age</strong>: how long ago the attestation was produced.</li>
+            </ul>
+          </div>
+        } />
         <h2 className="text-xl font-bold text-brand-text mb-2">Reserve attestation</h2>
         <p className="text-brand-muted text-sm mb-6 max-w-3xl">
           Verify cryptographic proofs of off-chain asset reserves. Real-time attestations validate that tokenized assets are fully backed 1:1 by traditional securities.
@@ -101,7 +111,7 @@ export const ReserveAttestationView = () => {
                           <span className="text-brand-text font-mono text-base">{item.attestationAgeHours.toFixed(1)}h</span>
                         )}
                       </td>
-                      <td className="py-2.5 px-3 text-brand-muted text-xs max-w-[250px] truncate" title={item.disclosure}>
+                      <td className="py-2.5 px-3 text-brand-muted text-xs min-w-[300px] whitespace-normal" title={item.disclosure}>
                         {item.disclosure}
                       </td>
                     </tr>

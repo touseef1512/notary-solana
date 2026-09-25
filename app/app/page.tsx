@@ -23,6 +23,7 @@ import {
   ShieldAlert,
   Code2,
   LineChart,
+  Terminal,
   Home,
   Eye,
   Library,
@@ -53,7 +54,7 @@ const WalletMultiButtonDynamic = dynamic(
   { ssr: false }
 );
 
-type TabId = 'today' | 'portfolio' | 'loans' | 'markets' | 'trust' | 'developer' | 'ask' | 'alerts';
+type TabId = 'today' | 'portfolio' | 'loans' | 'markets' | 'trust' | 'developer' | 'alerts';
 
 interface NavItem {
   id: TabId;
@@ -79,7 +80,7 @@ const SUB_NAV_ITEMS: Record<string, { id: string; label: string; icon: React.FC<
 
 const TAB_LABELS: Record<TabId, string> = {
   today: 'Today', portfolio: 'Portfolio', loans: 'Loans', markets: 'Markets',
-  trust: 'Trust', developer: 'Developers', ask: 'Ask Notary', alerts: 'Alerts'
+  trust: 'Trust', developer: 'Developers', alerts: 'Alerts'
 };
 
 export default function AppShell() {
@@ -91,7 +92,29 @@ export default function AppShell() {
   
   const [alerts, setAlerts] = useState<NotaryAlert[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAskNotaryOpen, setIsAskNotaryOpen] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipRemoved, setTooltipRemoved] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const inTimer = setTimeout(() => setShowTooltip(true), 300);
+    const outTimer = setTimeout(() => {
+      setShowTooltip(false);
+      setTimeout(() => setTooltipRemoved(true), 300);
+    }, 4300);
+    return () => {
+      clearTimeout(inTimer);
+      clearTimeout(outTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isAskNotaryOpen) {
+      setShowTooltip(false);
+      setTooltipRemoved(true);
+    }
+  }, [isAskNotaryOpen]);
   
   const { connected } = useWallet();
   const { isViewMode, activeAddress, setViewAddress } = useActiveAddress();
@@ -176,8 +199,6 @@ export default function AppShell() {
         return <TrustRegistryView />;
       case 'developer':
         return <DeveloperApiView />;
-      case 'ask':
-        return <AskNotaryView />;
       case 'alerts':
         return <AlertsView />;
       default:
@@ -342,17 +363,6 @@ export default function AppShell() {
               <span className="font-mono text-xs text-brand-accent uppercase">NETWORK: DEVNET</span>
             </div>
 
-            <button
-              className="text-brand-muted hover:text-brand-text focus:outline-none cursor-pointer p-1"
-              onClick={() => {
-                setActiveTab('ask');
-                setSubTab('');
-              }}
-              aria-label="Ask Notary"
-            >
-              <MessageSquare className="w-5 h-5" />
-            </button>
-
             <div className="relative" ref={dropdownRef}>
               <button 
                 className="relative text-brand-muted hover:text-brand-text focus:outline-none cursor-pointer p-1"
@@ -445,6 +455,46 @@ export default function AppShell() {
             {renderContent()}
           </div>
         </main>
+      </div>
+
+      {/* Persistent Floating Ask Notary */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        {isAskNotaryOpen && (
+          <div className="mb-4 w-[400px] h-[600px] max-h-[calc(100vh-100px)] max-w-[calc(100vw-32px)] bg-brand-bg border border-brand-border shadow-md flex flex-col overflow-hidden">
+            <div className="flex justify-between items-center p-3 border-b border-brand-border bg-brand-card shrink-0">
+              <span className="font-bold font-mono text-sm uppercase tracking-widest text-brand-text flex items-center gap-2">
+                <Terminal className="w-4 h-4 text-brand-accent"/> Ask Notary
+              </span>
+              <button onClick={() => setIsAskNotaryOpen(false)} className="text-brand-muted hover:text-brand-text p-1 cursor-pointer focus:outline-none">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-hidden relative bg-brand-bg">
+              <AskNotaryView />
+            </div>
+          </div>
+        )}
+        <div className="relative">
+          {!tooltipRemoved && (
+            <div 
+              className={`absolute bottom-full right-0 mb-3 whitespace-nowrap bg-brand-card border border-brand-border text-brand-text text-xs px-3 py-1.5 rounded shadow-md pointer-events-none transition-all duration-300 ${
+                showTooltip ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+              }`}
+            >
+              Ask Notary about your holdings
+              {/* Speech bubble pointer */}
+              <div className="absolute top-full right-5 -mt-[1px] border-4 border-transparent border-t-brand-border" />
+              <div className="absolute top-full right-5 mt-[-2px] border-4 border-transparent border-t-brand-card" />
+            </div>
+          )}
+          <button
+            onClick={() => setIsAskNotaryOpen(!isAskNotaryOpen)}
+            className="w-14 h-14 rounded-full bg-brand-accent text-brand-bg shadow-md hover:opacity-90 transition-opacity flex items-center justify-center focus:outline-none cursor-pointer"
+            aria-label="Ask Notary"
+          >
+            {isAskNotaryOpen ? <X className="w-6 h-6" /> : <MessageSquare className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
     </div>
   );

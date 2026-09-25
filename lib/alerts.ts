@@ -13,7 +13,7 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 let alertsCache: { timestamp: number, data: AlertResult[] } | null = null;
 
 export async function getAllUpcomingAlerts(): Promise<AlertResult[]> {
-  const { KNOWN_ASSETS } = await import('@/lib/known-assets');
+  const { getParityAssets } = await import('@/lib/parity-assets');
   const now = Date.now();
   
   if (alertsCache && (now - alertsCache.timestamp < CACHE_TTL)) {
@@ -21,7 +21,7 @@ export async function getAllUpcomingAlerts(): Promise<AlertResult[]> {
   }
   
   const data: AlertResult[] = [];
-  for (const asset of KNOWN_ASSETS) {
+  for (const asset of getParityAssets()) {
     data.push(await getUpcomingAlerts(asset));
   }
   alertsCache = { timestamp: now, data };
